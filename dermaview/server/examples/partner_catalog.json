@@ -1,0 +1,30 @@
+{
+  "products": [
+    {
+      "sku": "BODY-001",
+      "name_ar": "مرطب للجسم",
+      "name_en": "Body Moisturizer",
+      "product_url": "https://company.com/products/body-001",
+      "image_url": "https://company.com/images/body-001.jpg",
+      "price_sar": 79,
+      "ingredients": [
+        "ceramides",
+        "glycerin"
+      ],
+      "body_regions": [
+        "left_forearm",
+        "right_forearm",
+        "left_shin",
+        "right_shin"
+      ],
+      "concerns": [
+        "visible_dryness",
+        "texture"
+      ],
+      "skin_types": [
+        "all"
+      ],
+      "contraindications": []
+    }
+  ]
+}
