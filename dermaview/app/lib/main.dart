@@ -656,10 +656,10 @@ class _ScannerScreenState extends State<ScannerScreen>
 
   ui.Rect clampRect(ui.Rect rect, int width, int height) {
     return ui.Rect.fromLTRB(
-      rect.left.clamp(0, width - 1),
-      rect.top.clamp(0, height - 1),
-      rect.right.clamp(1, width),
-      rect.bottom.clamp(1, height),
+      rect.left.clamp(0, width - 1).toDouble(),
+      rect.top.clamp(0, height - 1).toDouble(),
+      rect.right.clamp(1, width).toDouble(),
+      rect.bottom.clamp(1, height).toDouble(),
     );
   }
 

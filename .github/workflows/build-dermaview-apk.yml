@@ -36,7 +36,9 @@ jobs:
           cache: true
 
       - name: Generate Android platform folder
-        run: flutter create . --platforms=android --project-name dermaview
+        run: |
+          flutter create . --platforms=android --project-name dermaview
+          rm -f test/widget_test.dart
 
       - name: Ensure camera permission in AndroidManifest
         run: |
