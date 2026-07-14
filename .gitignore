@@ -158,3 +158,4 @@ Thumbs.db
 
 # قاعدة بيانات مصنع الدخل المحلية
 data/income_factory.db
+data/app_foundry.db
