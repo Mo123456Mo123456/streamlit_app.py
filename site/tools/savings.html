@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>حاسبة الادخار والنمو المركب — كم سيصبح ادخارك الشهري بعد سنوات؟</title>
+<meta name="description" content="حاسبة ادخار بالعائد المركب: أدخل مبلغك الشهري وسنوات الادخار ونسبة العائد السنوي، واعرف المبلغ النهائي وأرباح النمو. خطط لأهدافك المالية بأرقام حقيقية.">
+<link rel="canonical" href="https://mo123456mo123456.github.io/streamlit_app.py/tools/savings.html">
+<meta property="og:title" content="حاسبة الادخار والنمو المركب">
+<meta property="og:description" content="اكتشف قوة الادخار المنتظم والعائد المركب بأرقامك أنت.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "ما هو العائد المركب؟", "acceptedAnswer": {"@type": "Answer", "text": "هو أن أرباح استثمارك تُضاف إلى رأس المال فتربح بدورها في الفترات التالية — ربح على الربح — وهو أقوى محرك لنمو الثروة على المدى الطويل."}},
+    {"@type": "Question", "name": "كم نسبة الادخار المثالية من الراتب؟", "acceptedAnswer": {"@type": "Answer", "text": "القاعدة الشائعة 50/30/20: خصص 20% من دخلك على الأقل للادخار والاستثمار، وكلما رفعت النسبة اقترب هدفك المالي."}},
+    {"@type": "Question", "name": "ما عائد سنوي معقول أستخدمه في الحساب؟", "acceptedAnswer": {"@type": "Answer", "text": "الودائع والصكوك قصيرة الأجل تاريخيًا بين 2-5%، ومؤشرات الأسهم العالمية 7-10% كمتوسط طويل الأجل مع تقلبات — استخدم رقمًا متحفظًا لتخطيط أكثر أمانًا."}}
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site">
+  <div class="container">
+    <a class="logo" href="../index.html">🧮 حاسبتي<span>.</span></a>
+    <nav class="main"><a href="../index.html#tools">الأدوات</a><a href="../about.html">عن الموقع</a></nav>
+  </div>
+</header>
+
+<main class="container tool-wrap">
+  <div class="tool-head">
+    <h1>🌱 حاسبة الادخار والنمو المركب</h1>
+    <p class="lead">أدخل مبلغك الشهري ومدة الادخار والعائد المتوقع — وشاهد ماذا يصنع الانتظام والوقت.</p>
+  </div>
+
+  <div class="calc">
+    <div class="row2">
+      <div class="field">
+        <label for="monthly">الادخار الشهري</label>
+        <input type="number" id="monthly" inputmode="decimal" placeholder="مثال: 1000" min="0">
+      </div>
+      <div class="field">
+        <label for="initial">مبلغ البداية (اختياري)</label>
+        <input type="number" id="initial" inputmode="decimal" placeholder="0" min="0" value="">
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label for="years">عدد السنوات</label>
+        <input type="number" id="years" inputmode="decimal" placeholder="مثال: 10" min="0" step="0.5">
+      </div>
+      <div class="field">
+        <label for="rate">العائد السنوي المتوقع %</label>
+        <input type="number" id="rate" inputmode="decimal" placeholder="مثال: 5" min="0" step="0.1" value="">
+      </div>
+    </div>
+    <button class="go" onclick="calc()">احسب النمو</button>
+
+    <div class="result" id="result">
+      <p class="big-number" id="fv">—</p>
+      <p class="big-label">المبلغ النهائي المتوقع</p>
+      <div class="mini-grid">
+        <div class="mini"><b id="contrib">—</b><span>إجمالي ما ادخرته من جيبك</span></div>
+        <div class="mini"><b id="growth">—</b><span>أرباح النمو المركب</span></div>
+        <div class="mini"><b id="pct">—</b><span>نسبة الأرباح من إجمالي المبلغ</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">⚠️ العوائد المستقبلية غير مضمونة، والأرقام تقديرية بافتراض عائد ثابت — استخدمها للتخطيط لا كوعد استثماري.</div>
+
+  <article class="explain">
+    <h2>قوة لا يراها معظم الناس: الربح على الربح</h2>
+    <p>الادخار في درج المكتب ينمو خطيًا، أما المستثمَر بعائد فيتضاعف نموه مع الوقت لأن <strong>الأرباح نفسها تبدأ تربح</strong>. الفارق يبدو صغيرًا في السنوات الأولى ثم ينفجر: 1,000 شهريًا لعشرين سنة بلا عائد = 240,000، وبعائد 7% ≈ <strong>520,000</strong> — أكثر من الضعف، والفارق كله صنعه الوقت.</p>
+    <h3>ثلاث قواعد عملية</h3>
+    <ul>
+      <li><strong>ابدأ الآن ولو بمبلغ صغير:</strong> سنة تأخير في البداية تكلف أكثر من أي زيادة لاحقة في المبلغ.</li>
+      <li><strong>ثبّت الاقتطاع آليًا:</strong> اجعل التحويل للادخار أول ما يحدث يوم الراتب، لا آخر ما يتبقى.</li>
+      <li><strong>لا تلمس النمو:</strong> كل سحب مبكر لا يأخذ المبلغ فقط، بل كل ما كان سيثمره حتى نهاية المدة.</li>
+    </ul>
+
+    <h2>أسئلة شائعة</h2>
+    <details class="faq"><summary>الحاسبة تفترض إضافة الأرباح شهريًا؟</summary><p>نعم، تُحسب بالتركيب الشهري (العائد السنوي ÷ 12 يُطبق كل شهر على الرصيد ثم يُضاف الادخار الشهري) — وهي الطريقة الأقرب لصناديق الاستثمار والمحافظ الشهرية.</p></details>
+    <details class="faq"><summary>ماذا أستخدم كعائد متوقع؟</summary><p>كن متحفظًا: 2-5% للأدوات منخفضة المخاطر، و7-10% متوسط تاريخي طويل الأجل لمؤشرات الأسهم مع تقلبات حادة في الطريق. التخطيط برقم متحفظ يجعل المفاجآت لصالحك.</p></details>
+    <details class="faq"><summary>هل تراعي الحاسبة التضخم؟</summary><p>لا، الأرقام اسمية. لتقدير القوة الشرائية الحقيقية اطرح ذهنيًا 2-3% من العائد المتوقع قبل إدخاله.</p></details>
+  </article>
+
+  <p>🧮 جرّب أيضًا: <a href="loan.html">حاسبة الأقساط</a> • <a href="zakat.html">حاسبة الزكاة</a> • <a href="end-of-service.html">حاسبة نهاية الخدمة</a></p>
+</main>
+
+<footer class="site">
+  <div class="container">
+    <div>© <span id="y"></span> حاسبتي</div>
+    <div><a href="../about.html">عن الموقع</a><a href="../privacy.html">سياسة الخصوصية</a></div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('y').textContent = new Date().getFullYear();
+const fmt = n => n.toLocaleString('ar-SA', {maximumFractionDigits: 0});
+
+function calc() {
+  const pm = parseFloat(document.getElementById('monthly').value) || 0;
+  const p0 = parseFloat(document.getElementById('initial').value) || 0;
+  const years = parseFloat(document.getElementById('years').value) || 0;
+  const annual = parseFloat(document.getElementById('rate').value) || 0;
+  const n = Math.round(years * 12);
+  if (n <= 0 || (pm <= 0 && p0 <= 0)) return;
+
+  const r = annual / 100 / 12;
+  let fv;
+  if (r === 0) {
+    fv = p0 + pm * n;
+  } else {
+    fv = p0 * Math.pow(1 + r, n) + pm * ((Math.pow(1 + r, n) - 1) / r);
+  }
+  const contrib = p0 + pm * n;
+  const growth = fv - contrib;
+
+  document.getElementById('fv').textContent = fmt(fv);
+  document.getElementById('contrib').textContent = fmt(contrib);
+  document.getElementById('growth').textContent = fmt(growth);
+  document.getElementById('pct').textContent = fv > 0 ? (growth / fv * 100).toFixed(1) + '%' : '0%';
+  document.getElementById('result').classList.add('show');
+}
+</script>
+</body>
+</html>

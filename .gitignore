@@ -119,7 +119,7 @@ venv.bak/
 .ropeproject
 
 # mkdocs documentation
-/site
+# /site  (معطّل: مجلد site/ هو موقع حاسبتي وليس مخرجات mkdocs)
 
 # mypy
 .mypy_cache/
