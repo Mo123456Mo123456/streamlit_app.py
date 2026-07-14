@@ -155,3 +155,6 @@ logs/
 # OS
 .DS_Store
 Thumbs.db
+
+# قاعدة بيانات مصنع الدخل المحلية
+data/income_factory.db
