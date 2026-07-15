@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>حاسبة التمويل العقاري — مكتب الرواد العقاري (نموذج تجريبي)</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
+<style>
+  :root {
+    /* هوية المكتب — تُبدَّل بألوان وشعار العميل الفعلي */
+    --brand: #123c63; --brand2: #0a2946; --gold: #c9a44a;
+    --bg: #f4f6f9; --card: #fff; --ink: #1d2733; --muted: #64748b; --line: #e2e8f0;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Segoe UI", Tahoma, Arial, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.8; }
+  header { background: linear-gradient(135deg, var(--brand2), var(--brand)); color: #fff; padding: 26px 18px; text-align: center; }
+  header .logo { font-size: 1.5rem; font-weight: 900; }
+  header .logo span { color: var(--gold); }
+  header p { margin: 6px 0 0; opacity: .85; font-size: .9rem; }
+  .wrap { max-width: 640px; margin: -18px auto 40px; padding: 0 16px; }
+  .card { background: var(--card); border-radius: 16px; padding: 26px; box-shadow: 0 10px 30px rgba(18,60,99,.12); }
+  h1 { font-size: 1.25rem; color: var(--brand); margin: 0 0 4px; }
+  .sub { color: var(--muted); font-size: .9rem; margin: 0 0 20px; }
+  label { display: block; font-weight: 700; font-size: .92rem; margin: 14px 0 6px; }
+  input, select { width: 100%; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 10px; font-size: 1rem; font-family: inherit; background: #fafbfd; }
+  input:focus, select:focus { outline: none; border-color: var(--brand); }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 480px) { .row { grid-template-columns: 1fr; } }
+  button.calc { width: 100%; margin-top: 20px; padding: 14px; border: 0; border-radius: 12px; cursor: pointer; background: linear-gradient(135deg, var(--brand), var(--brand2)); color: #fff; font-size: 1.05rem; font-weight: 800; font-family: inherit; }
+  .result { display: none; margin-top: 22px; border-top: 2px dashed var(--line); padding-top: 18px; text-align: center; }
+  .result.show { display: block; }
+  .big { font-size: 2.1rem; font-weight: 900; color: var(--brand); }
+  .big small { font-size: 1rem; color: var(--muted); font-weight: 400; }
+  .minis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
+  @media (max-width: 480px) { .minis { grid-template-columns: 1fr; } }
+  .mini { background: #eef3f8; border-radius: 10px; padding: 10px; }
+  .mini b { display: block; color: var(--brand2); }
+  .mini span { font-size: .78rem; color: var(--muted); }
+  a.wa { display: block; margin-top: 18px; padding: 13px; border-radius: 12px; background: #1fa855; color: #fff; text-decoration: none; font-weight: 800; text-align: center; }
+  .note { font-size: .78rem; color: var(--muted); margin-top: 14px; text-align: center; }
+  .demo-badge { position: fixed; bottom: 12px; inset-inline-start: 12px; background: #111; color: #fff; font-size: .72rem; padding: 6px 12px; border-radius: 99px; opacity: .75; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🏠 مكتب الرواد العقاري<span>.</span></div>
+  <p>وساطة وتسويق عقاري — رخصة فال (نموذج تجريبي)</p>
+</header>
+
+<div class="wrap">
+  <div class="card">
+    <h1>احسب قسطك العقاري قبل ما تزور العقار</h1>
+    <p class="sub">أداة مجانية من المكتب — النتيجة فورية وعلى جهازك مباشرة.</p>
+
+    <label>سعر العقار (ريال)</label>
+    <input type="number" id="price" inputmode="decimal" placeholder="مثال: 750000">
+
+    <div class="row">
+      <div>
+        <label>الدفعة الأولى %</label>
+        <select id="down">
+          <option value="10">10% (الحد الأدنى لمواطن - أول عقار)</option>
+          <option value="15">15%</option>
+          <option value="20">20%</option>
+          <option value="30">30%</option>
+        </select>
+      </div>
+      <div>
+        <label>مدة التمويل (سنة)</label>
+        <select id="years">
+          <option>15</option><option>20</option><option selected>25</option><option>30</option>
+        </select>
+      </div>
+    </div>
+
+    <label>معدل النسبة السنوي APR %</label>
+    <input type="number" id="rate" inputmode="decimal" value="5.5" step="0.1">
+
+    <button class="calc" onclick="calc()">احسب القسط الشهري</button>
+
+    <div class="result" id="result">
+      <div class="big" id="payment">—</div>
+      <small style="color:var(--muted)">القسط الشهري التقريبي</small>
+      <div class="minis">
+        <div class="mini"><b id="downAmt">—</b><span>الدفعة الأولى</span></div>
+        <div class="mini"><b id="financed">—</b><span>مبلغ التمويل</span></div>
+        <div class="mini"><b id="total">—</b><span>إجمالي المدفوع</span></div>
+      </div>
+      <a class="wa" id="waLink" href="#" target="_blank" rel="noopener">📲 أرسل النتيجة للمكتب واحجز استشارتك المجانية</a>
+    </div>
+
+    <p class="note">الأرقام استرشادية ولا تُعد عرض تمويل — العروض النهائية من جهة التمويل المعتمدة.</p>
+  </div>
+</div>
+
+<div class="demo-badge">نموذج عرض — بيانات المكتب افتراضية</div>
+
+<script>
+// رقم واتساب المكتب — يُستبدل برقم العميل الفعلي عند التسليم
+const OFFICE_WA = "9665XXXXXXXX";
+const fmt = n => Math.round(n).toLocaleString('ar-SA');
+
+function calc() {
+  const price = parseFloat(document.getElementById('price').value) || 0;
+  if (price <= 0) return;
+  const downPct = parseFloat(document.getElementById('down').value) / 100;
+  const years = parseInt(document.getElementById('years').value);
+  const apr = parseFloat(document.getElementById('rate').value) || 0;
+
+  const downAmt = price * downPct;
+  const financed = price - downAmt;
+  const n = years * 12, r = apr / 100 / 12;
+  const payment = r === 0 ? financed / n : financed * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+  const total = payment * n + downAmt;
+
+  document.getElementById('payment').textContent = fmt(payment) + ' ريال';
+  document.getElementById('downAmt').textContent = fmt(downAmt);
+  document.getElementById('financed').textContent = fmt(financed);
+  document.getElementById('total').textContent = fmt(total);
+
+  const msg = encodeURIComponent(
+    'السلام عليكم، حسبت قسطي من حاسبة المكتب:\n' +
+    'سعر العقار: ' + fmt(price) + ' ريال\n' +
+    'القسط الشهري التقريبي: ' + fmt(payment) + ' ريال\n' +
+    'أرغب باستشارة مجانية.');
+  document.getElementById('waLink').href = 'https://wa.me/' + OFFICE_WA + '?text=' + msg;
+  document.getElementById('result').classList.add('show');
+}
+</script>
+</body>
+</html>

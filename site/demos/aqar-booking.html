@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>حجز موعد معاينة — مكتب الرواد العقاري (نموذج تجريبي)</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
+<style>
+  :root { --brand: #123c63; --brand2: #0a2946; --gold: #c9a44a; --bg: #f4f6f9; --ink: #1d2733; --muted: #64748b; --line: #e2e8f0; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Segoe UI", Tahoma, Arial, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.8; }
+  header { background: linear-gradient(135deg, var(--brand2), var(--brand)); color: #fff; padding: 26px 18px; text-align: center; }
+  header .logo { font-size: 1.5rem; font-weight: 900; }
+  header .logo span { color: var(--gold); }
+  .wrap { max-width: 640px; margin: -18px auto 40px; padding: 0 16px; }
+  .card { background: #fff; border-radius: 16px; padding: 26px; box-shadow: 0 10px 30px rgba(18,60,99,.12); }
+  h1 { font-size: 1.25rem; color: var(--brand); margin: 0 0 4px; }
+  .sub { color: var(--muted); font-size: .9rem; margin: 0 0 18px; }
+  label { display: block; font-weight: 700; font-size: .92rem; margin: 14px 0 6px; }
+  input, select { width: 100%; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 10px; font-size: 1rem; font-family: inherit; background: #fafbfd; }
+  input:focus, select:focus { outline: none; border-color: var(--brand); }
+  .slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 6px; }
+  .slot { padding: 10px 4px; text-align: center; border: 1.5px solid var(--line); border-radius: 10px; cursor: pointer; font-size: .9rem; background: #fafbfd; user-select: none; }
+  .slot.sel { background: var(--brand); color: #fff; border-color: var(--brand); font-weight: 800; }
+  button.go { width: 100%; margin-top: 20px; padding: 14px; border: 0; border-radius: 12px; cursor: pointer; background: #1fa855; color: #fff; font-size: 1.05rem; font-weight: 800; font-family: inherit; }
+  .hint { font-size: .8rem; color: var(--muted); text-align: center; margin-top: 12px; }
+  .demo-badge { position: fixed; bottom: 12px; inset-inline-start: 12px; background: #111; color: #fff; font-size: .72rem; padding: 6px 12px; border-radius: 99px; opacity: .75; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🏠 مكتب الرواد العقاري<span>.</span></div>
+</header>
+
+<div class="wrap">
+  <div class="card">
+    <h1>📅 احجز موعد معاينة العقار</h1>
+    <p class="sub">اختر العقار والوقت المناسب — يصلنا حجزك فورًا على واتساب ونؤكده لك.</p>
+
+    <label>العقار المطلوب معاينته</label>
+    <select id="property">
+      <option>فيلا دوبلكس — حي النرجس (1,250,000 ريال)</option>
+      <option>شقة 4 غرف — حي الملقا (890,000 ريال)</option>
+      <option>دور أرضي — حي القيروان (760,000 ريال)</option>
+      <option>أرض سكنية 600م — حي العارض (1,050,000 ريال)</option>
+      <option>عقار آخر / استشارة عامة</option>
+    </select>
+
+    <label>اليوم</label>
+    <select id="day"></select>
+
+    <label>الوقت المناسب</label>
+    <div class="slots" id="slots"></div>
+
+    <label>الاسم الكريم</label>
+    <input type="text" id="name" placeholder="اسمك">
+
+    <label>رقم الجوال</label>
+    <input type="tel" id="phone" inputmode="tel" placeholder="05xxxxxxxx">
+
+    <button class="go" onclick="book()">📲 تأكيد الحجز عبر واتساب</button>
+    <p class="hint">بالضغط يُفتح واتساب برسالة حجز جاهزة — أرسلها وينتهي حجزك.</p>
+  </div>
+</div>
+
+<div class="demo-badge">نموذج عرض — العقارات والبيانات افتراضية</div>
+
+<script>
+const OFFICE_WA = "9665XXXXXXXX"; // يُستبدل برقم المكتب الفعلي
+// أوقات العمل — يعدلها المكتب بسهولة
+const TIMES = ["4:30 م", "5:30 م", "6:30 م", "7:30 م", "8:30 م", "9:30 م"];
+
+// تعبئة الأيام السبعة القادمة (عدا الجمعة)
+const daySel = document.getElementById('day');
+const dfmt = new Intl.DateTimeFormat('ar', { weekday: 'long', day: 'numeric', month: 'long' });
+for (let i = 1; i <= 8; i++) {
+  const d = new Date(); d.setDate(d.getDate() + i);
+  if (d.getDay() === 5) continue; // الجمعة إجازة
+  const opt = document.createElement('option');
+  opt.textContent = dfmt.format(d);
+  daySel.appendChild(opt);
+}
+
+// أزرار الأوقات
+const slotsBox = document.getElementById('slots');
+let selectedTime = null;
+TIMES.forEach(t => {
+  const el = document.createElement('div');
+  el.className = 'slot'; el.textContent = t;
+  el.onclick = () => {
+    document.querySelectorAll('.slot').forEach(s => s.classList.remove('sel'));
+    el.classList.add('sel'); selectedTime = t;
+  };
+  slotsBox.appendChild(el);
+});
+
+function book() {
+  const name = document.getElementById('name').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  if (!name || !phone) { alert('فضلًا أدخل اسمك ورقم جوالك'); return; }
+  if (!selectedTime) { alert('اختر الوقت المناسب'); return; }
+  const msg = encodeURIComponent(
+    'طلب حجز معاينة 🏠\n' +
+    'العقار: ' + document.getElementById('property').value + '\n' +
+    'اليوم: ' + daySel.value + '\n' +
+    'الوقت: ' + selectedTime + '\n' +
+    'الاسم: ' + name + '\n' +
+    'الجوال: ' + phone);
+  window.open('https://wa.me/' + OFFICE_WA + '?text=' + msg, '_blank');
+}
+</script>
+</body>
+</html>
