@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>بطاقة عرض</title>
+<script>
+/* ⚙️⚙️⚙️ إعدادات نشاطك والمنتج — عدّل هذه الأسطر فقط ثم احفظ الملف ⚙️⚙️⚙️ */
+const CONFIG = {
+  name:     "مكتب الرواد العقاري",  // اسم نشاطك
+  emoji:    "🏠",
+  whatsapp: "9665XXXXXXXX",          // رقم واتساب بصيغة دولية بدون +
+  phone:    "+9665XXXXXXXX",         // رقم الاتصال
+  mapQuery: "حي النرجس الرياض",      // موقع المنتج/العقار (يفتح خرائط جوجل)
+  color1:   "#123c63",
+  color2:   "#0a2946",
+  accent:   "#c9a44a",
+  // بيانات المنتج / العقار المعروض:
+  productEmoji: "🏡",
+  price:    "1,250,000",
+  priceNote:"ريال — قابل للتفاوض",
+  title:    "فيلا دوبلكس حديثة — تشطيب فاخر",
+  location: "📍 الرياض، حي النرجس",
+  // المميزات: [القيمة، الوصف] — أضف أو احذف أسطرًا
+  features: [
+    ["420م²","المساحة"], ["6","غرف نوم"], ["7","دورات مياه"], ["2024","سنة البناء"],
+    ["مصعد","جاهز"], ["ملحق","سطح"], ["موقفان","مظللان"], ["شمالية","الواجهة"]
+  ],
+  // نقاط الوصف — أضف أو احذف أسطرًا
+  bullets: [
+    "مجلس رجال ونساء منفصلان + صالة عائلية واسعة",
+    "مطبخ راكب + مكيفات مركزية",
+    "ضمانات: هيكل إنشائي 10 سنوات",
+    "إمكانية التمويل عن طريق جميع البنوك"
+  ],
+  footer: "رخصة فال رقم XXXXXXX — إعلان موثق"
+};
+/* ⚙️⚙️⚙️ نهاية الإعدادات — لا تعدّل شيئًا بعد هذا السطر ⚙️⚙️⚙️ */
+</script>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏡</text></svg>">
+<style>
+  :root { --brand:#123c63; --brand2:#0a2946; --gold:#c9a44a; --bg:#f4f6f9; --ink:#1d2733; --muted:#64748b; --line:#e2e8f0; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Segoe UI",Tahoma,Arial,sans-serif; background:var(--bg); color:var(--ink); line-height:1.8; }
+  .hero { background:linear-gradient(160deg,var(--brand2) 0%,var(--brand) 70%); color:#fff; padding:30px 18px 70px; text-align:center; }
+  .hero .office { font-weight:900; }
+  .hero .office span { color:var(--gold); }
+  .wrap { max-width:640px; margin:-52px auto 40px; padding:0 16px; }
+  .card { background:#fff; border-radius:18px; overflow:hidden; box-shadow:0 12px 34px rgba(18,60,99,.15); }
+  .visual { height:210px; background:
+      linear-gradient(rgba(10,41,70,.25),rgba(10,41,70,.25)),
+      repeating-linear-gradient(45deg,#dfe7f0 0 24px,#d3ddea 24px 48px);
+    display:flex; align-items:center; justify-content:center; font-size:4rem; }
+  .body { padding:24px; }
+  .price { font-size:1.7rem; font-weight:900; color:var(--brand); }
+  .price small { color:var(--muted); font-weight:400; font-size:.95rem; }
+  h1 { font-size:1.2rem; margin:4px 0 2px; }
+  .loc { color:var(--muted); font-size:.92rem; margin-bottom:16px; }
+  .feats { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:14px 0 18px; }
+  @media (max-width:480px){ .feats { grid-template-columns:repeat(2,1fr); } }
+  .feat { background:#eef3f8; border-radius:12px; padding:10px 6px; text-align:center; }
+  .feat b { display:block; color:var(--brand2); font-size:1.05rem; }
+  .feat span { font-size:.76rem; color:var(--muted); }
+  .desc { font-size:.95rem; color:#37414f; }
+  .desc li { margin-bottom:4px; }
+  .cta { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:20px; }
+  .cta a { padding:12px 6px; border-radius:12px; text-decoration:none; font-weight:800; text-align:center; font-size:.92rem; }
+  .wa { background:#1fa855; color:#fff; }
+  .call { background:var(--brand); color:#fff; }
+  .map { background:#eef3f8; color:var(--brand2); border:1.5px solid var(--line); }
+  .share { margin-top:14px; text-align:center; }
+  .share button { border:0; background:none; color:var(--muted); cursor:pointer; font-family:inherit; font-size:.85rem; text-decoration:underline; }
+  .footer { text-align:center; color:var(--muted); font-size:.8rem; padding:0 16px 26px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="office"><span id="cfgEmoji"></span> <span id="cfgName"></span><span>.</span></div>
+</div>
+
+<div class="wrap">
+  <div class="card">
+    <div class="visual" id="visual"></div>
+    <div class="body">
+      <div class="price"><span id="pPrice"></span> <small id="pPriceNote"></small></div>
+      <h1 id="pTitle"></h1>
+      <div class="loc" id="pLoc"></div>
+      <div class="feats" id="feats"></div>
+      <div class="desc"><ul id="bullets"></ul></div>
+      <div class="cta">
+        <a class="wa" id="wa" href="#" target="_blank" rel="noopener">واتساب</a>
+        <a class="call" id="call" href="#">اتصال</a>
+        <a class="map" id="map" href="#" target="_blank" rel="noopener">الموقع</a>
+      </div>
+      <div class="share"><button onclick="shareCard()">🔗 مشاركة هذا العرض</button></div>
+    </div>
+  </div>
+  <p class="footer" id="pFooter"></p>
+</div>
+
+<script>
+document.documentElement.style.setProperty('--brand', CONFIG.color1);
+document.documentElement.style.setProperty('--brand2', CONFIG.color2);
+document.documentElement.style.setProperty('--gold', CONFIG.accent);
+document.getElementById('cfgEmoji').textContent = CONFIG.emoji;
+document.getElementById('cfgName').textContent = CONFIG.name;
+document.getElementById('visual').textContent = CONFIG.productEmoji;
+document.getElementById('pPrice').textContent = CONFIG.price;
+document.getElementById('pPriceNote').textContent = CONFIG.priceNote;
+document.getElementById('pTitle').textContent = CONFIG.title;
+document.getElementById('pLoc').textContent = CONFIG.location;
+document.getElementById('pFooter').textContent = CONFIG.footer;
+document.title = CONFIG.title + ' — ' + CONFIG.name;
+
+const feats = document.getElementById('feats');
+CONFIG.features.forEach(([v, l]) => {
+  const el = document.createElement('div');
+  el.className = 'feat';
+  el.innerHTML = '<b></b><span></span>';
+  el.querySelector('b').textContent = v;
+  el.querySelector('span').textContent = l;
+  feats.appendChild(el);
+});
+const bullets = document.getElementById('bullets');
+CONFIG.bullets.forEach(b => {
+  const li = document.createElement('li');
+  li.textContent = b;
+  bullets.appendChild(li);
+});
+
+document.getElementById('wa').href = 'https://wa.me/' + CONFIG.whatsapp + '?text=' +
+  encodeURIComponent('مرحبًا، مهتم بـ ' + CONFIG.title + ' (' + CONFIG.price + ') — أرغب بالتفاصيل.');
+document.getElementById('call').href = 'tel:' + CONFIG.phone;
+document.getElementById('map').href = 'https://maps.google.com/?q=' + encodeURIComponent(CONFIG.mapQuery);
+
+function shareCard() {
+  if (navigator.share) {
+    navigator.share({ title: document.title, url: location.href });
+  } else {
+    navigator.clipboard.writeText(location.href);
+    alert('تم نسخ الرابط — أرسله لمن تريد');
+  }
+}
+</script>
+</body>
+</html>
