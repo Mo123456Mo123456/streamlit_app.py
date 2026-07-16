@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>حاسبة مكافأة نهاية الخدمة في الإمارات — قانون العمل الاتحادي (محدثة)</title>
+<meta name="description" content="احسب مكافأة نهاية الخدمة في الإمارات وفق المرسوم بقانون اتحادي رقم 33 لسنة 2021: 21 يومًا من الأجر الأساسي عن كل سنة من أول 5 سنوات و30 يومًا عما بعدها، بحد أقصى أجر سنتين. حاسبة دقيقة ومجانية.">
+<link rel="canonical" href="https://mo123456mo123456.github.io/streamlit_app.py/tools/end-of-service-uae.html">
+<meta property="og:title" content="حاسبة مكافأة نهاية الخدمة في الإمارات">
+<meta property="og:description" content="اعرف مستحقاتك وفق قانون العمل الإماراتي الجديد خلال ثوانٍ.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇦🇪</text></svg>">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "كيف تُحسب مكافأة نهاية الخدمة في الإمارات؟", "acceptedAnswer": {"@type": "Answer", "text": "وفق المرسوم بقانون اتحادي 33 لسنة 2021: أجر 21 يومًا من الراتب الأساسي عن كل سنة من السنوات الخمس الأولى، وأجر 30 يومًا عن كل سنة تزيد على ذلك، على ألا يتجاوز المجموع أجر سنتين، وتُحسب أجزاء السنة بنسبتها بشرط إتمام سنة خدمة."}},
+    {"@type": "Question", "name": "هل تنقص المكافأة إذا استقلت في الإمارات؟", "acceptedAnswer": {"@type": "Answer", "text": "لا — بموجب القانون الجديد النافذ من فبراير 2022 يستحق العامل المكافأة كاملة عند انتهاء العلاقة أيًا كان سببها بعد إتمام سنة خدمة، وأُلغيت التخفيضات القديمة المرتبطة بالاستقالة."}},
+    {"@type": "Question", "name": "هل تُحسب المكافأة على الراتب الأساسي أم الإجمالي؟", "acceptedAnswer": {"@type": "Answer", "text": "على الأجر الأساسي الأخير فقط، دون البدلات كالسكن والمواصلات — وهذا فرق جوهري عن النظام السعودي الذي يعتمد الأجر الشامل."}},
+    {"@type": "Question", "name": "من لا يشمله هذا الحساب؟", "acceptedAnswer": {"@type": "Answer", "text": "من أمضى أقل من سنة خدمة لا يستحق مكافأة، وللمناطق المالية الحرة (DIFC وADGM) أنظمة ادخار خاصة بها، وقد يخضع بعض العاملين لنظام الادخار البديل الاختياري بدل المكافأة."}}
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site">
+  <div class="container">
+    <a class="logo" href="../index.html">🧮 حاسبتي<span>.</span></a>
+    <nav class="main"><a href="../index.html#tools">الأدوات</a><a href="../about.html">عن الموقع</a></nav>
+  </div>
+</header>
+
+<main class="container tool-wrap">
+  <div class="tool-head">
+    <h1>🇦🇪 حاسبة مكافأة نهاية الخدمة — الإمارات</h1>
+    <p class="lead">وفق المرسوم بقانون اتحادي رقم 33 لسنة 2021 (النافذ من فبراير 2022) — أدخل بياناتك واعرف مستحقاتك.</p>
+  </div>
+
+  <div class="calc">
+    <div class="field">
+      <label for="salary">الراتب الأساسي الشهري الأخير (درهم) — بدون البدلات</label>
+      <input type="number" id="salary" inputmode="decimal" placeholder="مثال: 10000" min="0">
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label for="years">سنوات الخدمة</label>
+        <input type="number" id="years" inputmode="numeric" placeholder="مثال: 7" min="0">
+      </div>
+      <div class="field">
+        <label for="months">الأشهر الإضافية</label>
+        <input type="number" id="months" inputmode="numeric" placeholder="مثال: 4" min="0" max="11" value="0">
+      </div>
+    </div>
+    <button class="go" onclick="calc()">احسب المكافأة</button>
+
+    <div class="result" id="result">
+      <p class="big-number" id="total">—</p>
+      <p class="big-label">إجمالي مكافأة نهاية الخدمة المستحقة (درهم)</p>
+      <div class="mini-grid">
+        <div class="mini"><b id="first5">—</b><span>عن السنوات الخمس الأولى (21 يومًا/سنة)</span></div>
+        <div class="mini"><b id="after5">—</b><span>عن السنوات التالية (30 يومًا/سنة)</span></div>
+        <div class="mini"><b id="daily">—</b><span>الأجر اليومي (الأساسي ÷ 30)</span></div>
+        <div class="mini"><b id="capnote">—</b><span>سقف أجر السنتين</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">⚠️ الحاسبة استرشادية للقطاع الخاص وفق الأحكام العامة، ولا تشمل أنظمة الادخار الخاصة بالمناطق المالية الحرة أو نظام الادخار الاختياري البديل — للحالات الخاصة راجع وزارة الموارد البشرية والتوطين.</div>
+
+  <article class="explain">
+    <h2>كيف تُحسب المكافأة في الإمارات؟</h2>
+    <p>حدد <strong>المرسوم بقانون اتحادي رقم 33 لسنة 2021</strong> مكافأة نهاية الخدمة للعامل الأجنبي في القطاع الخاص كما يلي: أجر <strong>21 يومًا من الراتب الأساسي</strong> عن كل سنة من السنوات الخمس الأولى، وأجر <strong>30 يومًا</strong> عن كل سنة تزيد على ذلك — بشرط إتمام <strong>سنة خدمة متصلة</strong> على الأقل، وبحد أقصى إجمالي لا يتجاوز <strong>أجر سنتين</strong>.</p>
+    <h3>أهم ثلاثة فروق عن النظام السعودي</h3>
+    <ul>
+      <li><strong>الأساس:</strong> الراتب الأساسي فقط في الإمارات، مقابل الأجر الشامل للبدلات الثابتة في السعودية.</li>
+      <li><strong>الاستقالة:</strong> لا تُنقص المكافأة في الإمارات بعد قانون 2021، بينما تبقى نسب المادة 85 في السعودية.</li>
+      <li><strong>السقف:</strong> الإمارات تضع حدًا أقصى (أجر سنتين)، والسعودية بلا سقف.</li>
+    </ul>
+    <h3>مثال عملي</h3>
+    <p>موظف راتبه الأساسي 10,000 درهم وخدم 7 سنوات: الأجر اليومي = 10,000 ÷ 30 = 333.33 درهمًا. أول 5 سنوات = 5 × 21 × 333.33 = 35,000 درهم. السنتان التاليتان = 2 × 30 × 333.33 = 20,000 درهم. الإجمالي = <strong>55,000 درهم</strong>.</p>
+
+    <h2>أسئلة شائعة</h2>
+    <details class="faq"><summary>هل أستحق مكافأة إن عملت أقل من سنة؟</summary><p>لا، اشترط القانون إتمام سنة خدمة متصلة على الأقل. بعد إتمامها تُحسب أجزاء السنة التالية بنسبتها.</p></details>
+    <details class="faq"><summary>هل تدخل العمولات والبدلات في الحساب؟</summary><p>لا يدخل في حساب المكافأة إلا الأجر الأساسي الأخير. البدلات (سكن، مواصلات، هاتف) مستثناة بنص القانون.</p></details>
+    <details class="faq"><summary>ماذا عن موظفي DIFC وADGM؟</summary><p>المنطقتان الماليتان الحرتان في دبي وأبوظبي تطبقان أنظمة ادخار شهرية خاصة (مثل DEWS) بدل مكافأة نهاية الخدمة التقليدية — لا تنطبق عليهم هذه الحاسبة.</p></details>
+    <details class="faq"><summary>متى يجب صرف المستحقات؟</summary><p>ألزم القانون صاحب العمل بسداد جميع مستحقات العامل خلال 14 يومًا من تاريخ انتهاء العلاقة العمالية.</p></details>
+  </article>
+
+  <p>🧮 جرّب أيضًا: <a href="end-of-service.html">نهاية الخدمة — السعودية</a> • <a href="vat.html">حاسبة ضريبة القيمة المضافة</a> • <a href="loan.html">حاسبة الأقساط</a></p>
+</main>
+
+<footer class="site">
+  <div class="container">
+    <div>© <span id="y"></span> حاسبتي</div>
+    <div><a href="../about.html">عن الموقع</a><a href="../privacy.html">سياسة الخصوصية</a></div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('y').textContent = new Date().getFullYear();
+const fmt = n => n.toLocaleString('ar-AE', {maximumFractionDigits: 2});
+
+function calc() {
+  const salary = parseFloat(document.getElementById('salary').value) || 0;
+  const years = parseInt(document.getElementById('years').value) || 0;
+  const months = parseInt(document.getElementById('months').value) || 0;
+  if (salary <= 0) return;
+
+  const service = years + months / 12;
+  const daily = salary / 30;
+
+  let first5 = 0, after5 = 0, total = 0, note = '—';
+  if (service < 1) {
+    note = 'لا استحقاق قبل إتمام سنة';
+  } else {
+    // 21 يومًا/سنة لأول 5 سنوات، 30 يومًا/سنة بعدها (الكسور بنسبتها)
+    const first5Years = Math.min(service, 5);
+    const after5Years = Math.max(service - 5, 0);
+    first5 = first5Years * 21 * daily;
+    after5 = after5Years * 30 * daily;
+    total = first5 + after5;
+    // السقف: أجر سنتين من الراتب الأساسي
+    const cap = salary * 24;
+    if (total > cap) { total = cap; note = 'طُبق السقف (أجر سنتين)'; }
+    else { note = 'لم يُبلغ السقف'; }
+  }
+
+  document.getElementById('total').textContent = service < 1 ? '0' : fmt(total);
+  document.getElementById('first5').textContent = fmt(first5);
+  document.getElementById('after5').textContent = fmt(after5);
+  document.getElementById('daily').textContent = fmt(daily);
+  document.getElementById('capnote').textContent = note;
+  document.getElementById('result').classList.add('show');
+}
+</script>
+</body>
+</html>

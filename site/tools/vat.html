@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>حاسبة ضريبة القيمة المضافة 15% — إضافة الضريبة واستخراجها من الإجمالي</title>
+<meta name="description" content="حاسبة ضريبة القيمة المضافة السعودية 15%: أضف الضريبة على السعر قبلها، أو استخرج قيمة الضريبة والسعر الأصلي من المبلغ الشامل. مع نسب دول الخليج الأخرى. دقيقة ومجانية وبدون تسجيل.">
+<link rel="canonical" href="https://mo123456mo123456.github.io/streamlit_app.py/tools/vat.html">
+<meta property="og:title" content="حاسبة ضريبة القيمة المضافة 15%">
+<meta property="og:description" content="أضف الضريبة أو استخرجها من الإجمالي بضغطة واحدة.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧾</text></svg>">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "كيف أحسب ضريبة القيمة المضافة 15%؟", "acceptedAnswer": {"@type": "Answer", "text": "لإضافة الضريبة: اضرب السعر في 0.15 وأضف الناتج (أو اضرب في 1.15 مباشرة للحصول على الإجمالي). لاستخراجها من مبلغ شامل: اقسم الإجمالي على 1.15 لتحصل على السعر الأصلي، والفرق هو الضريبة."}},
+    {"@type": "Question", "name": "كيف أستخرج الضريبة من فاتورة شاملة؟", "acceptedAnswer": {"@type": "Answer", "text": "المبلغ الشامل ÷ 1.15 = السعر قبل الضريبة. مثال: فاتورة 230 ريالًا شاملة: 230 ÷ 1.15 = 200 ريال سعر أصلي، و30 ريالًا ضريبة — وليس صحيحًا خصم 15% من الإجمالي مباشرة."}},
+    {"@type": "Question", "name": "كم نسبة الضريبة في دول الخليج؟", "acceptedAnswer": {"@type": "Answer", "text": "السعودية 15%، الإمارات 5%، البحرين 10%، عُمان 5%، بينما لم تطبق الكويت وقطر ضريبة القيمة المضافة حتى الآن."}},
+    {"@type": "Question", "name": "هل كل السلع تخضع للضريبة؟", "acceptedAnswer": {"@type": "Answer", "text": "الأصل خضوع السلع والخدمات للنسبة الأساسية، مع فئات خاضعة لنسبة الصفر (كالصادرات وبعض الأدوية) وأخرى معفاة (كبعض الخدمات المالية والإيجار السكني) وفق لوائح هيئة الزكاة والضريبة والجمارك."}}
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site">
+  <div class="container">
+    <a class="logo" href="../index.html">🧮 حاسبتي<span>.</span></a>
+    <nav class="main"><a href="../index.html#tools">الأدوات</a><a href="../about.html">عن الموقع</a></nav>
+  </div>
+</header>
+
+<main class="container tool-wrap">
+  <div class="tool-head">
+    <h1>🧾 حاسبة ضريبة القيمة المضافة</h1>
+    <p class="lead">أضف الضريبة على سعر، أو استخرجها من مبلغ شامل — بالاتجاهين وبنسبة بلدك.</p>
+  </div>
+
+  <div class="calc">
+    <div class="row2">
+      <div class="field">
+        <label for="mode">نوع العملية</label>
+        <select id="mode">
+          <option value="add">إضافة الضريبة (السعر قبل الضريبة)</option>
+          <option value="extract">استخراج الضريبة (المبلغ شامل الضريبة)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="rate">النسبة</label>
+        <select id="rate">
+          <option value="15" selected>15% — السعودية</option>
+          <option value="10">10% — البحرين</option>
+          <option value="5">5% — الإمارات / عُمان</option>
+          <option value="custom">نسبة أخرى...</option>
+        </select>
+      </div>
+    </div>
+    <div class="field" id="customRateWrap" style="display:none">
+      <label for="customRate">النسبة المخصصة %</label>
+      <input type="number" id="customRate" inputmode="decimal" placeholder="مثال: 16" min="0" step="0.1">
+    </div>
+    <div class="field">
+      <label for="amount" id="amountLabel">السعر قبل الضريبة</label>
+      <input type="number" id="amount" inputmode="decimal" placeholder="مثال: 200" min="0" step="0.01">
+    </div>
+    <button class="go" onclick="calc()">احسب</button>
+
+    <div class="result" id="result">
+      <p class="big-number" id="main">—</p>
+      <p class="big-label" id="mainLabel">الإجمالي شامل الضريبة</p>
+      <div class="mini-grid">
+        <div class="mini"><b id="net">—</b><span>السعر قبل الضريبة</span></div>
+        <div class="mini"><b id="vat">—</b><span>قيمة الضريبة</span></div>
+        <div class="mini"><b id="gross">—</b><span>الإجمالي شامل الضريبة</span></div>
+      </div>
+    </div>
+  </div>
+
+  <article class="explain">
+    <h2>الخطأ الذي يقع فيه كثيرون عند استخراج الضريبة</h2>
+    <p>عند معرفة الضريبة داخل فاتورة شاملة، يخصم البعض 15% من الإجمالي مباشرة — وهذا <strong>خطأ</strong>. الصحيح: قسمة الإجمالي على 1.15. مثال: فاتورة 230 ريالًا شاملة الضريبة — الخطأ: 230 × 15% = 34.5. الصحيح: 230 ÷ 1.15 = 200 ريال سعرًا أصليًا، والضريبة 30 ريالًا فقط.</p>
+    <h3>المعادلتان</h3>
+    <ul>
+      <li><strong>إضافة الضريبة:</strong> الإجمالي = السعر × (1 + النسبة). لسعر 200 بنسبة 15%: 200 × 1.15 = 230.</li>
+      <li><strong>استخراج الضريبة:</strong> السعر الأصلي = الإجمالي ÷ (1 + النسبة)، والضريبة = الإجمالي − السعر الأصلي.</li>
+    </ul>
+    <h3>لمن هذه الحاسبة؟</h3>
+    <p>لأصحاب المتاجر عند التسعير، وللمستقلين عند إصدار الفواتير، وللمستهلك الذي يريد معرفة السعر الحقيقي قبل الضريبة، وللمحاسبين في التدقيق السريع — النسب مضبوطة لدول الخليج مع خيار نسبة مخصصة لأي دولة.</p>
+
+    <h2>أسئلة شائعة</h2>
+    <details class="faq"><summary>متى يجب على المنشأة التسجيل في الضريبة بالسعودية؟</summary><p>التسجيل إلزامي إذا تجاوزت الإيرادات السنوية الخاضعة 375,000 ريال، واختياري بين 187,500 و375,000 ريال — والتفاصيل لدى هيئة الزكاة والضريبة والجمارك.</p></details>
+    <details class="faq"><summary>هل أسعار المتاجر ملزمة بأن تكون شاملة الضريبة؟</summary><p>نعم في السعودية، يجب عرض الأسعار للمستهلك شاملة ضريبة القيمة المضافة في المتاجر والمنيوهات والإعلانات.</p></details>
+    <details class="faq"><summary>ما الفرق بين نسبة الصفر والإعفاء؟</summary><p>كلاهما لا يحمّل العميل ضريبة، لكن الخاضع لنسبة الصفر يحق للمنشأة استرداد ضريبة مدخلاته، بخلاف المعفى — فرق جوهري للمنشآت لا للمستهلك.</p></details>
+    <details class="faq"><summary>هل بياناتي تُحفظ؟</summary><p>لا، الحساب يتم داخل متصفحك بالكامل ولا يُرسل أي رقم لأي جهة.</p></details>
+  </article>
+
+  <p>🧮 جرّب أيضًا: <a href="loan.html">حاسبة الأقساط</a> • <a href="zakat.html">حاسبة الزكاة</a> • <a href="end-of-service.html">نهاية الخدمة السعودية</a> • <a href="end-of-service-uae.html">نهاية الخدمة الإماراتية</a></p>
+</main>
+
+<footer class="site">
+  <div class="container">
+    <div>© <span id="y"></span> حاسبتي</div>
+    <div><a href="../about.html">عن الموقع</a><a href="../privacy.html">سياسة الخصوصية</a></div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('y').textContent = new Date().getFullYear();
+const fmt = n => n.toLocaleString('ar-SA', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+const modeSel = document.getElementById('mode');
+const rateSel = document.getElementById('rate');
+modeSel.onchange = () => {
+  document.getElementById('amountLabel').textContent =
+    modeSel.value === 'add' ? 'السعر قبل الضريبة' : 'المبلغ شامل الضريبة';
+};
+rateSel.onchange = () => {
+  document.getElementById('customRateWrap').style.display =
+    rateSel.value === 'custom' ? 'block' : 'none';
+};
+
+function calc() {
+  const amount = parseFloat(document.getElementById('amount').value) || 0;
+  if (amount <= 0) return;
+  const rate = rateSel.value === 'custom'
+    ? (parseFloat(document.getElementById('customRate').value) || 0) / 100
+    : parseFloat(rateSel.value) / 100;
+
+  let net, vat, gross;
+  if (modeSel.value === 'add') {
+    net = amount; vat = amount * rate; gross = net + vat;
+    document.getElementById('main').textContent = fmt(gross);
+    document.getElementById('mainLabel').textContent = 'الإجمالي شامل الضريبة';
+  } else {
+    gross = amount; net = amount / (1 + rate); vat = gross - net;
+    document.getElementById('main').textContent = fmt(vat);
+    document.getElementById('mainLabel').textContent = 'قيمة الضريبة داخل المبلغ';
+  }
+  document.getElementById('net').textContent = fmt(net);
+  document.getElementById('vat').textContent = fmt(vat);
+  document.getElementById('gross').textContent = fmt(gross);
+  document.getElementById('result').classList.add('show');
+}
+</script>
+</body>
+</html>
