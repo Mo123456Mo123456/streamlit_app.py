@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>الدليل العملي للذكاء الاصطناعي — كتاب إلكتروني</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --ink:#1c2431; --ink2:#3f4a5a; --muted:#727d8c; --line:#e2e6ec;
+    --accent:#3b3ff0; --accent2:#7a3ff0; --soft:#eef0ff; --page:#fff;
+    --code:#0f1729; --code-ink:#d7e0f5;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{background:#e9ecf1; font-family:"Noto Kufi Arabic","Segoe UI",Tahoma,sans-serif; color:var(--ink); line-height:1.85; padding:22px 10px}
+  .bar{max-width:180mm; margin:0 auto 18px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center}
+  .bar button{border:1px solid var(--line); background:#fff; color:var(--ink); padding:10px 20px; border-radius:11px; font:inherit; font-weight:700; cursor:pointer}
+  .bar .go{background:var(--accent); color:#fff; border-color:var(--accent)}
+  .bar .hint{width:100%; text-align:center; color:var(--muted); font-size:.82rem; font-weight:600}
+
+  .page{width:190mm; min-height:277mm; margin:0 auto 18px; background:var(--page); box-shadow:0 12px 40px rgba(20,30,45,.14); padding:22mm 22mm; position:relative}
+  .page::after{content:attr(data-pg); position:absolute; bottom:12mm; inset-inline-start:22mm; color:var(--muted); font-size:9pt; font-weight:700}
+
+  /* cover */
+  .cover{background:linear-gradient(150deg,#2a2ee0,#7a3ff0 60%,#b23ff0); color:#fff; display:flex; flex-direction:column; justify-content:center; padding:26mm}
+  .cover::after{color:rgba(255,255,255,.6)}
+  .cover .kick{font-size:12pt; letter-spacing:.2em; opacity:.85; font-weight:700}
+  .cover h1{font-size:38pt; font-weight:800; line-height:1.15; margin:6mm 0}
+  .cover .tagline{font-size:14pt; opacity:.92; max-width:130mm}
+  .cover .rule{height:3px; width:40mm; background:#fff; opacity:.7; margin:8mm 0}
+  .cover .foot{margin-top:auto; font-size:11pt; opacity:.9}
+  .cover .badge{display:inline-block; border:1.5px solid rgba(255,255,255,.6); border-radius:99px; padding:3mm 8mm; font-size:10pt; font-weight:700; margin-top:6mm}
+
+  h2.ch{font-size:22pt; color:var(--accent); font-weight:800; margin-bottom:2mm; line-height:1.2}
+  .ch-no{font-size:11pt; color:var(--accent2); font-weight:800; letter-spacing:.1em}
+  .ch-rule{height:2.5px; background:linear-gradient(90deg,var(--accent),transparent); margin:4mm 0 7mm; border-radius:2px}
+  h3{font-size:14pt; color:var(--ink); font-weight:800; margin:7mm 0 2mm}
+  p{font-size:11.5pt; color:var(--ink2); margin-bottom:3.5mm}
+  ul,ol{margin:0 7mm 4mm; font-size:11.5pt; color:var(--ink2)}
+  li{margin-bottom:1.6mm}
+  strong{color:var(--ink)}
+  .lead{font-size:13pt; color:var(--ink); font-weight:600; border-inline-start:4px solid var(--accent); padding-inline-start:5mm; margin-bottom:6mm}
+  .box{background:var(--soft); border:1px solid #d6d9ff; border-radius:12px; padding:6mm; margin:5mm 0}
+  .box h4{color:var(--accent); font-size:11.5pt; margin-bottom:2mm; font-weight:800}
+  .warn{background:#fff4ec; border-color:#ffd9bf}
+  .warn h4{color:#c2560f}
+  .code{background:var(--code); color:var(--code-ink); border-radius:12px; padding:6mm; margin:4mm 0; font-size:10.5pt; line-height:1.7; direction:rtl}
+  .code .q{color:#8ec5ff; font-weight:700}
+  .toc{list-style:none; margin:0}
+  .toc li{display:flex; justify-content:space-between; gap:4mm; padding:2.5mm 0; border-bottom:1px dashed var(--line); font-size:12pt; font-weight:600}
+  .toc .n{color:var(--accent); font-weight:800}
+  table{width:100%; border-collapse:collapse; margin:4mm 0; font-size:10.5pt}
+  th,td{border:1px solid var(--line); padding:2.5mm 3mm; text-align:start}
+  th{background:var(--soft); color:var(--accent); font-weight:800}
+
+  @media print{ @page{size:A4; margin:0} body{background:#fff; padding:0} .bar{display:none} .page{box-shadow:none; margin:0; width:210mm; min-height:297mm; padding:24mm 24mm; page-break-after:always} .page::after{inset-inline-start:24mm} }
+  @media(max-width:800px){ .page{width:100%; padding:12mm} .cover h1{font-size:28pt} }
+</style>
+</head>
+<body>
+  <div class="bar">
+    <button class="go" onclick="window.print()">🖨️ حفظ الكتاب PDF</button>
+    <span class="hint">اضغط «حفظ الكتاب PDF» ثم اختر «حفظ كملف PDF» — يصبح جاهزًا للبيع أو الطباعة.</span>
+  </div>
+
+  <!-- COVER -->
+  <section class="page cover" data-pg="">
+    <div class="kick">كتاب إلكتروني عملي</div>
+    <h1>الدليل العملي للذكاء الاصطناعي</h1>
+    <div class="rule"></div>
+    <div class="tagline">من الصفر إلى الاحتراف: افهم الأدوات، أتقن كتابة الأوامر، ووظّفها في إنتاجيتك ودخلك — بأمثلة عربية واقعية وبصدق بلا مبالغة.</div>
+    <div class="badge">٧ فصول · أمثلة جاهزة · تحذيرات مهمة</div>
+    <div class="foot">إصدار ٢٠٢٦ — نسخة قابلة للتحديث</div>
+  </section>
+
+  <!-- TOC -->
+  <section class="page" data-pg="٢">
+    <span class="ch-no">المحتويات</span>
+    <h2 class="ch">ماذا ستتعلّم؟</h2>
+    <div class="ch-rule"></div>
+    <ul class="toc">
+      <li><span><span class="n">١.</span> ما الذكاء الاصطناعي التوليدي فعلًا؟</span><span>٣</span></li>
+      <li><span><span class="n">٢.</span> خريطة الأدوات: أيها تختار ولماذا</span><span>٥</span></li>
+      <li><span><span class="n">٣.</span> فن كتابة الأوامر (Prompting)</span><span>٧</span></li>
+      <li><span><span class="n">٤.</span> ٢٠ استخدامًا عمليًا يوفّر وقتك</span><span>٩</span></li>
+      <li><span><span class="n">٥.</span> طرق دخل مشروعة بالذكاء الاصطناعي</span><span>١١</span></li>
+      <li><span><span class="n">٦.</span> الأخطاء والمخاطر: احمِ نفسك</span><span>١٣</span></li>
+      <li><span><span class="n">٧.</span> خطة ٣٠ يومًا للإتقان</span><span>١٥</span></li>
+    </ul>
+    <div class="box">
+      <h4>وعدنا لك في هذا الكتاب</h4>
+      <p style="margin:0">محتوى عملي مباشر، بلا حشو وبلا وعود زائفة. الذكاء الاصطناعي أداة قوية تضاعف إنتاجك — لكنها لا تغني عن عقلك ولا تصنع مالًا بلا جهد. هنا نتعلّم كيف نستخدمها كمحترفين.</p>
+    </div>
+  </section>
+
+  <!-- CH1 -->
+  <section class="page" data-pg="٣">
+    <span class="ch-no">الفصل الأول</span>
+    <h2 class="ch">ما الذكاء الاصطناعي التوليدي فعلًا؟</h2>
+    <div class="ch-rule"></div>
+    <p class="lead">قبل أن تستخدم أي أداة، افهم ما تحت الغطاء — ففهمك لطريقة عملها هو ما يفصل المحترف عن المستخدم العشوائي.</p>
+    <p>الذكاء الاصطناعي التوليدي (Generative AI) هو نوع من البرامج تعلّم من كميات هائلة من النصوص والصور، فصار قادرًا على <strong>توليد</strong> محتوى جديد: نص، صورة، صوت، أو كود. أشهر أمثلته نماذج المحادثة مثل ChatGPT وClaude وGemini.</p>
+    <h3>كيف «يفكّر»؟ (ببساطة)</h3>
+    <p>النموذج لا يفهم المعنى كما نفهمه نحن؛ إنه يتوقّع الكلمة التالية الأرجح بناءً على ملايين الأمثلة التي تدرّب عليها. لهذا هو ممتاز في الصياغة والتلخيص والأفكار، لكنه <strong>قد يخطئ بثقة</strong> في الحقائق والأرقام. هذه النقطة وحدها ستحميك من ٩٠٪ من الأخطاء.</p>
+    <div class="box">
+      <h4>ماذا يجيد؟ وماذا لا يجيد؟</h4>
+      <p style="margin:0">✅ يجيد: الكتابة، التلخيص، إعادة الصياغة، العصف الذهني، الترجمة، شرح المفاهيم، كتابة الكود.<br>⚠️ يضعف في: الأرقام الدقيقة، الأحداث الحديثة جدًا، المصادر (قد يخترعها!)، والحسابات المعقدة.</p>
+    </div>
+    <h3>القاعدة الذهبية</h3>
+    <p>تعامل مع الذكاء الاصطناعي كـ<strong>مساعد ذكي سريع لكنه يحتاج مراجعة</strong>، لا كمصدر حقيقة مطلق. أنت المسؤول النهائي عن أي مخرَج تنشره أو تسلّمه لعميل.</p>
+  </section>
+
+  <!-- CH2 -->
+  <section class="page" data-pg="٥">
+    <span class="ch-no">الفصل الثاني</span>
+    <h2 class="ch">خريطة الأدوات: أيها تختار ولماذا</h2>
+    <div class="ch-rule"></div>
+    <p class="lead">لا تحتاج عشرين اشتراكًا. تحتاج أداة قوية لكل مهمة، وتتقنها.</p>
+    <table>
+      <tr><th>المهمة</th><th>أدوات موصى بها</th><th>ملاحظة</th></tr>
+      <tr><td>كتابة ومحادثة</td><td>ChatGPT · Claude · Gemini</td><td>ابدأ بواحدة وأتقنها</td></tr>
+      <tr><td>توليد الصور</td><td>Midjourney · Firefly · DALL·E</td><td>Firefly آمن تجاريًا</td></tr>
+      <tr><td>تصميم سريع</td><td>Canva AI</td><td>الأسهل للمبتدئ</td></tr>
+      <tr><td>صوت وتعليق</td><td>ElevenLabs</td><td>يدعم العربية</td></tr>
+      <tr><td>فيديو</td><td>Runway · Pika · CapCut</td><td>يتطور بسرعة</td></tr>
+      <tr><td>تفريغ ونسخ</td><td>Whisper · أدوات النسخ</td><td>دقيق للعربية</td></tr>
+    </table>
+    <h3>كيف تختار؟</h3>
+    <ul>
+      <li><strong>ابدأ بالمجاني:</strong> أغلب الأدوات لها خطة مجانية كافية للتعلّم.</li>
+      <li><strong>اشترك فقط عند الحاجة:</strong> حين تبدأ الأداة توفّر لك وقتًا أو مالًا يفوق سعرها.</li>
+      <li><strong>انتبه للحقوق التجارية:</strong> إن كنت ستبيع المخرَج، تأكّد أن رخصة الأداة تسمح بالاستخدام التجاري (Adobe Firefly مثال آمن).</li>
+    </ul>
+    <div class="box warn">
+      <h4>تحذير مبكّر</h4>
+      <p style="margin:0">احذر المواقع التي تعدك بـ«ChatGPT مجاني مدى الحياة» مقابل تسجيل بطاقتك — أغلبها احتيال. استخدم المواقع الرسمية فقط.</p>
+    </div>
+  </section>
+
+  <!-- CH3 -->
+  <section class="page" data-pg="٧">
+    <span class="ch-no">الفصل الثالث</span>
+    <h2 class="ch">فن كتابة الأوامر (Prompting)</h2>
+    <div class="ch-rule"></div>
+    <p class="lead">جودة إجابتك = جودة سؤالك. هذا الفصل وحده يستحق ثمن الكتاب.</p>
+    <p>الأمر الضعيف يعطي نتيجة عامة باهتة. الأمر الاحترافي يحدّد <strong>الدور، المهمة، السياق، والشكل المطلوب</strong>. قارن:</p>
+    <div class="code">❌ أمر ضعيف:<br><span class="q">«اكتب لي منشور عن التسويق»</span></div>
+    <div class="code">✅ أمر احترافي:<br><span class="q">«تصرّف كخبير تسويق رقمي. اكتب منشور إنستغرام لمتجر عطور نسائي فاخر، يستهدف نساء ٢٥–٤٠ سنة، بنبرة أنيقة ودافئة، لا يتجاوز ٤٠ كلمة، وينتهي بدعوة للطلب. اقترح ٣ صيغ.»</span></div>
+    <h3>صيغة يسهل حفظها: «د.م.س.ش»</h3>
+    <ul>
+      <li><strong>الدور:</strong> «تصرّف كـ… (خبير، محرّر، مبرمج)»</li>
+      <li><strong>المهمة:</strong> ماذا تريد بالضبط؟</li>
+      <li><strong>السياق:</strong> لمن؟ ما الخلفية؟ ما القيود؟</li>
+      <li><strong>الشكل:</strong> الطول، النبرة، عدد الخيارات، الصيغة (قائمة/جدول).</li>
+    </ul>
+    <div class="box">
+      <h4>حيلة المحترفين</h4>
+      <p style="margin:0">إن لم تعجبك النتيجة، لا تبدأ من جديد — بل صحّح: «اجعلها أقصر»، «نبرة أكثر رسمية»، «أضف مثالًا». الحوار التدريجي يصل لأفضل نتيجة.</p>
+    </div>
+  </section>
+
+  <!-- CH4 -->
+  <section class="page" data-pg="٩">
+    <span class="ch-no">الفصل الرابع</span>
+    <h2 class="ch">٢٠ استخدامًا عمليًا يوفّر وقتك</h2>
+    <div class="ch-rule"></div>
+    <p class="lead">أمثلة تطبّقها اليوم — انسخ الفكرة وعدّلها لحالتك.</p>
+    <h3>للعمل والدراسة</h3>
+    <ol>
+      <li>تلخيص تقرير أو مقال طويل في نقاط.</li>
+      <li>تحويل أفكارك المبعثرة إلى خطة منظّمة.</li>
+      <li>صياغة بريد إلكتروني رسمي باحترافية.</li>
+      <li>إعداد أسئلة مقابلة عمل والتدرّب عليها.</li>
+      <li>شرح مفهوم صعب ببساطة وبمثال.</li>
+      <li>ترجمة نص مع الحفاظ على النبرة.</li>
+      <li>تدقيق لغوي ونحوي لنصوصك.</li>
+    </ol>
+    <h3>للتسويق والمحتوى</h3>
+    <ol start="8">
+      <li>توليد ٣٠ فكرة منشور في دقيقة.</li>
+      <li>كتابة سيناريو فيديو قصير (ريلز).</li>
+      <li>صياغة وصف منتج يبيع.</li>
+      <li>عناوين جذّابة لمقال أو إعلان.</li>
+      <li>تقويم محتوى شهري كامل.</li>
+    </ol>
+    <h3>للإبداع والتنظيم</h3>
+    <ol start="13">
+      <li>عصف ذهني لاسم مشروع أو علامة.</li>
+      <li>خطة تعلّم مهارة جديدة في ٣٠ يومًا.</li>
+      <li>تحويل ملاحظات اجتماع إلى مهام.</li>
+      <li>كتابة أول مسودة لأي مستند.</li>
+      <li>توليد أسئلة اختبار لمذاكرتك.</li>
+      <li>أفكار هدايا/فعاليات حسب ميزانية.</li>
+      <li>تبسيط عقد أو مستند قانوني لفهمه.</li>
+      <li>مساعد برمجة: شرح خطأ وإصلاحه.</li>
+    </ol>
+  </section>
+
+  <!-- CH5 -->
+  <section class="page" data-pg="١١">
+    <span class="ch-no">الفصل الخامس</span>
+    <h2 class="ch">طرق دخل مشروعة بالذكاء الاصطناعي</h2>
+    <div class="ch-rule"></div>
+    <p class="lead">بصدق: الذكاء الاصطناعي لا يصنع لك مالًا وحده. لكنه يضاعف إنتاجك، فتنجز أكثر في وقت أقل — وهنا يأتي الدخل.</p>
+    <h3>طرق حقيقية (كلها تحتاج مهارتك وجهدك)</h3>
+    <ul>
+      <li><strong>خدمات محتوى مسرّعة:</strong> كتابة، ترجمة، وصف منتجات — تنجزها أسرع فتقبل عملًا أكثر. (مستقل، خمسات، Upwork)</li>
+      <li><strong>تصميم بمساعدة AI:</strong> شعارات، بوسترات، صور إعلانية عبر Firefly/Canva — مع لمستك الفنية.</li>
+      <li><strong>منتجات رقمية:</strong> قوالب، كتب إلكترونية، دورات مصغّرة — تصنعها مرة وتبيعها مرات. (هذا الكتاب مثال!)</li>
+      <li><strong>إدارة محتوى للحسابات:</strong> تدير محتوى متاجر/عيادات بكفاءة عالية بمساعدة الأدوات.</li>
+      <li><strong>تفريغ وتحرير الفيديو:</strong> تحويل بودكاست/محاضرات إلى مقاطع ومقالات.</li>
+    </ul>
+    <div class="box warn">
+      <h4>ابتعد عن هذه «الطرق»</h4>
+      <p style="margin:0">أي إعلان يقول «اربح ٥٠٠٠ ريال بالذكاء الاصطناعي بدون مجهود / بضغطة زر» هو احتيال. لا يوجد زر يطبع المال. القيمة الحقيقية في مهارة تقدّمها لعميل يدفع مقابلها.</p>
+    </div>
+    <h3>المعادلة الصادقة</h3>
+    <p><strong>مهارة تتقنها + أداة ذكاء اصطناعي تضاعف سرعتك + عميل يدفع = دخل حقيقي مستدام.</strong> أزل أي عنصر من الثلاثة وتنهار المعادلة.</p>
+  </section>
+
+  <!-- CH6 -->
+  <section class="page" data-pg="١٣">
+    <span class="ch-no">الفصل السادس</span>
+    <h2 class="ch">الأخطاء والمخاطر: احمِ نفسك</h2>
+    <div class="ch-rule"></div>
+    <p class="lead">المحترف يعرف حدود أداته. هذه أهم الأخطاء التي تقع فيها الأغلبية.</p>
+    <h3>١) الهلوسة (اختراع المعلومات)</h3>
+    <p>قد يعطيك النموذج اسم كتاب أو إحصائية أو مرجع <strong>غير موجود أصلًا</strong> بثقة تامة. القاعدة: تحقّق دائمًا من أي رقم أو مصدر أو اسم قبل الاعتماد عليه.</p>
+    <h3>٢) الخصوصية</h3>
+    <p>لا تُدخل بيانات سرية (أرقام بطاقات، كلمات مرور، معلومات عملاء حساسة) في الأدوات. اعتبر ما تكتبه قد يُطّلع عليه.</p>
+    <h3>٣) الحقوق التجارية</h3>
+    <p>قبل بيع أي مخرَج (صورة، نص، صوت)، تأكّد أن رخصة الأداة تسمح بالاستخدام التجاري. وكن صادقًا مع عميلك حول استخدامك للأدوات — الأمانة تبني سمعتك.</p>
+    <h3>٤) الاعتماد الكامل</h3>
+    <p>الأداة تساعدك لا تحلّ محلّك. المخرَج الخام يحتاج دائمًا لمسة إنسان: مراجعة، تدقيق، وحسّ. هذا ما يميّز عملك عن عمل أي شخص ينسخ ويلصق.</p>
+    <div class="box">
+      <h4>قائمة تحقّق قبل التسليم</h4>
+      <p style="margin:0">☐ راجعت الحقائق والأرقام · ☐ عدّلت النبرة لتناسب العميل · ☐ أزلت أي حشو · ☐ تأكدت من الحقوق · ☐ أضفت لمستك الشخصية.</p>
+    </div>
+  </section>
+
+  <!-- CH7 -->
+  <section class="page" data-pg="١٥">
+    <span class="ch-no">الفصل السابع</span>
+    <h2 class="ch">خطة ٣٠ يومًا للإتقان</h2>
+    <div class="ch-rule"></div>
+    <p class="lead">المعرفة بلا تطبيق تُنسى. اتبع هذه الخطة العملية.</p>
+    <table>
+      <tr><th>الأسبوع</th><th>التركيز</th><th>التطبيق اليومي (٣٠ دقيقة)</th></tr>
+      <tr><td>الأول</td><td>الأساسيات وكتابة الأوامر</td><td>جرّب صيغة «د.م.س.ش» في ٣ مهام يومية حقيقية</td></tr>
+      <tr><td>الثاني</td><td>أداة تخصصك (كتابة/تصميم/…)</td><td>أنتج عملًا واحدًا كاملًا كل يوم</td></tr>
+      <tr><td>الثالث</td><td>بناء منتج/خدمة</td><td>جهّز نموذج أعمال أو منتجًا رقميًا للبيع</td></tr>
+      <tr><td>الرابع</td><td>العرض والبيع</td><td>انشر، قدّم عروضًا، اجمع أول تقييم</td></tr>
+    </table>
+    <h3>كلمة أخيرة</h3>
+    <p>الذكاء الاصطناعي لن يأخذ عملك — لكن شخصًا <strong>يُتقن استخدامه</strong> قد يفعل. الفرق بينك وبين غيرك ليس الأداة (فهي متاحة للجميع)، بل <strong>مهارتك في توجيهها وحسّك في تحسين مخرجاتها</strong>. تعلّم، طبّق، واصنع قيمة حقيقية.</p>
+    <div class="box">
+      <h4>بالتوفيق في رحلتك 🚀</h4>
+      <p style="margin:0">راجع هذا الكتاب كلما احتجت، وطبّق فصلًا كل مرة. النجاح تراكم خطوات صغيرة متّسقة.</p>
+    </div>
+  </section>
+</body>
+</html>
