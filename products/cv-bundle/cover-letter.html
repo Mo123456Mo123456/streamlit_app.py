@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>خطاب تقديم | Cover Letter</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{ --ink:#1f2733; --ink2:#3d4451; --muted:#6b7280; --accent:#14532d; --line:#dfe4e8; --page:#fff; }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{background:#eceff2; font-family:"Noto Kufi Arabic","Segoe UI",Tahoma,sans-serif; color:var(--ink); line-height:1.9; padding:24px 12px}
+  .bar{max-width:820px; margin:0 auto 18px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center}
+  .bar button{border:1px solid var(--line); background:#fff; color:var(--ink); padding:10px 18px; border-radius:10px; font:inherit; font-weight:700; cursor:pointer}
+  .bar button:hover{border-color:var(--accent); color:var(--accent)}
+  .bar .go{background:var(--accent); color:#fff; border-color:var(--accent)}
+  .bar .hint{width:100%; text-align:center; color:var(--muted); font-size:.82rem; font-weight:600}
+
+  .page{width:210mm; min-height:297mm; margin:0 auto; background:var(--page); box-shadow:0 12px 40px rgba(20,30,45,.16); padding:22mm 22mm}
+  .head{display:flex; justify-content:space-between; align-items:flex-start; gap:8mm; border-bottom:2px solid var(--accent); padding-bottom:5mm; margin-bottom:8mm; flex-wrap:wrap}
+  .name{font-size:20pt; font-weight:800; color:var(--accent)}
+  .role{font-size:10.5pt; color:var(--ink2); font-weight:700}
+  .me{font-size:9pt; color:var(--muted); text-align:end; line-height:1.7}
+  .date{font-size:9.5pt; color:var(--muted); margin-bottom:6mm}
+  .to{font-size:10.5pt; margin-bottom:6mm; font-weight:700}
+  .body p{font-size:11pt; color:var(--ink2); margin-bottom:4mm}
+  .sign{margin-top:8mm; font-size:11pt}
+  .sign .nm{font-weight:800; color:var(--accent); margin-top:2mm}
+
+  [contenteditable]{outline:none; border-radius:3px}
+  body.edit [contenteditable]:hover{box-shadow:0 0 0 1.5px var(--accent)}
+  body.edit [contenteditable]:focus{box-shadow:0 0 0 2px var(--accent); background:rgba(20,83,45,.06)}
+
+  @media print{ @page{size:A4; margin:0} body{background:#fff; padding:0} .bar{display:none} .page{box-shadow:none; margin:0} }
+  @media(max-width:820px){ .page{width:100%; padding:12mm} }
+</style>
+</head>
+<body class="edit">
+  <div class="bar">
+    <button class="go" onclick="window.print()">🖨️ حفظ PDF / طباعة</button>
+    <button onclick="toggleLang()">🌐 عربي / English</button>
+    <button onclick="document.body.classList.toggle('edit')">✏️ إظهار/إخفاء التحرير</button>
+    <span class="hint">خطاب تقديم مرافق للسيرة الذاتية. عدّل النص ثم «حفظ PDF».</span>
+  </div>
+
+  <div class="page">
+    <div class="head">
+      <div>
+        <div class="name" contenteditable data-ar="محمد الأحمد" data-en="Mohammed Al-Ahmad">محمد الأحمد</div>
+        <div class="role" contenteditable data-ar="مصمم جرافيك وهوية بصرية" data-en="Graphic &amp; Brand Designer">مصمم جرافيك وهوية بصرية</div>
+      </div>
+      <div class="me">
+        <div contenteditable>name@email.com</div>
+        <div contenteditable dir="ltr">+966 5x xxx xxxx</div>
+        <div contenteditable data-ar="الرياض، السعودية" data-en="Riyadh, Saudi Arabia">الرياض، السعودية</div>
+      </div>
+    </div>
+
+    <div class="date" contenteditable data-ar="التاريخ: __ / __ / ____" data-en="Date: __ / __ / ____">التاريخ: __ / __ / ____</div>
+    <div class="to" contenteditable data-ar="إلى: مدير التوظيف — [اسم الشركة]" data-en="To: Hiring Manager — [Company Name]">إلى: مدير التوظيف — [اسم الشركة]</div>
+
+    <div class="body">
+      <p contenteditable data-ar="تحية طيبة وبعد،" data-en="Dear Hiring Manager,">تحية طيبة وبعد،</p>
+      <p contenteditable data-ar="يسعدني التقدم لوظيفة [المسمى الوظيفي] لديكم. أحمل خبرة تزيد على ٥ سنوات في مجال التصميم والهوية البصرية، وقد ساعدت خلالها علامات تجارية متعددة على تطوير حضورها البصري وتحقيق نتائج ملموسة." data-en="I am pleased to apply for the [Job Title] role at your company. With over 5 years of experience in design and brand identity, I have helped multiple brands develop their visual presence and achieve tangible results.">يسعدني التقدم لوظيفة [المسمى الوظيفي] لديكم. أحمل خبرة تزيد على ٥ سنوات في مجال التصميم والهوية البصرية، وقد ساعدت خلالها علامات تجارية متعددة على تطوير حضورها البصري وتحقيق نتائج ملموسة.</p>
+      <p contenteditable data-ar="ما يميزني هو الجمع بين الحس الجمالي والتفكير الاستراتيجي؛ فأنا لا أصمم شكلًا جميلًا فحسب، بل حلًّا بصريًا يخدم هدف العمل. وأثق أن مهاراتي ستضيف قيمة حقيقية لفريقكم." data-en="What sets me apart is combining aesthetic sense with strategic thinking — I don't just design something beautiful, but a visual solution that serves the business goal. I am confident my skills will add real value to your team.">ما يميزني هو الجمع بين الحس الجمالي والتفكير الاستراتيجي؛ فأنا لا أصمم شكلًا جميلًا فحسب، بل حلًّا بصريًا يخدم هدف العمل. وأثق أن مهاراتي ستضيف قيمة حقيقية لفريقكم.</p>
+      <p contenteditable data-ar="أرفق سيرتي الذاتية للاطلاع على تفاصيل خبراتي، ويسعدني تحديد موعد لمقابلة أوضّح فيها كيف يمكنني الإسهام في تحقيق أهدافكم. شاكرًا لكم حسن اطلاعكم." data-en="I have attached my résumé detailing my experience, and I would welcome the opportunity to discuss how I can contribute to your goals. Thank you for your consideration.">أرفق سيرتي الذاتية للاطلاع على تفاصيل خبراتي، ويسعدني تحديد موعد لمقابلة أوضّح فيها كيف يمكنني الإسهام في تحقيق أهدافكم. شاكرًا لكم حسن اطلاعكم.</p>
+    </div>
+
+    <div class="sign">
+      <span contenteditable data-ar="مع خالص التقدير،" data-en="Sincerely,">مع خالص التقدير،</span>
+      <div class="nm" contenteditable data-ar="محمد الأحمد" data-en="Mohammed Al-Ahmad">محمد الأحمد</div>
+    </div>
+  </div>
+
+<script>
+  let en=false;
+  function toggleLang(){
+    en=!en;
+    document.documentElement.lang = en?"en":"ar";
+    document.documentElement.dir = en?"ltr":"rtl";
+    document.querySelectorAll("[data-ar]").forEach(el=>{ const v = en?el.dataset.en:el.dataset.ar; if(v!=null) el.textContent=v; });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<title>متجر مَكسَب الرقمي</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#f5f3ee; --surface:#fff; --surface2:#efece4; --line:#e2ddd0;
+    --ink:#1e2422; --ink2:#535c58; --muted:#8a918c;
+    --accent:#3b3ff0; --accent2:#7a3ff0; --good:#1f9d63; --gold:#a87716;
+    --shadow:0 10px 30px rgba(30,35,45,.10); --r:16px;
+  }
+  @media(prefers-color-scheme:dark){:root{
+    --bg:#0f1216; --surface:#181d22; --surface2:#20262c; --line:#2c343b;
+    --ink:#eef0ec; --ink2:#b3bcb6; --muted:#7d867f;
+    --accent:#8b8dff; --accent2:#b98cff; --good:#4fc78a; --gold:#d9a441;
+    --shadow:0 10px 30px rgba(0,0,0,.4);
+  }}
+  :root[data-theme="dark"]{
+    --bg:#0f1216; --surface:#181d22; --surface2:#20262c; --line:#2c343b;
+    --ink:#eef0ec; --ink2:#b3bcb6; --muted:#7d867f;
+    --accent:#8b8dff; --accent2:#b98cff; --good:#4fc78a; --gold:#d9a441;
+    --shadow:0 10px 30px rgba(0,0,0,.4);
+  }
+  :root[data-theme="light"]{
+    --bg:#f5f3ee; --surface:#fff; --surface2:#efece4; --line:#e2ddd0;
+    --ink:#1e2422; --ink2:#535c58; --muted:#8a918c;
+    --accent:#3b3ff0; --accent2:#7a3ff0; --good:#1f9d63; --gold:#a87716;
+    --shadow:0 10px 30px rgba(30,35,45,.10);
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{background:var(--bg); color:var(--ink); font-family:"Noto Kufi Arabic","Segoe UI",Tahoma,sans-serif; line-height:1.75; direction:rtl}
+  .wrap{max-width:1080px; margin:0 auto; padding:26px 18px 70px}
+  .hero{text-align:center; padding:34px 16px 26px}
+  .logo{width:60px;height:60px;border-radius:16px;margin:0 auto 14px;background:linear-gradient(145deg,var(--accent),var(--accent2));display:grid;place-items:center;color:#fff;font-size:30px;font-weight:900}
+  .hero h1{font-size:2rem; font-weight:800; letter-spacing:.3px}
+  .hero p{color:var(--ink2); max-width:600px; margin:8px auto 0; font-size:1.02rem}
+  .pill{display:inline-block; margin-top:14px; background:var(--surface2); border:1px solid var(--line); color:var(--ink2); font-size:.82rem; font-weight:700; padding:6px 16px; border-radius:99px}
+
+  .sec{font-size:1.15rem; font-weight:800; margin:34px 4px 14px; display:flex; align-items:center; gap:10px}
+  .sec::after{content:"";flex:1;height:1px;background:var(--line)}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:18px}
+  .card{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); overflow:hidden; display:flex; flex-direction:column}
+  .thumb{height:150px; display:grid; place-items:center; font-size:52px; position:relative; color:#fff}
+  .t-book{background:linear-gradient(150deg,#2a2ee0,#7a3ff0,#b23ff0)}
+  .t-cv{background:linear-gradient(150deg,#14532d,#166f43)}
+  .t-slides{background:linear-gradient(150deg,#b8481f,#e08a2b)}
+  .t-invoice{background:linear-gradient(150deg,#0f6d8c,#12a3b0)}
+  .t-social{background:linear-gradient(150deg,#b1246b,#e0559a)}
+  .t-planner{background:linear-gradient(150deg,#5a3ba8,#8a6ad0)}
+  .badge{position:absolute; top:10px; inset-inline-start:10px; background:rgba(0,0,0,.28); backdrop-filter:blur(4px); color:#fff; font-size:.7rem; font-weight:800; padding:3px 10px; border-radius:99px}
+  .body{padding:16px; flex:1; display:flex; flex-direction:column}
+  .body h3{font-size:1.05rem; font-weight:800}
+  .body p{color:var(--ink2); font-size:.88rem; margin:6px 0 12px; flex:1}
+  .meta{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:auto}
+  .price{font-size:1.15rem; font-weight:800; color:var(--good)}
+  .price .old{font-size:.8rem; color:var(--muted); text-decoration:line-through; font-weight:600; margin-inline-start:6px}
+  .tag{font-size:.72rem; font-weight:700; color:var(--accent); background:color-mix(in srgb,var(--accent) 12%,transparent); padding:3px 10px; border-radius:99px}
+  .soon .thumb{filter:grayscale(.3) opacity(.9)}
+  .soon .body h3::after{content:" — قريبًا"; color:var(--muted); font-weight:700; font-size:.8rem}
+
+  .strategy{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:22px; margin-top:20px; box-shadow:var(--shadow)}
+  .strategy h3{font-size:1.05rem; font-weight:800; margin-bottom:10px}
+  .steps{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; margin-top:6px}
+  .step{display:flex; gap:10px; align-items:flex-start}
+  .step .n{flex:none; width:28px;height:28px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:800;font-size:.85rem}
+  .step p{font-size:.86rem; color:var(--ink2)}
+  .note{background:color-mix(in srgb,var(--gold) 12%,transparent); border:1px solid color-mix(in srgb,var(--gold) 35%,transparent); border-radius:var(--r); padding:14px 18px; margin-top:18px; font-size:.9rem; color:var(--ink)}
+  .foot{text-align:center; color:var(--muted); font-size:.82rem; margin-top:30px}
+</style>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="logo">م</div>
+    <h1>متجر مَكسَب الرقمي</h1>
+    <p>منتجات رقمية احترافية عربية — تصنعها مرة، وتُباع وتُسلَّم تلقائيًا. قوالب، كتب، دورات، وتصاميم جاهزة للبيع الفوري.</p>
+    <span class="pill">✅ تسليم فوري · بلا إدارة يومية · دخل متكرّر</span>
+  </div>
+
+  <div class="sec">📦 متوفّر الآن</div>
+  <div class="grid">
+    <div class="card">
+      <div class="thumb t-book">📘<span class="badge">الأكثر طلبًا</span></div>
+      <div class="body">
+        <h3>الدليل العملي للذكاء الاصطناعي</h3>
+        <p>كتاب عربي من ٧ فصول: الأدوات، فن كتابة الأوامر، ٢٠ استخدامًا عمليًا، طرق دخل مشروعة، وخطة ٣٠ يومًا. محتوى حقيقي بلا مبالغة.</p>
+        <div class="meta"><span class="price">39 ﷼ <span class="old">59</span></span><span class="tag">كتاب PDF</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="thumb t-cv">💼</div>
+      <div class="body">
+        <h3>حزمة السيرة الذاتية</h3>
+        <p>٣ قوالب (عصري + كلاسيكي ATS + خطاب تقديم) عربي/إنجليزي، تُعدَّل في المتصفح بلا برامج وتُحفظ PDF. للجوال والحاسوب.</p>
+        <div class="meta"><span class="price">49 ﷼ <span class="old">79</span></span><span class="tag">قوالب</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="thumb t-invoice">🧾</div>
+      <div class="body">
+        <h3>حزمة فواتير المستقلّين</h3>
+        <p>قوالب فاتورة وعرض سعر وإيصال عربي/إنجليزي احترافية، تملؤها وتحفظها PDF فورًا. مثالية لأصحاب العمل الحر.</p>
+        <div class="meta"><span class="price">29 ﷼</span><span class="tag">قوالب</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">🚀 قيد الإعداد (أضيفها تباعًا)</div>
+  <div class="grid">
+    <div class="card soon">
+      <div class="thumb t-slides">📊</div>
+      <div class="body"><h3>قوالب عروض تقديمية</h3><p>حزمة شرائح احترافية جاهزة للأعمال والدورات، بألوان وتخطيطات أنيقة.</p><div class="meta"><span class="price">59 ﷼</span><span class="tag">تصاميم</span></div></div>
+    </div>
+    <div class="card soon">
+      <div class="thumb t-social">📱</div>
+      <div class="body"><h3>حزمة محتوى السوشيال</h3><p>٣٠ قالب منشور + تقويم محتوى شهري + أفكار جاهزة للمتاجر والعلامات.</p><div class="meta"><span class="price">45 ﷼</span><span class="tag">تصاميم</span></div></div>
+    </div>
+    <div class="card soon">
+      <div class="thumb t-planner">🗓️</div>
+      <div class="body"><h3>مخطط منتج عربي (Planner)</h3><p>مخطط يومي/أسبوعي/شهري قابل للطباعة، لتنظيم الوقت والأهداف والعادات.</p><div class="meta"><span class="price">35 ﷼</span><span class="tag">قوالب</span></div></div>
+    </div>
+    <div class="card soon">
+      <div class="thumb t-book" style="background:linear-gradient(150deg,#0d7a5f,#3fb488)">🎓</div>
+      <div class="body"><h3>دورة: الذكاء الاصطناعي للمبتدئين</h3><p>دورة مصغّرة بالدروس والتمارين والشرائح، مبنية على محتوى الكتاب مع تطبيقات عملية.</p><div class="meta"><span class="price">99 ﷼</span><span class="tag">دورة</span></div></div>
+    </div>
+  </div>
+
+  <div class="strategy">
+    <h3>💡 كيف تبيع هذا المتجر؟ (خطوات عملية)</h3>
+    <div class="steps">
+      <div class="step"><span class="n">١</span><p>افتح حساب <strong>Gumroad</strong> (عالمي، بالدولار) أو <strong>متجر سلة/زد</strong> (السوق الخليجي، دفع محلي).</p></div>
+      <div class="step"><span class="n">٢</span><p>ارفع كل منتج كملف ZIP، والصق وصفه الجاهز، وضع صور المعاينة الحقيقية.</p></div>
+      <div class="step"><span class="n">٣</span><p>سعّر بحكمة، واعمل خصم إطلاق ٣٠٪ أول أسبوع لجمع تقييمات تبني الثقة.</p></div>
+      <div class="step"><span class="n">٤</span><p>انشر الروابط في حساباتك ومجموعات مهتمة (باحثون عن عمل، مستقلّون، طلاب).</p></div>
+    </div>
+  </div>
+
+  <div class="note">⚖️ <strong>لماذا هذا هو الطريق المشروع للدخل شبه التلقائي:</strong> المنتج الرقمي تصنعه مرة، والمنصة تبيعه وتسلّمه وتحوّل المال لحسابك تلقائيًا ٢٤/٧ — دون إدارة يومية ولا حسابات على منصات عمل تُحظر. هذا أقرب ما يكون لـ«يعمل وأنت نائم» بشكل حقيقي وآمن.</div>
+
+  <div class="foot">متجر مَكسَب — كل المنتجات من إنتاجك، والأرباح إلى حسابك مباشرة.</div>
+</div>

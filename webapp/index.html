@@ -1,0 +1,984 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>مَكسَب — إدارة الدخل</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#F6F3EA; --surface:#FFFFFF; --surface2:#EFEBDE; --line:#DDD7C6;
+    --ink:#1E2722; --ink2:#5C665F; --muted:#8A9289;
+    --accent:#A87716; --accent-ink:#FFFFFF; --accent-soft:#F3E7CC;
+    --good:#2E7D5B; --bad:#B4423E; --good-soft:#DFEEE6; --bad-soft:#F5E2E1;
+    --c1:#C08A28; --c2:#37A188; --c3:#6E79DE; --c4:#C06A67;
+    --shadow:0 10px 30px rgba(30,39,34,.10);
+    --r:14px;
+  }
+  @media (prefers-color-scheme: dark){ :root{
+    --bg:#0E1613; --surface:#16211D; --surface2:#1D2A25; --line:#2A3832;
+    --ink:#EDE9DC; --ink2:#ADB8AF; --muted:#7E8B82;
+    --accent:#D9A441; --accent-ink:#161207; --accent-soft:#2A2413;
+    --good:#5BBE95; --bad:#DE837F; --good-soft:#17352A; --bad-soft:#3A1F1E;
+    --c1:#B8811F; --c2:#3FA98E; --c3:#6E79DE; --c4:#C4726F;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+  }}
+  :root[data-theme="dark"]{
+    --bg:#0E1613; --surface:#16211D; --surface2:#1D2A25; --line:#2A3832;
+    --ink:#EDE9DC; --ink2:#ADB8AF; --muted:#7E8B82;
+    --accent:#D9A441; --accent-ink:#161207; --accent-soft:#2A2413;
+    --good:#5BBE95; --bad:#DE837F; --good-soft:#17352A; --bad-soft:#3A1F1E;
+    --c1:#B8811F; --c2:#3FA98E; --c3:#6E79DE; --c4:#C4726F;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+  :root[data-theme="light"]{
+    --bg:#F6F3EA; --surface:#FFFFFF; --surface2:#EFEBDE; --line:#DDD7C6;
+    --ink:#1E2722; --ink2:#5C665F; --muted:#8A9289;
+    --accent:#A87716; --accent-ink:#FFFFFF; --accent-soft:#F3E7CC;
+    --good:#2E7D5B; --bad:#B4423E; --good-soft:#DFEEE6; --bad-soft:#F5E2E1;
+    --c1:#C08A28; --c2:#37A188; --c3:#6E79DE; --c4:#C06A67;
+    --shadow:0 10px 30px rgba(30,39,34,.10);
+  }
+  *{box-sizing:border-box; margin:0}
+  html,body{height:100%}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:"Noto Kufi Arabic","Segoe UI",Tahoma,system-ui,sans-serif;
+    font-size:15.5px; line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  button,input,select{font:inherit; color:inherit}
+  button{cursor:pointer}
+  :focus-visible{outline:2.5px solid var(--accent); outline-offset:2px; border-radius:6px}
+  @media (prefers-reduced-motion: reduce){ *,*::before,*::after{transition:none!important; animation:none!important} }
+
+  /* ---------- shell ---------- */
+  .app{min-height:100dvh; display:flex; flex-direction:column}
+  .topbar{
+    position:sticky; top:0; z-index:40;
+    display:flex; align-items:center; gap:10px;
+    padding:12px 16px; background:color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter:blur(10px); border-bottom:1px solid var(--line);
+  }
+  .brand{display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.12rem; letter-spacing:.2px}
+  .brand .logo{
+    width:34px;height:34px;border-radius:10px; display:grid; place-items:center;
+    background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 55%, var(--c2))); color:var(--accent-ink);
+    font-size:1.05rem; font-weight:900;
+  }
+  .brand small{display:block; font-weight:500; font-size:.68rem; color:var(--muted); letter-spacing:.06em}
+  .iconbtn{
+    width:38px;height:38px; border:1px solid var(--line); border-radius:10px;
+    background:var(--surface); display:grid; place-items:center; color:var(--ink2);
+  }
+  .iconbtn:hover{color:var(--ink); border-color:var(--muted)}
+  .spacer{flex:1}
+
+  .layout{flex:1; display:flex; width:100%; max-width:1180px; margin-inline:auto}
+  nav.side{
+    width:230px; flex:none; padding:20px 14px; border-inline-end:1px solid var(--line);
+    display:flex; flex-direction:column; gap:4px;
+  }
+  .navlink{
+    display:flex; align-items:center; gap:11px; padding:10px 13px; border-radius:11px;
+    background:none; border:none; color:var(--ink2); text-align:start; width:100%;
+    font-weight:600; font-size:.95rem;
+  }
+  .navlink svg{flex:none; opacity:.85}
+  .navlink:hover{background:var(--surface2); color:var(--ink)}
+  .navlink[aria-current="page"]{background:var(--accent-soft); color:var(--accent)}
+  .side .foot{margin-top:auto; padding:12px; font-size:.78rem; color:var(--muted); border-top:1px dashed var(--line)}
+  main{flex:1; min-width:0; padding:22px 20px 90px}
+  @media (max-width:840px){
+    .layout{display:block}
+    nav.side{
+      position:fixed; inset-block:0; inset-inline-start:0; z-index:60; width:min(80vw,290px);
+      background:var(--surface); box-shadow:var(--shadow);
+      transform:translateX(var(--hide,100%)); transition:transform .28s ease;
+      border-inline-end:1px solid var(--line);
+    }
+    [dir="ltr"] nav.side{--hide:-100%}
+    nav.side.open{transform:none}
+    .scrim{position:fixed; inset:0; z-index:55; background:rgba(0,0,0,.45); opacity:0; pointer-events:none; transition:opacity .28s}
+    .scrim.show{opacity:1; pointer-events:auto}
+  }
+  @media (min-width:841px){ .scrim,#menuBtn{display:none} }
+
+  /* ---------- common ---------- */
+  h1{font-size:1.45rem; font-weight:800; text-wrap:balance}
+  h2{font-size:1.05rem; font-weight:700; margin-bottom:12px}
+  .sub{color:var(--ink2); font-size:.9rem; margin-top:2px}
+  .card{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:18px; box-shadow:var(--shadow)}
+  .grid{display:grid; gap:14px}
+  .stats{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+  .cols2{grid-template-columns:1fr 1fr}
+  @media (max-width:700px){ .cols2{grid-template-columns:1fr} }
+  .stat .lbl{font-size:.78rem; color:var(--muted); font-weight:600; letter-spacing:.02em}
+  .stat .val{font-size:1.5rem; font-weight:800; font-variant-numeric:tabular-nums; margin-top:2px}
+  .stat .delta{font-size:.75rem; font-weight:700; border-radius:99px; padding:2px 9px; display:inline-block; margin-top:6px}
+  .up{color:var(--good); background:var(--good-soft)} .down{color:var(--bad); background:var(--bad-soft)}
+  .btn{
+    border:none; border-radius:11px; padding:10px 18px; font-weight:700;
+    background:var(--accent); color:var(--accent-ink);
+  }
+  .btn.ghost{background:var(--surface2); color:var(--ink)}
+  .btn.danger{background:var(--bad-soft); color:var(--bad)}
+  .btn:hover{filter:brightness(1.06)}
+  input[type=text],input[type=number],input[type=date],select{
+    width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--line);
+    background:var(--surface2); color:var(--ink);
+  }
+  label.f{display:block; font-size:.8rem; font-weight:700; color:var(--ink2); margin-bottom:4px}
+  .row{display:flex; gap:10px; flex-wrap:wrap; align-items:end}
+  .row > div{flex:1; min-width:130px}
+  .empty{
+    text-align:center; color:var(--muted); padding:34px 14px; border:1.5px dashed var(--line);
+    border-radius:var(--r); font-size:.92rem;
+  }
+  .list{display:flex; flex-direction:column}
+  .item{display:flex; align-items:center; gap:12px; padding:11px 4px; border-bottom:1px solid var(--line)}
+  .item:last-child{border-bottom:none}
+  .item .grow{flex:1; min-width:0}
+  .item .t{font-weight:700; font-size:.94rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .item .m{font-size:.78rem; color:var(--muted)}
+  .amt{font-weight:800; font-variant-numeric:tabular-nums; white-space:nowrap}
+  .amt.in{color:var(--good)} .amt.out{color:var(--bad)}
+  .chip{width:10px;height:10px;border-radius:3px;flex:none}
+  .x{border:none;background:none;color:var(--muted);font-size:1.05rem;padding:4px 8px;border-radius:8px}
+  .x:hover{color:var(--bad);background:var(--bad-soft)}
+  .badge{font-size:.72rem; font-weight:700; padding:3px 10px; border-radius:99px; white-space:nowrap}
+  .bar{height:9px; border-radius:99px; background:var(--surface2); overflow:hidden; margin-top:8px}
+  .bar > i{display:block; height:100%; border-radius:99px; background:linear-gradient(90deg,var(--c2),var(--accent)); transition:width .5s ease}
+  .seg{display:inline-flex; border:1px solid var(--line); border-radius:11px; overflow:hidden}
+  .seg button{border:none; background:var(--surface); padding:8px 15px; font-weight:700; font-size:.85rem; color:var(--ink2)}
+  .seg button[aria-pressed="true"]{background:var(--accent); color:var(--accent-ink)}
+  .toast{
+    position:fixed; bottom:22px; inset-inline:0; margin-inline:auto; width:fit-content; max-width:88vw;
+    background:var(--ink); color:var(--bg); padding:11px 20px; border-radius:12px; font-weight:700; font-size:.9rem;
+    z-index:99; opacity:0; transform:translateY(12px); transition:.3s; pointer-events:none;
+  }
+  .toast.show{opacity:1; transform:none}
+  .page{display:none; animation:fade .25s ease}
+  .page.active{display:block}
+  @keyframes fade{from{opacity:0; transform:translateY(6px)} to{opacity:1}}
+  .chartbox{position:relative}
+  .chartbox canvas{width:100%; height:210px; display:block}
+  .tip{
+    position:absolute; pointer-events:none; background:var(--ink); color:var(--bg);
+    font-size:.76rem; font-weight:700; padding:5px 10px; border-radius:8px; white-space:nowrap;
+    transform:translate(-50%,-115%); opacity:0; transition:opacity .12s; z-index:5; font-variant-numeric:tabular-nums;
+  }
+  .legend{display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:10px; font-size:.8rem; color:var(--ink2); font-weight:600}
+  .legend span{display:flex; align-items:center; gap:6px}
+  .note{
+    background:var(--accent-soft); border:1px solid color-mix(in srgb,var(--accent) 30%, transparent);
+    color:var(--ink); border-radius:var(--r); padding:13px 16px; font-size:.88rem;
+  }
+  .opp{border-inline-start:3.5px solid var(--c2); padding-inline-start:14px; margin-bottom:16px}
+  .opp h3{font-size:.98rem; font-weight:800}
+  .opp p{font-size:.87rem; color:var(--ink2); margin-top:3px}
+  .opp .tags{display:flex; gap:6px; flex-wrap:wrap; margin-top:7px}
+  .opp .tags i{font-style:normal; font-size:.72rem; background:var(--surface2); border:1px solid var(--line); padding:2px 10px; border-radius:99px; color:var(--ink2); font-weight:600}
+  .mb{margin-bottom:14px} .mt{margin-top:14px}
+  .head{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:16px}
+</style>
+
+<div class="app" id="app">
+  <header class="topbar">
+    <button class="iconbtn" id="menuBtn" aria-label="القائمة">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <div class="brand"><span class="logo">م</span><span><span data-i="app">مَكسَب</span><small data-i="tag">إدارة الدخل الذكية</small></span></div>
+    <div class="spacer"></div>
+    <button class="iconbtn" id="themeBtn" aria-label="تبديل المظهر">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8" stroke-linecap="round"/></svg>
+    </button>
+    <button class="iconbtn" id="langBtn" style="width:auto;padding-inline:12px;font-weight:800;font-size:.8rem">EN</button>
+  </header>
+
+  <div class="layout">
+    <div class="scrim" id="scrim"></div>
+    <nav class="side" id="side" aria-label="التنقل">
+      <button class="navlink" data-page="find" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.5-4.5"/></svg><span data-i="nav_find">بحث الفرص</span></button>
+      <button class="navlink" data-page="dash"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg><span data-i="nav_dash">لوحة التحكم</span></button>
+      <button class="navlink" data-page="tx"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 10h13m0 0-3.5-3.5M20 10l-3.5 3.5M17 17H4m0 0 3.5-3.5M4 17l3.5 3.5"/></svg><span data-i="nav_tx">المعاملات</span></button>
+      <button class="navlink" data-page="src"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8.5 12 4l9 4.5M5 10v8.5M19 10v8.5M3 20h18M9.5 14a2.5 2.5 0 1 1 5 0c0 1.7-2.5 2-2.5 4" stroke-linecap="round"/></svg><span data-i="nav_src">مصادر الدخل</span></button>
+      <button class="navlink" data-page="tasks"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m4 12.5 2.5 2.5L11 10.5"/><path d="M14 7h7M14 12h7M14 17h7"/></svg><span data-i="nav_tasks">المهام</span></button>
+      <button class="navlink" data-page="goals"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg><span data-i="nav_goals">الأهداف</span></button>
+      <button class="navlink" data-page="opp"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v3M5.6 5.6l2.1 2.1M3 12h3M18.4 5.6l-2.1 2.1M21 12h-3M8.5 20.5h7M10 17.5c0-2.5-3-3.4-3-6a5 5 0 0 1 10 0c0 2.6-3 3.5-3 6z"/></svg><span data-i="nav_opp">أفكار دخل واقعية</span></button>
+      <button class="navlink" data-page="set"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3.2"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2-1.2L14.2 3h-4l-.4 2.5a7 7 0 0 0-2 1.2l-2.3-.9-2 3.4 2 1.5a7 7 0 0 0 0 2.5l-2 1.5 2 3.4 2.3-.9a7 7 0 0 0 2 1.2l.4 2.5h4l.4-2.5a7 7 0 0 0 2-1.2l2.3.9 2-3.4-2-1.5c.06-.4.1-.8.1-1.2Z"/></svg><span data-i="nav_set">الإعدادات</span></button>
+      <div class="foot" data-i="local_note">بياناتك محفوظة على جهازك فقط — لا خوادم، لا تتبّع.</div>
+    </nav>
+
+    <main id="main">
+
+      <!-- ============ Opportunity Finder ============ -->
+      <section class="page active" id="page-find">
+        <div class="head"><div><h1 data-i="nav_find">بحث الفرص</h1><p class="sub" data-i="find_sub">ابحث في منصات العمل الحقيقية وافتح النتائج الحية مباشرة.</p></div></div>
+        <div class="card mb">
+          <div class="row mb">
+            <div><label class="f" for="fSkill" data-i="f_skill">مجالك</label><select id="fSkill"></select></div>
+            <div><label class="f" for="fKwAr" data-i="f_kw_ar">كلمة البحث (المنصات العربية)</label><input type="text" id="fKwAr" maxlength="50"></div>
+            <div><label class="f" for="fKwEn" data-i="f_kw_en">كلمة البحث (المنصات العالمية)</label><input type="text" id="fKwEn" maxlength="50" dir="ltr"></div>
+          </div>
+          <label class="f" data-i="f_plats">المنصات</label>
+          <div id="fPlats" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px"></div>
+          <button class="btn" id="fGo" data-i="open_results">🔎 اعرض روابط البحث الحية</button>
+        </div>
+        <div id="fRes" class="grid mb"></div>
+        <div class="card mb" id="tipsBox"></div>
+        <div class="card">
+          <h2 data-i="track_title">فرصي قيد المتابعة</h2>
+          <div class="row mb">
+            <div style="flex:2"><label class="f" for="trTitle" data-i="tr_title">عنوان الفرصة</label><input type="text" id="trTitle" maxlength="80"></div>
+            <div><label class="f" for="trPlat" data-i="tr_plat">المنصة</label><input type="text" id="trPlat" maxlength="30"></div>
+            <div><label class="f" for="trAmount" data-i="tr_amount">القيمة المتوقعة</label><input type="number" id="trAmount" min="0"></div>
+            <div style="flex:2"><label class="f" for="trLink" data-i="tr_link">الرابط (اختياري)</label><input type="text" id="trLink" dir="ltr" placeholder="https://…"></div>
+            <div style="flex:0 0 auto"><button class="btn" id="trAdd" data-i="add">إضافة</button></div>
+          </div>
+          <div class="list" id="trList"></div>
+        </div>
+      </section>
+
+      <!-- ============ Dashboard ============ -->
+      <section class="page" id="page-dash">
+        <div class="head">
+          <div><h1 id="hello">مرحباً 👋</h1><p class="sub" data-i="dash_sub">هذه نظرة سريعة على وضعك المالي.</p></div>
+          <button class="btn" id="quickAdd" data-i="quick_add">+ معاملة جديدة</button>
+        </div>
+        <div class="grid stats mb">
+          <div class="card stat"><div class="lbl" data-i="st_balance">الرصيد الصافي</div><div class="val" id="stBalance">—</div><span class="delta" id="stBalanceD"></span></div>
+          <div class="card stat"><div class="lbl" data-i="st_month_in">دخل هذا الشهر</div><div class="val" id="stIn">—</div><span class="delta up" id="stInD"></span></div>
+          <div class="card stat"><div class="lbl" data-i="st_month_out">مصروفات هذا الشهر</div><div class="val" id="stOut">—</div><span class="delta down" id="stOutD"></span></div>
+          <div class="card stat"><div class="lbl" data-i="st_opps">فرص قيد المتابعة</div><div class="val" id="stOpp">—</div><span class="delta up" id="stOppD"></span></div>
+        </div>
+        <div class="grid cols2 mb">
+          <div class="card">
+            <h2 data-i="ch_flow">صافي الدخل — آخر ٣٠ يومًا</h2>
+            <div class="chartbox"><canvas id="lineChart"></canvas><div class="tip" id="lineTip"></div></div>
+          </div>
+          <div class="card">
+            <h2 data-i="ch_src">الدخل حسب المصدر (هذا الشهر)</h2>
+            <div class="chartbox"><canvas id="donutChart"></canvas><div class="tip" id="donutTip"></div></div>
+            <div class="legend" id="donutLegend"></div>
+          </div>
+        </div>
+        <div class="card">
+          <h2 data-i="recent">أحدث المعاملات</h2>
+          <div class="list" id="recentList"></div>
+        </div>
+      </section>
+
+      <!-- ============ Transactions ============ -->
+      <section class="page" id="page-tx">
+        <div class="head"><div><h1 data-i="nav_tx">المعاملات</h1><p class="sub" data-i="tx_sub">سجّل كل دخل ومصروف لتبقى الصورة واضحة.</p></div></div>
+        <div class="card mb">
+          <h2 data-i="tx_add">إضافة معاملة</h2>
+          <div class="row">
+            <div style="flex:0 0 auto"><label class="f" data-i="f_type">النوع</label>
+              <span class="seg" id="txType">
+                <button aria-pressed="true" data-v="in" data-i="f_income">دخل</button>
+                <button aria-pressed="false" data-v="out" data-i="f_expense">مصروف</button>
+              </span>
+            </div>
+            <div><label class="f" for="txAmt" data-i="f_amount">المبلغ</label><input type="number" id="txAmt" min="0" step="0.01" placeholder="0.00"></div>
+            <div><label class="f" for="txSrc" data-i="f_source">المصدر</label><select id="txSrc"></select></div>
+            <div><label class="f" for="txDate" data-i="f_date">التاريخ</label><input type="date" id="txDate"></div>
+            <div style="flex:2"><label class="f" for="txNote" data-i="f_note">ملاحظة (اختياري)</label><input type="text" id="txNote" maxlength="60"></div>
+            <div style="flex:0 0 auto"><button class="btn" id="txAdd" data-i="add">إضافة</button></div>
+          </div>
+        </div>
+        <div class="card"><h2 data-i="tx_all">كل المعاملات</h2><div class="list" id="txList"></div></div>
+      </section>
+
+      <!-- ============ Sources ============ -->
+      <section class="page" id="page-src">
+        <div class="head"><div><h1 data-i="nav_src">مصادر الدخل</h1><p class="sub" data-i="src_sub">أضف مصادر دخلك — عمل حر، متجر، وظيفة، استثمار…</p></div></div>
+        <div class="card mb">
+          <div class="row">
+            <div><label class="f" for="srcName" data-i="src_name">اسم المصدر</label><input type="text" id="srcName" maxlength="30"></div>
+            <div style="flex:0 0 auto"><button class="btn" id="srcAdd" data-i="add">إضافة</button></div>
+          </div>
+        </div>
+        <div class="card"><div class="list" id="srcList"></div></div>
+      </section>
+
+      <!-- ============ Tasks ============ -->
+      <section class="page" id="page-tasks">
+        <div class="head"><div><h1 data-i="nav_tasks">المهام</h1><p class="sub" data-i="tasks_sub">خطوات صغيرة يومية تصنع دخلًا حقيقيًا.</p></div></div>
+        <div class="card mb">
+          <div class="row">
+            <div><label class="f" for="taskName" data-i="task_name">المهمة</label><input type="text" id="taskName" maxlength="70"></div>
+            <div style="flex:0 0 auto"><button class="btn" id="taskAdd" data-i="add">إضافة</button></div>
+          </div>
+        </div>
+        <div class="card"><div class="list" id="taskList"></div></div>
+      </section>
+
+      <!-- ============ Goals ============ -->
+      <section class="page" id="page-goals">
+        <div class="head"><div><h1 data-i="nav_goals">الأهداف</h1><p class="sub" data-i="goals_sub">حدد هدفًا ماليًا وتابع تقدمك نحوه.</p></div></div>
+        <div class="card mb">
+          <div class="row">
+            <div><label class="f" for="goalName" data-i="goal_name">اسم الهدف</label><input type="text" id="goalName" maxlength="40"></div>
+            <div><label class="f" for="goalTarget" data-i="goal_target">المبلغ المستهدف</label><input type="number" id="goalTarget" min="1"></div>
+            <div style="flex:0 0 auto"><button class="btn" id="goalAdd" data-i="add">إضافة</button></div>
+          </div>
+        </div>
+        <div id="goalList" class="grid"></div>
+      </section>
+
+      <!-- ============ Opportunities ============ -->
+      <section class="page" id="page-opp">
+        <div class="head"><div><h1 data-i="nav_opp">أفكار دخل واقعية</h1><p class="sub" data-i="opp_sub">طرق مشروعة ومجرَّبة — كلها تحتاج جهدًا ووقتًا، ولا شيء "تلقائي".</p></div></div>
+        <div class="note mb" data-i="opp_note">⚠️ تنبيه صادق: لا يوجد تطبيق يجني المال تلقائيًا. أي خدمة تعدك بأرباح بلا جهد هي غالبًا احتيال. القائمة التالية أفكار حقيقية تعتمد على مهارتك وعملك.</div>
+        <div class="card" id="oppList"></div>
+      </section>
+
+      <!-- ============ Settings ============ -->
+      <section class="page" id="page-set">
+        <div class="head"><div><h1 data-i="nav_set">الإعدادات</h1></div></div>
+        <div class="card mb">
+          <h2 data-i="set_appearance">المظهر واللغة</h2>
+          <div class="row">
+            <div><label class="f" data-i="set_theme">المظهر</label>
+              <span class="seg" id="themeSeg">
+                <button data-v="auto" data-i="th_auto">تلقائي</button>
+                <button data-v="dark" data-i="th_dark">داكن</button>
+                <button data-v="light" data-i="th_light">فاتح</button>
+              </span>
+            </div>
+            <div><label class="f" data-i="set_lang">اللغة</label>
+              <span class="seg" id="langSeg">
+                <button data-v="ar">العربية</button>
+                <button data-v="en">English</button>
+              </span>
+            </div>
+            <div><label class="f" for="curSel" data-i="set_currency">العملة</label>
+              <select id="curSel">
+                <option value="$">$ دولار</option><option value="€">€ يورو</option><option value="ر.س">ر.س ريال سعودي</option>
+                <option value="د.إ">د.إ درهم إماراتي</option><option value="ج.م">ج.م جنيه مصري</option><option value="د.م">د.م درهم مغربي</option>
+                <option value="د.ج">د.ج دينار جزائري</option><option value="د.ت">د.ت دينار تونسي</option><option value="د.ك">د.ك دينار كويتي</option><option value="ر.ق">ر.ق ريال قطري</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="card mb">
+          <h2 data-i="set_data">البيانات</h2>
+          <p class="sub mb" data-i="set_data_sub">كل شيء محفوظ محليًا في متصفحك. صدّر نسخة احتياطية بصيغة JSON متى شئت.</p>
+          <div class="row">
+            <div style="flex:0 0 auto"><button class="btn ghost" id="btnExport" data-i="export">تصدير نسخة احتياطية</button></div>
+            <div style="flex:0 0 auto"><button class="btn ghost" id="btnImport" data-i="import">استيراد نسخة</button><input type="file" id="fileImport" accept=".json" hidden></div>
+            <div style="flex:0 0 auto"><button class="btn ghost" id="btnDemo" data-i="demo">تعبئة بيانات تجريبية</button></div>
+            <div style="flex:0 0 auto"><button class="btn danger" id="btnWipe" data-i="wipe">مسح كل البيانات</button></div>
+          </div>
+        </div>
+        <div class="card"><p class="sub" data-i="about">«مَكسَب» تطبيق مفتوح يعمل بالكامل في متصفحك بلا خادم ولا حسابات. صُمم ليكون بديلًا صادقًا وعمليًا عن تطبيقات "الربح التلقائي" الوهمية.</p></div>
+      </section>
+
+    </main>
+  </div>
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+(() => {
+"use strict";
+/* ---------------- i18n ---------------- */
+const DICT = {
+  ar: {
+    app:"مَكسَب", tag:"اعثر على عمل بمقابل حقيقي",
+    nav_find:"بحث الفرص", find_sub:"ابحث في منصات العمل الحقيقية وافتح النتائج الحية مباشرة — عملاء يدفعون فعلًا.",
+    f_skill:"مجالك", f_kw_ar:"كلمة البحث (المنصات العربية)", f_kw_en:"كلمة البحث (المنصات العالمية)",
+    f_plats:"المنصات", open_results:"🔎 اعرض روابط البحث الحية",
+    res_hint:"كل زر يفتح نتائج بحث حية الآن على المنصة نفسها. هذه مشاريع ووظائف حقيقية أصحابها يدفعون مالًا حقيقيًا — قدّم عروضك هناك.",
+    open_in:"افتح البحث في", add_track:"＋ متابعة",
+    type_projects:"مشاريع عمل حر", type_requests:"طلبات مشترين", type_jobs:"وظائف عن بُعد", type_services:"سوق خدمات",
+    tips_title:"قبل أن تقدّم عرضك", flags_title:"علامات احتيال — انسحب فورًا",
+    tips:["اقرأ طلب العميل كاملًا ورُدّ على تفاصيله بالتحديد — العروض المنسوخة تُرفض فورًا.","قدّم سعرًا واضحًا ومدة تسليم محددة، ولا تقبل عملًا قبل الاتفاق الموثق داخل المنصة.","أرفق نموذجين من أعمالك الأقرب للمطلوب — الجودة تغني عن الكثرة.","ابدأ بمشاريع صغيرة لتبني تقييمات، ثم ارفع أسعارك تدريجيًا."],
+    flags:["أي جهة تطلب منك دفع رسوم أو «تفعيل حساب» مقابل العمل — احتيال مؤكد.","وعود بربح كبير مقابل جهد بسيط (نقر إعلانات، مشاهدة فيديوهات) — ليست أعمالًا حقيقية.","طلب إكمال التعامل خارج المنصة قبل اتفاق موثق يحرمك من الحماية.","عميل يرفض تحديد نطاق العمل أو السعر كتابيًا."],
+    track_title:"فرصي قيد المتابعة", tr_title:"عنوان الفرصة", tr_plat:"المنصة", tr_amount:"القيمة المتوقعة", tr_link:"الرابط (اختياري)",
+    st_lead:"مرشحة", st_applied:"قدّمت عرضًا", st_talking:"تفاوض", st_won:"فزت بها ✓", st_paid:"استلمت المال 💰",
+    empty_track:"لا فرص متابَعة بعد — ابحث أعلاه، قدّم عروضك، وسجّل هنا كل فرصة تتقدم لها.",
+    st_opps:"فرص قيد المتابعة", st_won_n:"فزت بـ", need_kw:"اكتب كلمة بحث أولًا", open:"فتح",
+    sk_design:"تصميم وشعارات", sk_web:"برمجة مواقع", sk_mobile:"تطبيقات جوال", sk_write:"كتابة محتوى", sk_tr:"ترجمة",
+    sk_video:"مونتاج فيديو", sk_mkt:"تسويق رقمي", sk_data:"إدخال بيانات", sk_tut:"تدريس أونلاين", sk_voice:"تعليق صوتي",
+    nav_dash:"لوحة التحكم", nav_tx:"المعاملات", nav_src:"مصادر الدخل", nav_tasks:"المهام",
+    nav_goals:"الأهداف", nav_opp:"أفكار دخل واقعية", nav_set:"الإعدادات",
+    local_note:"بياناتك محفوظة على جهازك فقط — لا خوادم، لا تتبّع.",
+    hello_morning:"صباح الخير", hello_day:"يومك سعيد", hello_evening:"مساء الخير",
+    dash_sub:"هذه نظرة سريعة على وضعك المالي.", quick_add:"+ معاملة جديدة",
+    st_balance:"الرصيد الصافي", st_month_in:"دخل هذا الشهر", st_month_out:"مصروفات هذا الشهر", st_tasks:"إنجاز المهام",
+    ch_flow:"صافي الدخل — آخر ٣٠ يومًا", ch_src:"الدخل حسب المصدر (هذا الشهر)",
+    recent:"أحدث المعاملات", tx_sub:"سجّل كل دخل ومصروف لتبقى الصورة واضحة.",
+    tx_add:"إضافة معاملة", tx_all:"كل المعاملات",
+    f_type:"النوع", f_income:"دخل", f_expense:"مصروف", f_amount:"المبلغ", f_source:"المصدر",
+    f_date:"التاريخ", f_note:"ملاحظة (اختياري)", add:"إضافة",
+    src_sub:"أضف مصادر دخلك — عمل حر، متجر، وظيفة، استثمار…", src_name:"اسم المصدر",
+    tasks_sub:"خطوات صغيرة يومية تصنع دخلًا حقيقيًا.", task_name:"المهمة",
+    goals_sub:"حدد هدفًا ماليًا وتابع تقدمك نحوه.", goal_name:"اسم الهدف", goal_target:"المبلغ المستهدف",
+    opp_sub:"طرق مشروعة ومجرَّبة — كلها تحتاج جهدًا ووقتًا، ولا شيء «تلقائي».",
+    opp_note:"⚠️ تنبيه صادق: لا يوجد تطبيق يجني المال تلقائيًا. أي خدمة تعدك بأرباح بلا جهد هي غالبًا احتيال. القائمة التالية أفكار حقيقية تعتمد على مهارتك وعملك.",
+    set_appearance:"المظهر واللغة", set_theme:"المظهر", th_auto:"تلقائي", th_dark:"داكن", th_light:"فاتح",
+    set_lang:"اللغة", set_currency:"العملة", set_data:"البيانات",
+    set_data_sub:"كل شيء محفوظ محليًا في متصفحك. صدّر نسخة احتياطية بصيغة JSON متى شئت.",
+    export:"تصدير نسخة احتياطية", import:"استيراد نسخة", demo:"تعبئة بيانات تجريبية", wipe:"مسح كل البيانات",
+    about:"«مَكسَب» تطبيق مفتوح يعمل بالكامل في متصفحك بلا خادم ولا حسابات. صُمم ليكون بديلًا صادقًا وعمليًا عن تطبيقات «الربح التلقائي» الوهمية.",
+    empty_tx:"لا معاملات بعد. أضف أول معاملة من الأعلى ⬆", empty_src:"لا مصادر بعد — أضف مصدر دخلك الأول.",
+    empty_tasks:"لا مهام. أضف مهمة لتبدأ.", empty_goals:"لا أهداف بعد — حدد هدفك الأول.",
+    empty_chart:"أضف معاملات لعرض الرسم البياني", no_source:"بدون مصدر",
+    task_todo:"جديدة", task_doing:"جارية", task_done:"منجزة",
+    saved:"تم الحفظ ✓", deleted:"تم الحذف", imported:"تم الاستيراد بنجاح ✓", import_err:"تعذر قراءة الملف — تأكد أنه نسخة صحيحة",
+    demo_done:"تمت تعبئة بيانات تجريبية ✓", wiped:"تم مسح كل البيانات",
+    wipe_confirm:"سيتم حذف كل بياناتك نهائيًا من هذا الجهاز. متأكد؟",
+    need_amount:"أدخل مبلغًا صحيحًا", need_name:"أدخل الاسم أولًا", add_to_goal:"إضافة مبلغ", goal_of:"من", goal_done:"🎉 تحقق الهدف!",
+    day:"اليوم", total_in:"الدخل", per_of:"من الإجمالي",
+    demo_src:["عمل حر","متجر إلكتروني","قناة يوتيوب","استثمارات"],
+    demo_tasks:[["تسليم مشروع التصميم للعميل","doing"],["تصوير ٣ فيديوهات جديدة","todo"],["تحديث معرض الأعمال","todo"],["الرد على رسائل العملاء","done"]],
+    demo_goal:"شراء لابتوب جديد",
+    opps:[
+      ["العمل الحر (خدمات رقمية)","قدّم مهارتك — تصميم، ترجمة، برمجة، مونتاج، كتابة — عبر منصات مثل مستقل وخمسات وUpwork وFiverr. أسرع طريق لدخل حقيقي إن كنت تملك مهارة.","تصميم · ترجمة · برمجة"],
+      ["بيع منتجات رقمية","قوالب، دورات مصغرة، كتب إلكترونية، إعدادات جاهزة. تصنع المنتج مرة وتبيعه مرات عبر Gumroad أو سلة أو زد.","جهد مرة واحدة · دخل متكرر"],
+      ["صناعة المحتوى","يوتيوب، تيك توك، مدونة متخصصة. الدخل يأتي متأخرًا (إعلانات، رعايات، عمولات) لكنه يتراكم مع الاستمرارية.","يحتاج صبرًا · ٦–١٢ شهرًا"],
+      ["التجارة الإلكترونية","متجر صغير بمنتجات مختارة بعناية أفضل من دروبشيبينغ عشوائي. ابدأ بمنتج واحد تفهمه جيدًا.","رأس مال صغير · تعلم التسويق"],
+      ["التسويق بالعمولة","روّج منتجات تستخدمها فعلًا واكسب عمولة عن كل عملية شراء. مصداقيتك هي رأس مالك.","بدون رأس مال · يحتاج جمهورًا"],
+      ["الدروس الخصوصية عن بُعد","لغات، رياضيات، برمجة… منصات التدريس أو مباشرة عبر معارفك. دخل ثابت مقابل ساعات محددة.","دخل ثابت · مرونة بالوقت"]
+    ]
+  },
+  en: {
+    app:"Maksab", tag:"Find real paid work",
+    nav_find:"Find work", find_sub:"Search real work platforms and open live results — clients who actually pay.",
+    f_skill:"Your field", f_kw_ar:"Search keyword (Arabic platforms)", f_kw_en:"Search keyword (global platforms)",
+    f_plats:"Platforms", open_results:"🔎 Open live search links",
+    res_hint:"Each button opens live search results on the platform itself. These are real projects and jobs with real budgets — pitch there.",
+    open_in:"Open search on", add_track:"＋ Track",
+    type_projects:"Freelance projects", type_requests:"Buyer requests", type_jobs:"Remote jobs", type_services:"Services marketplace",
+    tips_title:"Before you send a proposal", flags_title:"Scam signs — walk away",
+    tips:["Read the client's brief fully and answer its specifics — copy-pasted proposals get rejected.","Quote a clear price and delivery time; never start before a documented agreement inside the platform.","Attach two samples closest to what's requested — quality beats quantity.","Start with small projects to build reviews, then raise your rates."],
+    flags:["Anyone asking you to pay a fee or 'activate an account' to get work — guaranteed scam.","Big returns for trivial effort (clicking ads, watching videos) — not real work.","Moving off-platform before a documented agreement removes your protection.","A client who won't put scope and price in writing."],
+    track_title:"Opportunities I'm tracking", tr_title:"Opportunity title", tr_plat:"Platform", tr_amount:"Expected value", tr_link:"Link (optional)",
+    st_lead:"Shortlisted", st_applied:"Proposal sent", st_talking:"Negotiating", st_won:"Won ✓", st_paid:"Paid 💰",
+    empty_track:"Nothing tracked yet — search above, send proposals, and log every opportunity here.",
+    st_opps:"Tracked opportunities", st_won_n:"Won", need_kw:"Type a search keyword first", open:"Open",
+    sk_design:"Design & logos", sk_web:"Web development", sk_mobile:"Mobile apps", sk_write:"Content writing", sk_tr:"Translation",
+    sk_video:"Video editing", sk_mkt:"Digital marketing", sk_data:"Data entry", sk_tut:"Online tutoring", sk_voice:"Voice-over",
+    nav_dash:"Dashboard", nav_tx:"Transactions", nav_src:"Income sources", nav_tasks:"Tasks",
+    nav_goals:"Goals", nav_opp:"Realistic income ideas", nav_set:"Settings",
+    local_note:"Your data lives on this device only — no servers, no tracking.",
+    hello_morning:"Good morning", hello_day:"Good day", hello_evening:"Good evening",
+    dash_sub:"A quick look at where you stand.", quick_add:"+ New transaction",
+    st_balance:"Net balance", st_month_in:"Income this month", st_month_out:"Expenses this month", st_tasks:"Tasks done",
+    ch_flow:"Net income — last 30 days", ch_src:"Income by source (this month)",
+    recent:"Recent transactions", tx_sub:"Log every inflow and outflow to keep the picture clear.",
+    tx_add:"Add transaction", tx_all:"All transactions",
+    f_type:"Type", f_income:"Income", f_expense:"Expense", f_amount:"Amount", f_source:"Source",
+    f_date:"Date", f_note:"Note (optional)", add:"Add",
+    src_sub:"Add your income sources — freelancing, store, job, investments…", src_name:"Source name",
+    tasks_sub:"Small daily steps build real income.", task_name:"Task",
+    goals_sub:"Set a financial goal and track your progress.", goal_name:"Goal name", goal_target:"Target amount",
+    opp_sub:"Legitimate, proven paths — all take real effort. Nothing is 'automatic'.",
+    opp_note:"⚠️ Honest note: no app makes money automatically. Anything promising effortless profit is likely a scam. These are real ideas that depend on your skill and work.",
+    set_appearance:"Appearance & language", set_theme:"Theme", th_auto:"Auto", th_dark:"Dark", th_light:"Light",
+    set_lang:"Language", set_currency:"Currency", set_data:"Data",
+    set_data_sub:"Everything is stored locally in your browser. Export a JSON backup anytime.",
+    export:"Export backup", import:"Import backup", demo:"Load demo data", wipe:"Erase all data",
+    about:"Maksab runs entirely in your browser — no server, no accounts. Built as an honest, practical alternative to fake 'auto-profit' apps.",
+    empty_tx:"No transactions yet. Add your first one above ⬆", empty_src:"No sources yet — add your first income source.",
+    empty_tasks:"No tasks. Add one to get started.", empty_goals:"No goals yet — set your first one.",
+    empty_chart:"Add transactions to see the chart", no_source:"No source",
+    task_todo:"To do", task_doing:"Doing", task_done:"Done",
+    saved:"Saved ✓", deleted:"Deleted", imported:"Imported successfully ✓", import_err:"Couldn't read the file — make sure it's a valid backup",
+    demo_done:"Demo data loaded ✓", wiped:"All data erased",
+    wipe_confirm:"This permanently deletes all your data on this device. Sure?",
+    need_amount:"Enter a valid amount", need_name:"Enter a name first", add_to_goal:"Add amount", goal_of:"of", goal_done:"🎉 Goal reached!",
+    day:"Today", total_in:"Income", per_of:"of total",
+    demo_src:["Freelancing","Online store","YouTube channel","Investments"],
+    demo_tasks:[["Deliver design project to client","doing"],["Film 3 new videos","todo"],["Update portfolio","todo"],["Reply to client messages","done"]],
+    demo_goal:"New laptop",
+    opps:[
+      ["Freelancing (digital services)","Offer your skill — design, translation, code, editing, writing — on Mostaql, Khamsat, Upwork, Fiverr. The fastest route to real income if you have a skill.","Design · Translation · Code"],
+      ["Selling digital products","Templates, mini-courses, e-books, presets. Make it once, sell it many times via Gumroad, Salla or Zid.","One-time effort · recurring income"],
+      ["Content creation","YouTube, TikTok, a niche blog. Income arrives late (ads, sponsors, affiliates) but compounds with consistency.","Needs patience · 6–12 months"],
+      ["E-commerce","A small store with carefully chosen products beats random dropshipping. Start with one product you truly understand.","Small capital · learn marketing"],
+      ["Affiliate marketing","Recommend products you actually use and earn a cut per sale. Your credibility is your capital.","No capital · needs an audience"],
+      ["Online tutoring","Languages, math, coding… via tutoring platforms or your own network. Steady income for fixed hours.","Steady income · flexible hours"]
+    ]
+  }
+};
+
+/* ---------------- state ---------------- */
+const KEY = "maksab_v1";
+const uid = () => Math.random().toString(36).slice(2,9);
+const today = () => new Date().toISOString().slice(0,10);
+let S;
+function fresh(){ return { lang:"ar", theme:"auto", cur:"$", sources:[], tx:[], tasks:[], goals:[], opps:[] }; }
+function load(){ try{ const raw = localStorage.getItem(KEY); S = raw ? Object.assign(fresh(), JSON.parse(raw)) : fresh(); }catch(e){ S = fresh(); } }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+const T = k => (DICT[S.lang] && DICT[S.lang][k]) ?? DICT.ar[k] ?? k;
+
+/* ---------------- helpers ---------------- */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const PAL = () => [css("--c1"),css("--c2"),css("--c3"),css("--c4")];
+const nf = () => new Intl.NumberFormat(S.lang==="ar"?"ar-EG":"en-US",{maximumFractionDigits:2});
+const money = v => `${nf().format(Math.abs(v))} ${S.cur}`;
+const srcColor = id => { const i = S.sources.findIndex(s=>s.id===id); return i<0 ? css("--muted") : PAL()[i%4]; };
+const srcName = id => S.sources.find(s=>s.id===id)?.name ?? T("no_source");
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),2200); }
+function esc(x){ return String(x).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+/* ---------------- theme & lang ---------------- */
+function applyTheme(){
+  const r = document.documentElement;
+  if(S.theme==="auto") r.removeAttribute("data-theme"); else r.setAttribute("data-theme", S.theme);
+  $$("#themeSeg button").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.v===S.theme)));
+  drawCharts();
+}
+function applyLang(){
+  const r = document.documentElement;
+  r.lang = S.lang; r.dir = S.lang==="ar" ? "rtl" : "ltr";
+  $$("[data-i]").forEach(el=>{ el.textContent = T(el.dataset.i); });
+  $("#langBtn").textContent = S.lang==="ar" ? "EN" : "ع";
+  $$("#langSeg button").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.v===S.lang)));
+  $$("#themeSeg button").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.v===S.theme)));
+  renderAll();
+}
+
+/* ---------------- opportunity finder ---------------- */
+const PLATFORMS = [
+  {id:"mostaql",  name:"مستقل Mostaql",      type:"projects", lang:"ar", url:k=>`https://mostaql.com/projects?keyword=${encodeURIComponent(k)}`},
+  {id:"khamsat",  name:"خمسات Khamsat",      type:"requests", lang:"ar", url:k=>`https://khamsat.com/community/requests?query=${encodeURIComponent(k)}`},
+  {id:"upwork",   name:"Upwork",             type:"projects", lang:"en", url:k=>`https://www.upwork.com/nx/search/jobs/?q=${encodeURIComponent(k)}`},
+  {id:"freelancer",name:"Freelancer",        type:"projects", lang:"en", url:k=>`https://www.freelancer.com/search/projects?q=${encodeURIComponent(k)}`},
+  {id:"fiverr",   name:"Fiverr",             type:"services", lang:"en", url:k=>`https://www.fiverr.com/search/gigs?query=${encodeURIComponent(k)}`},
+  {id:"linkedin", name:"LinkedIn Jobs",      type:"jobs",     lang:"en", url:k=>`https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(k)}&f_WT=2`},
+  {id:"wwr",      name:"We Work Remotely",   type:"jobs",     lang:"en", url:k=>`https://weworkremotely.com/remote-jobs/search?term=${encodeURIComponent(k)}`},
+  {id:"wuzzuf",   name:"Wuzzuf",             type:"jobs",     lang:"en", url:k=>`https://wuzzuf.net/search/jobs/?q=${encodeURIComponent(k)}`}
+];
+const SKILLS = [
+  {id:"sk_design", ar:"تصميم شعار",    en:"logo design"},
+  {id:"sk_web",    ar:"برمجة موقع",    en:"web developer"},
+  {id:"sk_mobile", ar:"تطبيق جوال",    en:"flutter developer"},
+  {id:"sk_write",  ar:"كتابة محتوى",   en:"content writer"},
+  {id:"sk_tr",     ar:"ترجمة",         en:"arabic english translation"},
+  {id:"sk_video",  ar:"مونتاج فيديو",  en:"video editing"},
+  {id:"sk_mkt",    ar:"تسويق الكتروني",en:"digital marketing"},
+  {id:"sk_data",   ar:"ادخال بيانات",  en:"data entry"},
+  {id:"sk_tut",    ar:"تدريس",         en:"online tutor"},
+  {id:"sk_voice",  ar:"تعليق صوتي",    en:"arabic voice over"}
+];
+function renderFinder(){
+  const sel = $("#fSkill"); const prev = sel.value; sel.innerHTML = "";
+  SKILLS.forEach(s=>{ const o = document.createElement("option"); o.value=s.id; o.textContent=T(s.id); sel.appendChild(o); });
+  if(prev) sel.value = prev;
+  const cur = SKILLS.find(s=>s.id===sel.value) || SKILLS[0];
+  if(!$("#fKwAr").value) $("#fKwAr").value = cur.ar;
+  if(!$("#fKwEn").value) $("#fKwEn").value = cur.en;
+  const box = $("#fPlats");
+  const checked = new Set([...box.querySelectorAll("input:checked")].map(i=>i.value));
+  const first = !box.children.length;
+  box.innerHTML = "";
+  PLATFORMS.forEach(p=>{
+    const l = document.createElement("label");
+    l.style.cssText = "display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:99px;padding:6px 13px;font-size:.83rem;font-weight:600;cursor:pointer;background:var(--surface2)";
+    const c = document.createElement("input"); c.type="checkbox"; c.value=p.id; c.checked = first || checked.has(p.id);
+    l.appendChild(c); l.appendChild(document.createTextNode(p.name));
+    box.appendChild(l);
+  });
+  const tips = $("#tipsBox");
+  tips.innerHTML = `<h2>${esc(T("tips_title"))}</h2><ul style="padding-inline-start:20px;color:var(--ink2);font-size:.9rem;display:grid;gap:6px">${T("tips").map(t=>`<li>${esc(t)}</li>`).join("")}</ul>
+    <h2 class="mt" style="color:var(--bad)">${esc(T("flags_title"))}</h2><ul style="padding-inline-start:20px;color:var(--ink2);font-size:.9rem;display:grid;gap:6px">${T("flags").map(t=>`<li>${esc(t)}</li>`).join("")}</ul>`;
+}
+$("#fSkill").addEventListener("change", ()=>{
+  const cur = SKILLS.find(s=>s.id===$("#fSkill").value); if(!cur) return;
+  $("#fKwAr").value = cur.ar; $("#fKwEn").value = cur.en;
+});
+$("#fGo").addEventListener("click", ()=>{
+  const kwAr = $("#fKwAr").value.trim(), kwEn = $("#fKwEn").value.trim();
+  if(!kwAr && !kwEn) return toast(T("need_kw"));
+  const ids = new Set([...$("#fPlats").querySelectorAll("input:checked")].map(i=>i.value));
+  const res = $("#fRes"); res.innerHTML = "";
+  const hint = document.createElement("div"); hint.className = "note"; hint.textContent = T("res_hint"); res.appendChild(hint);
+  PLATFORMS.filter(p=>ids.has(p.id)).forEach(p=>{
+    const kw = p.lang==="ar" ? (kwAr||kwEn) : (kwEn||kwAr);
+    const card = document.createElement("div"); card.className = "card";
+    card.style.cssText = "display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 16px";
+    card.innerHTML = `<div class="grow" style="flex:1;min-width:150px"><div class="t" style="font-weight:800">${esc(p.name)}</div>
+      <div class="m" style="color:var(--muted);font-size:.78rem">${esc(T("type_"+p.type))} · <span dir="ltr">${esc(kw)}</span></div></div>`;
+    const a = document.createElement("a"); a.href = p.url(kw); a.target = "_blank"; a.rel = "noopener";
+    a.className = "btn"; a.style.textDecoration = "none"; a.textContent = `${T("open_in")} ${p.name} ↗`;
+    const tr = document.createElement("button"); tr.className = "btn ghost"; tr.textContent = T("add_track");
+    tr.addEventListener("click", ()=>{
+      $("#trTitle").value = `${T($("#fSkill").value)} — ${kw}`; $("#trPlat").value = p.name; $("#trLink").value = p.url(kw);
+      $("#trTitle").scrollIntoView({behavior:"smooth", block:"center"}); $("#trTitle").focus();
+    });
+    card.appendChild(a); card.appendChild(tr); res.appendChild(card);
+  });
+});
+
+/* ---------------- opportunity tracker ---------------- */
+const OPP_NEXT = { lead:"applied", applied:"talking", talking:"won", won:"paid", paid:"lead" };
+const OPP_STYLE = { lead:["var(--muted)","var(--surface2)"], applied:["var(--accent)","var(--accent-soft)"],
+  talking:["var(--c3)","var(--surface2)"], won:["var(--good)","var(--good-soft)"], paid:["var(--good)","var(--good-soft)"] };
+$("#trAdd").addEventListener("click", ()=>{
+  const t = $("#trTitle").value.trim();
+  if(!t) return toast(T("need_name"));
+  S.opps.unshift({ id:uid(), title:t, plat:$("#trPlat").value.trim(), amount:parseFloat($("#trAmount").value)||0,
+    link:$("#trLink").value.trim(), status:"lead" });
+  ["trTitle","trPlat","trAmount","trLink"].forEach(i=>$("#"+i).value="");
+  save(); renderAll(); toast(T("saved"));
+});
+function renderTrack(){
+  const L = $("#trList"); L.innerHTML = "";
+  if(!S.opps.length){ L.innerHTML = `<div class="empty">${T("empty_track")}</div>`; return; }
+  S.opps.forEach(o=>{
+    const d = document.createElement("div"); d.className = "item";
+    d.innerHTML = `<div class="grow"><div class="t">${esc(o.title)}</div>
+      <div class="m">${esc(o.plat||"—")}${o.amount?` · ${money(o.amount)}`:""}</div></div>`;
+    if(o.link){
+      const a = document.createElement("a"); a.href = o.link; a.target="_blank"; a.rel="noopener";
+      a.className = "badge"; a.style.cssText = "color:var(--accent);background:var(--accent-soft);text-decoration:none";
+      a.textContent = T("open")+" ↗"; d.appendChild(a);
+    }
+    const [fg,bg] = OPP_STYLE[o.status] || OPP_STYLE.lead;
+    const b = document.createElement("button"); b.className = "badge"; b.style.cssText = `color:${fg};background:${bg};border:none`;
+    b.textContent = T("st_"+o.status);
+    b.addEventListener("click", ()=>{ o.status = OPP_NEXT[o.status] || "lead"; save(); renderAll(); });
+    const x = document.createElement("button"); x.className = "x"; x.textContent = "✕"; x.setAttribute("aria-label","حذف");
+    x.addEventListener("click", ()=>{ S.opps = S.opps.filter(z=>z.id!==o.id); save(); renderAll(); toast(T("deleted")); });
+    d.appendChild(b); d.appendChild(x); L.appendChild(d);
+  });
+}
+
+/* ---------------- nav ---------------- */
+let page = "find";
+function go(p){
+  page = p;
+  $$(".page").forEach(x=>x.classList.toggle("active", x.id==="page-"+p));
+  $$(".navlink").forEach(b=>{ if(b.dataset.page===p) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
+  closeDrawer();
+  if(p==="dash") drawCharts();
+}
+function closeDrawer(){ $("#side").classList.remove("open"); $("#scrim").classList.remove("show"); }
+$("#menuBtn").addEventListener("click", ()=>{ $("#side").classList.add("open"); $("#scrim").classList.add("show"); });
+$("#scrim").addEventListener("click", closeDrawer);
+$$(".navlink").forEach(b=>b.addEventListener("click", ()=>go(b.dataset.page)));
+
+/* ---------------- stats ---------------- */
+function monthTx(){ const m = new Date().toISOString().slice(0,7); return S.tx.filter(t=>t.date.startsWith(m)); }
+function renderStats(){
+  const bal = S.tx.reduce((a,t)=>a + (t.type==="in"? +t.amount : -t.amount), 0);
+  const mIn = monthTx().filter(t=>t.type==="in").reduce((a,t)=>a + +t.amount,0);
+  const mOut = monthTx().filter(t=>t.type==="out").reduce((a,t)=>a + +t.amount,0);
+  $("#stBalance").textContent = (bal<0?"-":"") + money(bal);
+  const bd = $("#stBalanceD"); bd.className = "delta " + (bal>=0?"up":"down"); bd.textContent = bal>=0 ? "▲" : "▼";
+  $("#stIn").textContent = money(mIn); $("#stInD").textContent = "+";
+  $("#stOut").textContent = money(mOut); $("#stOutD").textContent = "−";
+  const active = S.opps.filter(o=>["lead","applied","talking"].includes(o.status)).length;
+  const won = S.opps.filter(o=>["won","paid"].includes(o.status)).length;
+  $("#stOpp").textContent = nf().format(active);
+  $("#stOppD").textContent = `${T("st_won_n")} ${nf().format(won)} ✓`;
+  const h = new Date().getHours();
+  $("#hello").textContent = (h<12?T("hello_morning"):h<17?T("hello_day"):T("hello_evening")) + " 👋";
+}
+
+/* ---------------- charts ---------------- */
+function setupCanvas(cv){
+  const dpr = window.devicePixelRatio||1, w = cv.clientWidth, h = cv.clientHeight;
+  if(!w) return null;
+  cv.width = w*dpr; cv.height = h*dpr;
+  const ctx = cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx,w,h};
+}
+let linePts = [];
+function drawLine(){
+  const cv = $("#lineChart"), env = setupCanvas(cv); if(!env) return;
+  const {ctx,w,h} = env;
+  ctx.clearRect(0,0,w,h);
+  const days = [];
+  for(let i=29;i>=0;i--){ const d = new Date(); d.setDate(d.getDate()-i); days.push(d.toISOString().slice(0,10)); }
+  const vals = days.map(d => S.tx.filter(t=>t.date===d).reduce((a,t)=>a+(t.type==="in"? +t.amount : -t.amount),0));
+  if(!S.tx.length){ ctx.fillStyle = css("--muted"); ctx.font = "600 13px sans-serif"; ctx.textAlign="center"; ctx.fillText(T("empty_chart"), w/2, h/2); linePts=[]; return; }
+  const pad = {l:8,r:8,t:14,b:22};
+  const min = Math.min(0,...vals), max = Math.max(1,...vals);
+  const X = i => pad.l + i*(w-pad.l-pad.r)/29;
+  const Y = v => pad.t + (max-v)*(h-pad.t-pad.b)/(max-min||1);
+  ctx.strokeStyle = css("--line"); ctx.lineWidth = 1;
+  [0,.5,1].forEach(f=>{ const y = pad.t + f*(h-pad.t-pad.b); ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(w-pad.r,y); ctx.stroke(); });
+  const zero = Y(0);
+  ctx.strokeStyle = css("--muted"); ctx.setLineDash([3,4]); ctx.beginPath(); ctx.moveTo(pad.l,zero); ctx.lineTo(w-pad.r,zero); ctx.stroke(); ctx.setLineDash([]);
+  const col = css("--c2");
+  const grad = ctx.createLinearGradient(0,pad.t,0,h-pad.b);
+  grad.addColorStop(0, col+"55"); grad.addColorStop(1, col+"00");
+  ctx.beginPath(); vals.forEach((v,i)=>{ const x=X(i),y=Y(v); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+  ctx.lineTo(X(29),zero); ctx.lineTo(X(0),zero); ctx.closePath(); ctx.fillStyle = grad; ctx.fill();
+  ctx.beginPath(); vals.forEach((v,i)=>{ const x=X(i),y=Y(v); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+  ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.lineJoin="round"; ctx.stroke();
+  const lx = X(29), ly = Y(vals[29]);
+  ctx.beginPath(); ctx.arc(lx,ly,4.5,0,7); ctx.fillStyle = col; ctx.fill();
+  ctx.beginPath(); ctx.arc(lx,ly,4.5,0,7); ctx.strokeStyle = css("--surface"); ctx.lineWidth=2; ctx.stroke();
+  ctx.fillStyle = css("--ink2"); ctx.font = "600 11px sans-serif";
+  [0,14,29].forEach(i=>{
+    ctx.textAlign = i===0 ? "left" : i===29 ? "right" : "center";
+    const lab = days[i].slice(5).replace("-","/"); ctx.fillText(lab, X(i), h-6);
+  });
+  linePts = days.map((d,i)=>({x:X(i), y:Y(vals[i]), d, v:vals[i]}));
+}
+let donutArcs = [];
+function drawDonut(){
+  const cv = $("#donutChart"), env = setupCanvas(cv); if(!env) return;
+  const {ctx,w,h} = env;
+  ctx.clearRect(0,0,w,h);
+  const byS = {};
+  monthTx().filter(t=>t.type==="in").forEach(t=>{ byS[t.src] = (byS[t.src]||0) + +t.amount; });
+  const entries = Object.entries(byS).sort((a,b)=>b[1]-a[1]).slice(0,4);
+  const total = entries.reduce((a,e)=>a+e[1],0);
+  const legend = $("#donutLegend"); legend.innerHTML = "";
+  donutArcs = [];
+  if(!total){ ctx.fillStyle = css("--muted"); ctx.font="600 13px sans-serif"; ctx.textAlign="center"; ctx.fillText(T("empty_chart"), w/2, h/2); return; }
+  const cx = w/2, cy = h/2, R = Math.min(w,h)/2 - 12, r = R*0.62;
+  let a0 = -Math.PI/2;
+  entries.forEach(([sid,val],i)=>{
+    const frac = val/total, a1 = a0 + frac*Math.PI*2;
+    const col = srcColor(sid);
+    ctx.beginPath(); ctx.arc(cx,cy,R,a0+0.02,a1-0.02); ctx.arc(cx,cy,r,a1-0.02,a0+0.02,true); ctx.closePath();
+    ctx.fillStyle = col; ctx.fill();
+    donutArcs.push({a0,a1,sid,val,frac});
+    a0 = a1;
+    const el = document.createElement("span");
+    el.innerHTML = `<span class="chip" style="background:${col}"></span>${esc(srcName(sid))} — ${Math.round(frac*100)}٪`;
+    legend.appendChild(el);
+  });
+  ctx.fillStyle = css("--ink"); ctx.font = "800 17px sans-serif"; ctx.textAlign="center"; ctx.textBaseline="middle";
+  ctx.fillText(money(total), cx, cy-8);
+  ctx.fillStyle = css("--muted"); ctx.font = "600 11px sans-serif";
+  ctx.fillText(T("total_in"), cx, cy+13);
+}
+function drawCharts(){ requestAnimationFrame(()=>{ drawLine(); drawDonut(); }); }
+$("#lineChart").addEventListener("pointermove", e=>{
+  if(!linePts.length) return;
+  const r = e.currentTarget.getBoundingClientRect(), x = e.clientX - r.left;
+  let best = linePts[0]; linePts.forEach(p=>{ if(Math.abs(p.x-x)<Math.abs(best.x-x)) best=p; });
+  const tip = $("#lineTip");
+  tip.style.left = best.x+"px"; tip.style.top = best.y+"px";
+  tip.textContent = `${best.d.slice(5).replace("-","/")} · ${best.v<0?"-":""}${money(best.v)}`;
+  tip.style.opacity = 1;
+});
+$("#lineChart").addEventListener("pointerleave", ()=>{ $("#lineTip").style.opacity = 0; });
+$("#donutChart").addEventListener("pointermove", e=>{
+  if(!donutArcs.length) return;
+  const r = e.currentTarget.getBoundingClientRect();
+  const cx = r.width/2, cy = r.height/2, dx = e.clientX-r.left-cx, dy = e.clientY-r.top-cy;
+  const dist = Math.hypot(dx,dy), R = Math.min(r.width,r.height)/2-12;
+  const tip = $("#donutTip");
+  if(dist < R*0.62 || dist > R){ tip.style.opacity=0; return; }
+  let ang = Math.atan2(dy,dx); if(ang < -Math.PI/2) ang += Math.PI*2;
+  const hit = donutArcs.find(a=>ang>=a.a0 && ang<a.a1);
+  if(!hit){ tip.style.opacity=0; return; }
+  tip.style.left = (e.clientX-r.left)+"px"; tip.style.top = (e.clientY-r.top)+"px";
+  tip.textContent = `${srcName(hit.sid)} · ${money(hit.val)} · ${Math.round(hit.frac*100)}% ${T("per_of")}`;
+  tip.style.opacity = 1;
+});
+$("#donutChart").addEventListener("pointerleave", ()=>{ $("#donutTip").style.opacity = 0; });
+
+/* ---------------- transactions ---------------- */
+let txType = "in";
+$$("#txType button").forEach(b=>b.addEventListener("click", ()=>{
+  txType = b.dataset.v;
+  $$("#txType button").forEach(x=>x.setAttribute("aria-pressed", String(x===b)));
+}));
+function fillSrcSelect(){
+  const sel = $("#txSrc"); sel.innerHTML = "";
+  const o0 = document.createElement("option"); o0.value=""; o0.textContent = T("no_source"); sel.appendChild(o0);
+  S.sources.forEach(s=>{ const o = document.createElement("option"); o.value=s.id; o.textContent=s.name; sel.appendChild(o); });
+}
+$("#txAdd").addEventListener("click", ()=>{
+  const amt = parseFloat($("#txAmt").value);
+  if(!(amt>0)) return toast(T("need_amount"));
+  S.tx.unshift({ id:uid(), type:txType, amount:amt, src:$("#txSrc").value, note:$("#txNote").value.trim(), date:$("#txDate").value || today() });
+  $("#txAmt").value = ""; $("#txNote").value = "";
+  save(); renderAll(); toast(T("saved"));
+});
+function txRow(t, allowDelete){
+  const d = document.createElement("div"); d.className = "item";
+  const sign = t.type==="in" ? "+" : "−";
+  d.innerHTML = `<span class="chip" style="background:${srcColor(t.src)}"></span>
+    <div class="grow"><div class="t">${esc(t.note || srcName(t.src))}</div>
+    <div class="m">${esc(srcName(t.src))} · ${t.date}</div></div>
+    <span class="amt ${t.type}">${sign} ${money(t.amount)}</span>`;
+  if(allowDelete){
+    const x = document.createElement("button"); x.className="x"; x.textContent="✕"; x.setAttribute("aria-label","حذف");
+    x.addEventListener("click", ()=>{ S.tx = S.tx.filter(z=>z.id!==t.id); save(); renderAll(); toast(T("deleted")); });
+    d.appendChild(x);
+  }
+  return d;
+}
+function renderTx(){
+  const sorted = [...S.tx].sort((a,b)=>b.date.localeCompare(a.date));
+  const L1 = $("#recentList"); L1.innerHTML = "";
+  if(!sorted.length) L1.innerHTML = `<div class="empty">${T("empty_tx")}</div>`;
+  else sorted.slice(0,6).forEach(t=>L1.appendChild(txRow(t,false)));
+  const L2 = $("#txList"); L2.innerHTML = "";
+  if(!sorted.length) L2.innerHTML = `<div class="empty">${T("empty_tx")}</div>`;
+  else sorted.forEach(t=>L2.appendChild(txRow(t,true)));
+}
+$("#quickAdd").addEventListener("click", ()=>{ go("tx"); $("#txAmt").focus(); });
+
+/* ---------------- sources ---------------- */
+$("#srcAdd").addEventListener("click", ()=>{
+  const n = $("#srcName").value.trim();
+  if(!n) return toast(T("need_name"));
+  S.sources.push({id:uid(), name:n});
+  $("#srcName").value = "";
+  save(); renderAll(); toast(T("saved"));
+});
+function renderSrc(){
+  const L = $("#srcList"); L.innerHTML = "";
+  if(!S.sources.length){ L.innerHTML = `<div class="empty">${T("empty_src")}</div>`; }
+  S.sources.forEach(s=>{
+    const total = S.tx.filter(t=>t.src===s.id && t.type==="in").reduce((a,t)=>a + +t.amount,0);
+    const d = document.createElement("div"); d.className="item";
+    d.innerHTML = `<span class="chip" style="background:${srcColor(s.id)}"></span>
+      <div class="grow"><div class="t">${esc(s.name)}</div><div class="m">${T("total_in")}: ${money(total)}</div></div>`;
+    const x = document.createElement("button"); x.className="x"; x.textContent="✕"; x.setAttribute("aria-label","حذف");
+    x.addEventListener("click", ()=>{ S.sources = S.sources.filter(z=>z.id!==s.id); save(); renderAll(); toast(T("deleted")); });
+    d.appendChild(x); L.appendChild(d);
+  });
+  fillSrcSelect();
+}
+
+/* ---------------- tasks ---------------- */
+const STATUS_NEXT = { todo:"doing", doing:"done", done:"todo" };
+const STATUS_STYLE = { todo:["var(--muted)","var(--surface2)"], doing:["var(--accent)","var(--accent-soft)"], done:["var(--good)","var(--good-soft)"] };
+$("#taskAdd").addEventListener("click", ()=>{
+  const n = $("#taskName").value.trim();
+  if(!n) return toast(T("need_name"));
+  S.tasks.unshift({id:uid(), title:n, status:"todo"});
+  $("#taskName").value = "";
+  save(); renderAll(); toast(T("saved"));
+});
+function renderTasks(){
+  const L = $("#taskList"); L.innerHTML = "";
+  if(!S.tasks.length){ L.innerHTML = `<div class="empty">${T("empty_tasks")}</div>`; return; }
+  S.tasks.forEach(t=>{
+    const d = document.createElement("div"); d.className="item";
+    const [fg,bg] = STATUS_STYLE[t.status];
+    d.innerHTML = `<div class="grow"><div class="t" style="${t.status==='done'?'text-decoration:line-through;opacity:.6':''}">${esc(t.title)}</div></div>`;
+    const b = document.createElement("button"); b.className="badge"; b.style.cssText = `color:${fg};background:${bg};border:none`;
+    b.textContent = T("task_"+t.status);
+    b.addEventListener("click", ()=>{ t.status = STATUS_NEXT[t.status]; save(); renderAll(); });
+    const x = document.createElement("button"); x.className="x"; x.textContent="✕"; x.setAttribute("aria-label","حذف");
+    x.addEventListener("click", ()=>{ S.tasks = S.tasks.filter(z=>z.id!==t.id); save(); renderAll(); toast(T("deleted")); });
+    d.appendChild(b); d.appendChild(x); L.appendChild(d);
+  });
+}
+
+/* ---------------- goals ---------------- */
+$("#goalAdd").addEventListener("click", ()=>{
+  const n = $("#goalName").value.trim(), tgt = parseFloat($("#goalTarget").value);
+  if(!n) return toast(T("need_name"));
+  if(!(tgt>0)) return toast(T("need_amount"));
+  S.goals.push({id:uid(), name:n, target:tgt, saved:0});
+  $("#goalName").value=""; $("#goalTarget").value="";
+  save(); renderAll(); toast(T("saved"));
+});
+function renderGoals(){
+  const L = $("#goalList"); L.innerHTML = "";
+  if(!S.goals.length){ L.innerHTML = `<div class="empty">${T("empty_goals")}</div>`; return; }
+  S.goals.forEach(g=>{
+    const pct = Math.min(100, Math.round(g.saved/g.target*100));
+    const c = document.createElement("div"); c.className = "card";
+    c.innerHTML = `<div style="display:flex;align-items:center;gap:10px">
+        <div class="grow" style="flex:1"><div class="t" style="font-weight:800">${esc(g.name)} ${pct>=100?T("goal_done"):""}</div>
+        <div class="m" style="color:var(--muted);font-size:.8rem">${money(g.saved)} ${T("goal_of")} ${money(g.target)} · ${pct}%</div></div>
+      </div>
+      <div class="bar"><i style="width:${pct}%"></i></div>`;
+    const row = document.createElement("div"); row.className = "row mt";
+    const wrap = document.createElement("div");
+    const inp = document.createElement("input"); inp.type="number"; inp.min="0"; inp.placeholder="0.00"; wrap.appendChild(inp);
+    const add = document.createElement("button"); add.className="btn ghost"; add.textContent = T("add_to_goal");
+    add.addEventListener("click", ()=>{ const v = parseFloat(inp.value); if(!(v>0)) return toast(T("need_amount")); g.saved += v; inp.value=""; save(); renderAll(); toast(T("saved")); });
+    const x = document.createElement("button"); x.className="x"; x.textContent="✕"; x.setAttribute("aria-label","حذف"); x.style.marginInlineStart="auto";
+    x.addEventListener("click", ()=>{ S.goals = S.goals.filter(z=>z.id!==g.id); save(); renderAll(); toast(T("deleted")); });
+    const bwrap = document.createElement("div"); bwrap.style.flex="0 0 auto"; bwrap.appendChild(add);
+    row.appendChild(wrap); row.appendChild(bwrap); row.appendChild(x);
+    c.appendChild(row); L.appendChild(c);
+  });
+}
+
+/* ---------------- opportunities ---------------- */
+function renderOpp(){
+  const L = $("#oppList"); L.innerHTML = "";
+  T("opps").forEach(([h,p,tags])=>{
+    const d = document.createElement("div"); d.className = "opp";
+    d.innerHTML = `<h3>${esc(h)}</h3><p>${esc(p)}</p><div class="tags">${tags.split("·").map(t=>`<i>${esc(t.trim())}</i>`).join("")}</div>`;
+    L.appendChild(d);
+  });
+}
+
+/* ---------------- settings ---------------- */
+$$("#themeSeg button").forEach(b=>b.addEventListener("click", ()=>{ S.theme = b.dataset.v; save(); applyTheme(); }));
+$$("#langSeg button").forEach(b=>b.addEventListener("click", ()=>{ S.lang = b.dataset.v; save(); applyLang(); }));
+$("#langBtn").addEventListener("click", ()=>{ S.lang = S.lang==="ar" ? "en":"ar"; save(); applyLang(); });
+$("#themeBtn").addEventListener("click", ()=>{
+  const dark = document.documentElement.getAttribute("data-theme")==="dark" ||
+    (!document.documentElement.getAttribute("data-theme") && matchMedia("(prefers-color-scheme: dark)").matches);
+  S.theme = dark ? "light":"dark"; save(); applyTheme();
+});
+$("#curSel").addEventListener("change", e=>{ S.cur = e.target.value; save(); renderAll(); });
+$("#btnExport").addEventListener("click", ()=>{
+  const blob = new Blob([JSON.stringify(S,null,2)], {type:"application/json"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+  a.download = "maksab-backup-"+today()+".json"; a.click(); URL.revokeObjectURL(a.href);
+});
+$("#btnImport").addEventListener("click", ()=>$("#fileImport").click());
+$("#fileImport").addEventListener("change", e=>{
+  const f = e.target.files[0]; if(!f) return;
+  const rd = new FileReader();
+  rd.onload = () => {
+    try{
+      const obj = JSON.parse(rd.result);
+      if(!obj || !Array.isArray(obj.tx) || !Array.isArray(obj.sources)) throw 0;
+      S = Object.assign(fresh(), obj); save(); applyTheme(); applyLang(); toast(T("imported"));
+    }catch(err){ toast(T("import_err")); }
+  };
+  rd.readAsText(f); e.target.value = "";
+});
+$("#btnWipe").addEventListener("click", ()=>{
+  if(!confirm(T("wipe_confirm"))) return;
+  S = fresh(); save(); applyTheme(); applyLang(); toast(T("wiped"));
+});
+$("#btnDemo").addEventListener("click", ()=>{ seedDemo(); toast(T("demo_done")); });
+function seedDemo(){
+  S.sources = T("demo_src").map(n=>({id:uid(), name:n}));
+  const ids = S.sources.map(s=>s.id);
+  S.tx = [];
+  for(let i=0;i<30;i++){
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const ds = d.toISOString().slice(0,10);
+    if(i%2===0) S.tx.push({id:uid(), type:"in", amount: 40+Math.round(Math.random()*180), src: ids[i%ids.length], note:"", date: ds});
+    if(i%5===0) S.tx.push({id:uid(), type:"out", amount: 15+Math.round(Math.random()*60), src:"", note:"", date: ds});
+  }
+  S.tasks = T("demo_tasks").map(([t,s])=>({id:uid(), title:t, status:s}));
+  S.goals = [{id:uid(), name:T("demo_goal"), target:1200, saved:450}];
+  save(); applyLang();
+}
+
+/* ---------------- render all ---------------- */
+function renderAll(){
+  $("#txDate").value ||= today();
+  $("#curSel").value = S.cur;
+  renderStats(); renderTx(); renderSrc(); renderTasks(); renderGoals(); renderOpp();
+  renderFinder(); renderTrack();
+  drawCharts();
+}
+let rto; addEventListener("resize", ()=>{ clearTimeout(rto); rto = setTimeout(drawCharts, 150); });
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", ()=>{ if(S.theme==="auto") drawCharts(); });
+
+/* ---------------- boot ---------------- */
+load();
+applyTheme(); applyLang();
+})();
+</script>
+
+</html>

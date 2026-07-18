@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>سيرة ذاتية — تصميم كلاسيكي | Classic CV</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{ --ink:#1a1a1a; --ink2:#3d4451; --muted:#6b7280; --accent:#8a5a1c; --line:#d8ccb8; --page:#fff; }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{background:#eceff2; font-family:"Noto Kufi Arabic","Segoe UI",Tahoma,sans-serif; color:var(--ink); line-height:1.65; padding:24px 12px}
+  .bar{max-width:820px; margin:0 auto 18px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center}
+  .bar button{border:1px solid var(--line); background:#fff; color:var(--ink); padding:10px 18px; border-radius:10px; font:inherit; font-weight:700; cursor:pointer}
+  .bar button:hover{border-color:var(--accent); color:var(--accent)}
+  .bar .go{background:var(--accent); color:#fff; border-color:var(--accent)}
+  .bar .hint{width:100%; text-align:center; color:var(--muted); font-size:.82rem; font-weight:600}
+
+  .page{width:210mm; min-height:297mm; margin:0 auto; background:var(--page); box-shadow:0 12px 40px rgba(20,30,45,.16); padding:18mm 20mm}
+  header{text-align:center; border-bottom:2.5px solid var(--accent); padding-bottom:6mm; margin-bottom:6mm}
+  .name{font-size:27pt; font-weight:800; letter-spacing:.02em; color:var(--ink)}
+  .role{font-size:12pt; color:var(--accent); font-weight:700; margin-top:1mm}
+  .contact{margin-top:3mm; font-size:9.5pt; color:var(--ink2); display:flex; gap:5mm; justify-content:center; flex-wrap:wrap}
+  h2{font-size:12pt; color:var(--accent); text-transform:uppercase; letter-spacing:.06em; margin:7mm 0 3mm; padding-bottom:1.5mm; border-bottom:1px solid var(--line)}
+  h2:first-of-type{margin-top:2mm}
+  .summary{font-size:10.5pt; color:var(--ink2)}
+  .entry{margin-bottom:4.5mm}
+  .top{display:flex; justify-content:space-between; gap:4mm; flex-wrap:wrap}
+  .t{font-weight:800; font-size:11pt}
+  .org{color:var(--accent); font-weight:700; font-size:10pt}
+  .date{color:var(--muted); font-size:9pt; font-weight:700; white-space:nowrap}
+  .entry ul{margin:1.5mm 6mm 0; font-size:10pt; color:var(--ink2)}
+  .entry ul li{margin-bottom:.6mm}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:2mm 10mm}
+  .tagrow{display:flex; flex-wrap:wrap; gap:2mm}
+  .tag{border:1px solid var(--line); border-radius:99px; padding:1mm 4mm; font-size:9pt; color:var(--ink2)}
+
+  [contenteditable]{outline:none; border-radius:3px}
+  body.edit [contenteditable]:hover{box-shadow:0 0 0 1.5px var(--accent)}
+  body.edit [contenteditable]:focus{box-shadow:0 0 0 2px var(--accent); background:rgba(138,90,28,.06)}
+
+  @media print{ @page{size:A4; margin:0} body{background:#fff; padding:0} .bar{display:none} .page{box-shadow:none; margin:0; padding:16mm 18mm} }
+  @media(max-width:820px){ .page{width:100%; padding:12mm} .grid2{grid-template-columns:1fr} .name{font-size:22pt} }
+</style>
+</head>
+<body class="edit">
+  <div class="bar">
+    <button class="go" onclick="window.print()">🖨️ حفظ PDF / طباعة</button>
+    <button onclick="toggleLang()">🌐 عربي / English</button>
+    <button onclick="document.body.classList.toggle('edit')">✏️ إظهار/إخفاء التحرير</button>
+    <span class="hint">قالب كلاسيكي متوافق مع أنظمة الفرز (ATS). اضغط على أي نص لتعديله ثم «حفظ PDF».</span>
+  </div>
+
+  <div class="page">
+    <header>
+      <div class="name" contenteditable data-ar="فاطمة العتيبي" data-en="Fatima Al-Otaibi">فاطمة العتيبي</div>
+      <div class="role" contenteditable data-ar="أخصائية تسويق رقمي" data-en="Digital Marketing Specialist">أخصائية تسويق رقمي</div>
+      <div class="contact">
+        <span contenteditable>name@email.com</span><span>·</span>
+        <span contenteditable dir="ltr">+966 5x xxx xxxx</span><span>·</span>
+        <span contenteditable data-ar="جدة، السعودية" data-en="Jeddah, Saudi Arabia">جدة، السعودية</span><span>·</span>
+        <span contenteditable dir="ltr">linkedin.com/in/username</span>
+      </div>
+    </header>
+
+    <h2 data-ar="الملخص المهني" data-en="Professional Summary">الملخص المهني</h2>
+    <p class="summary" contenteditable data-ar="أخصائية تسويق رقمي بخبرة ٤ سنوات في إدارة الحملات الإعلانية وتحسين محركات البحث. أُحقق نموًا قابلًا للقياس عبر استراتيجيات محتوى مدروسة وتحليل دقيق للأداء." data-en="Digital marketer with 4 years running ad campaigns and SEO. I drive measurable growth through data-informed content strategy and rigorous performance analysis.">أخصائية تسويق رقمي بخبرة ٤ سنوات في إدارة الحملات الإعلانية وتحسين محركات البحث. أُحقق نموًا قابلًا للقياس عبر استراتيجيات محتوى مدروسة وتحليل دقيق للأداء.</p>
+
+    <h2 data-ar="الخبرات العملية" data-en="Work Experience">الخبرات العملية</h2>
+    <div class="entry">
+      <div class="top"><div><span class="t" contenteditable data-ar="قائدة فريق التسويق" data-en="Marketing Team Lead">قائدة فريق التسويق</span> — <span class="org" contenteditable data-ar="متجر نُون" data-en="Noon Store">متجر نُون</span></div><span class="date" contenteditable dir="ltr">2021 — الآن</span></div>
+      <ul>
+        <li contenteditable data-ar="زيادة المبيعات عبر الإنترنت بنسبة ٤٠٪ خلال عام واحد." data-en="Grew online sales 40% in one year.">زيادة المبيعات عبر الإنترنت بنسبة ٤٠٪ خلال عام واحد.</li>
+        <li contenteditable data-ar="إدارة ميزانية إعلانية شهرية بأكثر من ٥٠ ألف ريال بعائد مرتفع." data-en="Managed a 50k+ monthly ad budget at high ROI.">إدارة ميزانية إعلانية شهرية بأكثر من ٥٠ ألف ريال بعائد مرتفع.</li>
+      </ul>
+    </div>
+    <div class="entry">
+      <div class="top"><div><span class="t" contenteditable data-ar="أخصائية محتوى" data-en="Content Specialist">أخصائية محتوى</span> — <span class="org" contenteditable data-ar="وكالة نبض" data-en="Nabd Agency">وكالة نبض</span></div><span class="date" contenteditable dir="ltr">2019 — 2021</span></div>
+      <ul>
+        <li contenteditable data-ar="بناء تقويم محتوى شهري لأكثر من ٨ علامات تجارية." data-en="Built monthly content calendars for 8+ brands.">بناء تقويم محتوى شهري لأكثر من ٨ علامات تجارية.</li>
+      </ul>
+    </div>
+
+    <h2 data-ar="التعليم" data-en="Education">التعليم</h2>
+    <div class="entry">
+      <div class="top"><div><span class="t" contenteditable data-ar="بكالوريوس إدارة أعمال" data-en="B.A. Business Administration">بكالوريوس إدارة أعمال</span> — <span class="org" contenteditable data-ar="جامعة الملك عبدالعزيز" data-en="King Abdulaziz University">جامعة الملك عبدالعزيز</span></div><span class="date" contenteditable dir="ltr">2015 — 2019</span></div>
+    </div>
+
+    <h2 data-ar="المهارات" data-en="Skills">المهارات</h2>
+    <div class="tagrow">
+      <span class="tag" contenteditable>Google Ads</span>
+      <span class="tag" contenteditable>SEO</span>
+      <span class="tag" contenteditable>Meta Business</span>
+      <span class="tag" contenteditable data-ar="تحليل البيانات" data-en="Data Analysis">تحليل البيانات</span>
+      <span class="tag" contenteditable data-ar="كتابة المحتوى" data-en="Copywriting">كتابة المحتوى</span>
+      <span class="tag" contenteditable data-ar="إدارة الحملات" data-en="Campaign Management">إدارة الحملات</span>
+    </div>
+  </div>
+
+<script>
+  let en=false;
+  function toggleLang(){
+    en=!en;
+    document.documentElement.lang = en?"en":"ar";
+    document.documentElement.dir = en?"ltr":"rtl";
+    document.querySelectorAll("[data-ar]").forEach(el=>{ const v = en?el.dataset.en:el.dataset.ar; if(v!=null) el.textContent=v; });
+  }
+</script>
+</body>
+</html>
