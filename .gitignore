@@ -155,3 +155,6 @@ logs/
 # OS
 .DS_Store
 Thumbs.db
+
+# Claude Code local overrides (never commit API keys)
+.claude/settings.local.json
