@@ -198,7 +198,8 @@
   <div class="layout">
     <div class="scrim" id="scrim"></div>
     <nav class="side" id="side" aria-label="التنقل">
-      <button class="navlink" data-page="dash" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg><span data-i="nav_dash">لوحة التحكم</span></button>
+      <button class="navlink" data-page="find" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.5-4.5"/></svg><span data-i="nav_find">بحث الفرص</span></button>
+      <button class="navlink" data-page="dash"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg><span data-i="nav_dash">لوحة التحكم</span></button>
       <button class="navlink" data-page="tx"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 10h13m0 0-3.5-3.5M20 10l-3.5 3.5M17 17H4m0 0 3.5-3.5M4 17l3.5 3.5"/></svg><span data-i="nav_tx">المعاملات</span></button>
       <button class="navlink" data-page="src"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8.5 12 4l9 4.5M5 10v8.5M19 10v8.5M3 20h18M9.5 14a2.5 2.5 0 1 1 5 0c0 1.7-2.5 2-2.5 4" stroke-linecap="round"/></svg><span data-i="nav_src">مصادر الدخل</span></button>
       <button class="navlink" data-page="tasks"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m4 12.5 2.5 2.5L11 10.5"/><path d="M14 7h7M14 12h7M14 17h7"/></svg><span data-i="nav_tasks">المهام</span></button>
@@ -210,8 +211,36 @@
 
     <main id="main">
 
+      <!-- ============ Opportunity Finder ============ -->
+      <section class="page active" id="page-find">
+        <div class="head"><div><h1 data-i="nav_find">بحث الفرص</h1><p class="sub" data-i="find_sub">ابحث في منصات العمل الحقيقية وافتح النتائج الحية مباشرة.</p></div></div>
+        <div class="card mb">
+          <div class="row mb">
+            <div><label class="f" for="fSkill" data-i="f_skill">مجالك</label><select id="fSkill"></select></div>
+            <div><label class="f" for="fKwAr" data-i="f_kw_ar">كلمة البحث (المنصات العربية)</label><input type="text" id="fKwAr" maxlength="50"></div>
+            <div><label class="f" for="fKwEn" data-i="f_kw_en">كلمة البحث (المنصات العالمية)</label><input type="text" id="fKwEn" maxlength="50" dir="ltr"></div>
+          </div>
+          <label class="f" data-i="f_plats">المنصات</label>
+          <div id="fPlats" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px"></div>
+          <button class="btn" id="fGo" data-i="open_results">🔎 اعرض روابط البحث الحية</button>
+        </div>
+        <div id="fRes" class="grid mb"></div>
+        <div class="card mb" id="tipsBox"></div>
+        <div class="card">
+          <h2 data-i="track_title">فرصي قيد المتابعة</h2>
+          <div class="row mb">
+            <div style="flex:2"><label class="f" for="trTitle" data-i="tr_title">عنوان الفرصة</label><input type="text" id="trTitle" maxlength="80"></div>
+            <div><label class="f" for="trPlat" data-i="tr_plat">المنصة</label><input type="text" id="trPlat" maxlength="30"></div>
+            <div><label class="f" for="trAmount" data-i="tr_amount">القيمة المتوقعة</label><input type="number" id="trAmount" min="0"></div>
+            <div style="flex:2"><label class="f" for="trLink" data-i="tr_link">الرابط (اختياري)</label><input type="text" id="trLink" dir="ltr" placeholder="https://…"></div>
+            <div style="flex:0 0 auto"><button class="btn" id="trAdd" data-i="add">إضافة</button></div>
+          </div>
+          <div class="list" id="trList"></div>
+        </div>
+      </section>
+
       <!-- ============ Dashboard ============ -->
-      <section class="page active" id="page-dash">
+      <section class="page" id="page-dash">
         <div class="head">
           <div><h1 id="hello">مرحباً 👋</h1><p class="sub" data-i="dash_sub">هذه نظرة سريعة على وضعك المالي.</p></div>
           <button class="btn" id="quickAdd" data-i="quick_add">+ معاملة جديدة</button>
@@ -220,7 +249,7 @@
           <div class="card stat"><div class="lbl" data-i="st_balance">الرصيد الصافي</div><div class="val" id="stBalance">—</div><span class="delta" id="stBalanceD"></span></div>
           <div class="card stat"><div class="lbl" data-i="st_month_in">دخل هذا الشهر</div><div class="val" id="stIn">—</div><span class="delta up" id="stInD"></span></div>
           <div class="card stat"><div class="lbl" data-i="st_month_out">مصروفات هذا الشهر</div><div class="val" id="stOut">—</div><span class="delta down" id="stOutD"></span></div>
-          <div class="card stat"><div class="lbl" data-i="st_tasks">إنجاز المهام</div><div class="val" id="stTasks">—</div><div class="bar"><i id="stTasksBar" style="width:0%"></i></div></div>
+          <div class="card stat"><div class="lbl" data-i="st_opps">فرص قيد المتابعة</div><div class="val" id="stOpp">—</div><span class="delta up" id="stOppD"></span></div>
         </div>
         <div class="grid cols2 mb">
           <div class="card">
@@ -357,7 +386,22 @@
 /* ---------------- i18n ---------------- */
 const DICT = {
   ar: {
-    app:"مَكسَب", tag:"إدارة الدخل الذكية",
+    app:"مَكسَب", tag:"اعثر على عمل بمقابل حقيقي",
+    nav_find:"بحث الفرص", find_sub:"ابحث في منصات العمل الحقيقية وافتح النتائج الحية مباشرة — عملاء يدفعون فعلًا.",
+    f_skill:"مجالك", f_kw_ar:"كلمة البحث (المنصات العربية)", f_kw_en:"كلمة البحث (المنصات العالمية)",
+    f_plats:"المنصات", open_results:"🔎 اعرض روابط البحث الحية",
+    res_hint:"كل زر يفتح نتائج بحث حية الآن على المنصة نفسها. هذه مشاريع ووظائف حقيقية أصحابها يدفعون مالًا حقيقيًا — قدّم عروضك هناك.",
+    open_in:"افتح البحث في", add_track:"＋ متابعة",
+    type_projects:"مشاريع عمل حر", type_requests:"طلبات مشترين", type_jobs:"وظائف عن بُعد", type_services:"سوق خدمات",
+    tips_title:"قبل أن تقدّم عرضك", flags_title:"علامات احتيال — انسحب فورًا",
+    tips:["اقرأ طلب العميل كاملًا ورُدّ على تفاصيله بالتحديد — العروض المنسوخة تُرفض فورًا.","قدّم سعرًا واضحًا ومدة تسليم محددة، ولا تقبل عملًا قبل الاتفاق الموثق داخل المنصة.","أرفق نموذجين من أعمالك الأقرب للمطلوب — الجودة تغني عن الكثرة.","ابدأ بمشاريع صغيرة لتبني تقييمات، ثم ارفع أسعارك تدريجيًا."],
+    flags:["أي جهة تطلب منك دفع رسوم أو «تفعيل حساب» مقابل العمل — احتيال مؤكد.","وعود بربح كبير مقابل جهد بسيط (نقر إعلانات، مشاهدة فيديوهات) — ليست أعمالًا حقيقية.","طلب إكمال التعامل خارج المنصة قبل اتفاق موثق يحرمك من الحماية.","عميل يرفض تحديد نطاق العمل أو السعر كتابيًا."],
+    track_title:"فرصي قيد المتابعة", tr_title:"عنوان الفرصة", tr_plat:"المنصة", tr_amount:"القيمة المتوقعة", tr_link:"الرابط (اختياري)",
+    st_lead:"مرشحة", st_applied:"قدّمت عرضًا", st_talking:"تفاوض", st_won:"فزت بها ✓", st_paid:"استلمت المال 💰",
+    empty_track:"لا فرص متابَعة بعد — ابحث أعلاه، قدّم عروضك، وسجّل هنا كل فرصة تتقدم لها.",
+    st_opps:"فرص قيد المتابعة", st_won_n:"فزت بـ", need_kw:"اكتب كلمة بحث أولًا", open:"فتح",
+    sk_design:"تصميم وشعارات", sk_web:"برمجة مواقع", sk_mobile:"تطبيقات جوال", sk_write:"كتابة محتوى", sk_tr:"ترجمة",
+    sk_video:"مونتاج فيديو", sk_mkt:"تسويق رقمي", sk_data:"إدخال بيانات", sk_tut:"تدريس أونلاين", sk_voice:"تعليق صوتي",
     nav_dash:"لوحة التحكم", nav_tx:"المعاملات", nav_src:"مصادر الدخل", nav_tasks:"المهام",
     nav_goals:"الأهداف", nav_opp:"أفكار دخل واقعية", nav_set:"الإعدادات",
     local_note:"بياناتك محفوظة على جهازك فقط — لا خوادم، لا تتبّع.",
@@ -401,7 +445,22 @@ const DICT = {
     ]
   },
   en: {
-    app:"Maksab", tag:"Smart income manager",
+    app:"Maksab", tag:"Find real paid work",
+    nav_find:"Find work", find_sub:"Search real work platforms and open live results — clients who actually pay.",
+    f_skill:"Your field", f_kw_ar:"Search keyword (Arabic platforms)", f_kw_en:"Search keyword (global platforms)",
+    f_plats:"Platforms", open_results:"🔎 Open live search links",
+    res_hint:"Each button opens live search results on the platform itself. These are real projects and jobs with real budgets — pitch there.",
+    open_in:"Open search on", add_track:"＋ Track",
+    type_projects:"Freelance projects", type_requests:"Buyer requests", type_jobs:"Remote jobs", type_services:"Services marketplace",
+    tips_title:"Before you send a proposal", flags_title:"Scam signs — walk away",
+    tips:["Read the client's brief fully and answer its specifics — copy-pasted proposals get rejected.","Quote a clear price and delivery time; never start before a documented agreement inside the platform.","Attach two samples closest to what's requested — quality beats quantity.","Start with small projects to build reviews, then raise your rates."],
+    flags:["Anyone asking you to pay a fee or 'activate an account' to get work — guaranteed scam.","Big returns for trivial effort (clicking ads, watching videos) — not real work.","Moving off-platform before a documented agreement removes your protection.","A client who won't put scope and price in writing."],
+    track_title:"Opportunities I'm tracking", tr_title:"Opportunity title", tr_plat:"Platform", tr_amount:"Expected value", tr_link:"Link (optional)",
+    st_lead:"Shortlisted", st_applied:"Proposal sent", st_talking:"Negotiating", st_won:"Won ✓", st_paid:"Paid 💰",
+    empty_track:"Nothing tracked yet — search above, send proposals, and log every opportunity here.",
+    st_opps:"Tracked opportunities", st_won_n:"Won", need_kw:"Type a search keyword first", open:"Open",
+    sk_design:"Design & logos", sk_web:"Web development", sk_mobile:"Mobile apps", sk_write:"Content writing", sk_tr:"Translation",
+    sk_video:"Video editing", sk_mkt:"Digital marketing", sk_data:"Data entry", sk_tut:"Online tutoring", sk_voice:"Voice-over",
     nav_dash:"Dashboard", nav_tx:"Transactions", nav_src:"Income sources", nav_tasks:"Tasks",
     nav_goals:"Goals", nav_opp:"Realistic income ideas", nav_set:"Settings",
     local_note:"Your data lives on this device only — no servers, no tracking.",
@@ -451,7 +510,7 @@ const KEY = "maksab_v1";
 const uid = () => Math.random().toString(36).slice(2,9);
 const today = () => new Date().toISOString().slice(0,10);
 let S;
-function fresh(){ return { lang:"ar", theme:"auto", cur:"$", sources:[], tx:[], tasks:[], goals:[] }; }
+function fresh(){ return { lang:"ar", theme:"auto", cur:"$", sources:[], tx:[], tasks:[], goals:[], opps:[] }; }
 function load(){ try{ const raw = localStorage.getItem(KEY); S = raw ? Object.assign(fresh(), JSON.parse(raw)) : fresh(); }catch(e){ S = fresh(); } }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
 const T = k => (DICT[S.lang] && DICT[S.lang][k]) ?? DICT.ar[k] ?? k;
@@ -485,8 +544,114 @@ function applyLang(){
   renderAll();
 }
 
+/* ---------------- opportunity finder ---------------- */
+const PLATFORMS = [
+  {id:"mostaql",  name:"مستقل Mostaql",      type:"projects", lang:"ar", url:k=>`https://mostaql.com/projects?keyword=${encodeURIComponent(k)}`},
+  {id:"khamsat",  name:"خمسات Khamsat",      type:"requests", lang:"ar", url:k=>`https://khamsat.com/community/requests?query=${encodeURIComponent(k)}`},
+  {id:"upwork",   name:"Upwork",             type:"projects", lang:"en", url:k=>`https://www.upwork.com/nx/search/jobs/?q=${encodeURIComponent(k)}`},
+  {id:"freelancer",name:"Freelancer",        type:"projects", lang:"en", url:k=>`https://www.freelancer.com/search/projects?q=${encodeURIComponent(k)}`},
+  {id:"fiverr",   name:"Fiverr",             type:"services", lang:"en", url:k=>`https://www.fiverr.com/search/gigs?query=${encodeURIComponent(k)}`},
+  {id:"linkedin", name:"LinkedIn Jobs",      type:"jobs",     lang:"en", url:k=>`https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(k)}&f_WT=2`},
+  {id:"wwr",      name:"We Work Remotely",   type:"jobs",     lang:"en", url:k=>`https://weworkremotely.com/remote-jobs/search?term=${encodeURIComponent(k)}`},
+  {id:"wuzzuf",   name:"Wuzzuf",             type:"jobs",     lang:"en", url:k=>`https://wuzzuf.net/search/jobs/?q=${encodeURIComponent(k)}`}
+];
+const SKILLS = [
+  {id:"sk_design", ar:"تصميم شعار",    en:"logo design"},
+  {id:"sk_web",    ar:"برمجة موقع",    en:"web developer"},
+  {id:"sk_mobile", ar:"تطبيق جوال",    en:"flutter developer"},
+  {id:"sk_write",  ar:"كتابة محتوى",   en:"content writer"},
+  {id:"sk_tr",     ar:"ترجمة",         en:"arabic english translation"},
+  {id:"sk_video",  ar:"مونتاج فيديو",  en:"video editing"},
+  {id:"sk_mkt",    ar:"تسويق الكتروني",en:"digital marketing"},
+  {id:"sk_data",   ar:"ادخال بيانات",  en:"data entry"},
+  {id:"sk_tut",    ar:"تدريس",         en:"online tutor"},
+  {id:"sk_voice",  ar:"تعليق صوتي",    en:"arabic voice over"}
+];
+function renderFinder(){
+  const sel = $("#fSkill"); const prev = sel.value; sel.innerHTML = "";
+  SKILLS.forEach(s=>{ const o = document.createElement("option"); o.value=s.id; o.textContent=T(s.id); sel.appendChild(o); });
+  if(prev) sel.value = prev;
+  const cur = SKILLS.find(s=>s.id===sel.value) || SKILLS[0];
+  if(!$("#fKwAr").value) $("#fKwAr").value = cur.ar;
+  if(!$("#fKwEn").value) $("#fKwEn").value = cur.en;
+  const box = $("#fPlats");
+  const checked = new Set([...box.querySelectorAll("input:checked")].map(i=>i.value));
+  const first = !box.children.length;
+  box.innerHTML = "";
+  PLATFORMS.forEach(p=>{
+    const l = document.createElement("label");
+    l.style.cssText = "display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:99px;padding:6px 13px;font-size:.83rem;font-weight:600;cursor:pointer;background:var(--surface2)";
+    const c = document.createElement("input"); c.type="checkbox"; c.value=p.id; c.checked = first || checked.has(p.id);
+    l.appendChild(c); l.appendChild(document.createTextNode(p.name));
+    box.appendChild(l);
+  });
+  const tips = $("#tipsBox");
+  tips.innerHTML = `<h2>${esc(T("tips_title"))}</h2><ul style="padding-inline-start:20px;color:var(--ink2);font-size:.9rem;display:grid;gap:6px">${T("tips").map(t=>`<li>${esc(t)}</li>`).join("")}</ul>
+    <h2 class="mt" style="color:var(--bad)">${esc(T("flags_title"))}</h2><ul style="padding-inline-start:20px;color:var(--ink2);font-size:.9rem;display:grid;gap:6px">${T("flags").map(t=>`<li>${esc(t)}</li>`).join("")}</ul>`;
+}
+$("#fSkill").addEventListener("change", ()=>{
+  const cur = SKILLS.find(s=>s.id===$("#fSkill").value); if(!cur) return;
+  $("#fKwAr").value = cur.ar; $("#fKwEn").value = cur.en;
+});
+$("#fGo").addEventListener("click", ()=>{
+  const kwAr = $("#fKwAr").value.trim(), kwEn = $("#fKwEn").value.trim();
+  if(!kwAr && !kwEn) return toast(T("need_kw"));
+  const ids = new Set([...$("#fPlats").querySelectorAll("input:checked")].map(i=>i.value));
+  const res = $("#fRes"); res.innerHTML = "";
+  const hint = document.createElement("div"); hint.className = "note"; hint.textContent = T("res_hint"); res.appendChild(hint);
+  PLATFORMS.filter(p=>ids.has(p.id)).forEach(p=>{
+    const kw = p.lang==="ar" ? (kwAr||kwEn) : (kwEn||kwAr);
+    const card = document.createElement("div"); card.className = "card";
+    card.style.cssText = "display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 16px";
+    card.innerHTML = `<div class="grow" style="flex:1;min-width:150px"><div class="t" style="font-weight:800">${esc(p.name)}</div>
+      <div class="m" style="color:var(--muted);font-size:.78rem">${esc(T("type_"+p.type))} · <span dir="ltr">${esc(kw)}</span></div></div>`;
+    const a = document.createElement("a"); a.href = p.url(kw); a.target = "_blank"; a.rel = "noopener";
+    a.className = "btn"; a.style.textDecoration = "none"; a.textContent = `${T("open_in")} ${p.name} ↗`;
+    const tr = document.createElement("button"); tr.className = "btn ghost"; tr.textContent = T("add_track");
+    tr.addEventListener("click", ()=>{
+      $("#trTitle").value = `${T($("#fSkill").value)} — ${kw}`; $("#trPlat").value = p.name; $("#trLink").value = p.url(kw);
+      $("#trTitle").scrollIntoView({behavior:"smooth", block:"center"}); $("#trTitle").focus();
+    });
+    card.appendChild(a); card.appendChild(tr); res.appendChild(card);
+  });
+});
+
+/* ---------------- opportunity tracker ---------------- */
+const OPP_NEXT = { lead:"applied", applied:"talking", talking:"won", won:"paid", paid:"lead" };
+const OPP_STYLE = { lead:["var(--muted)","var(--surface2)"], applied:["var(--accent)","var(--accent-soft)"],
+  talking:["var(--c3)","var(--surface2)"], won:["var(--good)","var(--good-soft)"], paid:["var(--good)","var(--good-soft)"] };
+$("#trAdd").addEventListener("click", ()=>{
+  const t = $("#trTitle").value.trim();
+  if(!t) return toast(T("need_name"));
+  S.opps.unshift({ id:uid(), title:t, plat:$("#trPlat").value.trim(), amount:parseFloat($("#trAmount").value)||0,
+    link:$("#trLink").value.trim(), status:"lead" });
+  ["trTitle","trPlat","trAmount","trLink"].forEach(i=>$("#"+i).value="");
+  save(); renderAll(); toast(T("saved"));
+});
+function renderTrack(){
+  const L = $("#trList"); L.innerHTML = "";
+  if(!S.opps.length){ L.innerHTML = `<div class="empty">${T("empty_track")}</div>`; return; }
+  S.opps.forEach(o=>{
+    const d = document.createElement("div"); d.className = "item";
+    d.innerHTML = `<div class="grow"><div class="t">${esc(o.title)}</div>
+      <div class="m">${esc(o.plat||"—")}${o.amount?` · ${money(o.amount)}`:""}</div></div>`;
+    if(o.link){
+      const a = document.createElement("a"); a.href = o.link; a.target="_blank"; a.rel="noopener";
+      a.className = "badge"; a.style.cssText = "color:var(--accent);background:var(--accent-soft);text-decoration:none";
+      a.textContent = T("open")+" ↗"; d.appendChild(a);
+    }
+    const [fg,bg] = OPP_STYLE[o.status] || OPP_STYLE.lead;
+    const b = document.createElement("button"); b.className = "badge"; b.style.cssText = `color:${fg};background:${bg};border:none`;
+    b.textContent = T("st_"+o.status);
+    b.addEventListener("click", ()=>{ o.status = OPP_NEXT[o.status] || "lead"; save(); renderAll(); });
+    const x = document.createElement("button"); x.className = "x"; x.textContent = "✕"; x.setAttribute("aria-label","حذف");
+    x.addEventListener("click", ()=>{ S.opps = S.opps.filter(z=>z.id!==o.id); save(); renderAll(); toast(T("deleted")); });
+    d.appendChild(b); d.appendChild(x); L.appendChild(d);
+  });
+}
+
 /* ---------------- nav ---------------- */
-let page = "dash";
+let page = "find";
 function go(p){
   page = p;
   $$(".page").forEach(x=>x.classList.toggle("active", x.id==="page-"+p));
@@ -509,10 +674,10 @@ function renderStats(){
   const bd = $("#stBalanceD"); bd.className = "delta " + (bal>=0?"up":"down"); bd.textContent = bal>=0 ? "▲" : "▼";
   $("#stIn").textContent = money(mIn); $("#stInD").textContent = "+";
   $("#stOut").textContent = money(mOut); $("#stOutD").textContent = "−";
-  const done = S.tasks.filter(t=>t.status==="done").length;
-  const pct = S.tasks.length ? Math.round(done/S.tasks.length*100) : 0;
-  $("#stTasks").textContent = S.tasks.length ? `${nf().format(done)}/${nf().format(S.tasks.length)}` : "—";
-  $("#stTasksBar").style.width = pct+"%";
+  const active = S.opps.filter(o=>["lead","applied","talking"].includes(o.status)).length;
+  const won = S.opps.filter(o=>["won","paid"].includes(o.status)).length;
+  $("#stOpp").textContent = nf().format(active);
+  $("#stOppD").textContent = `${T("st_won_n")} ${nf().format(won)} ✓`;
   const h = new Date().getHours();
   $("#hello").textContent = (h<12?T("hello_morning"):h<17?T("hello_day"):T("hello_evening")) + " 👋";
 }
@@ -804,6 +969,7 @@ function renderAll(){
   $("#txDate").value ||= today();
   $("#curSel").value = S.cur;
   renderStats(); renderTx(); renderSrc(); renderTasks(); renderGoals(); renderOpp();
+  renderFinder(); renderTrack();
   drawCharts();
 }
 let rto; addEventListener("resize", ()=>{ clearTimeout(rto); rto = setTimeout(drawCharts, 150); });
@@ -811,7 +977,6 @@ matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", ()=>{ if
 
 /* ---------------- boot ---------------- */
 load();
-if(!S.tx.length && !S.sources.length && !localStorage.getItem(KEY)) seedDemo();
 applyTheme(); applyLang();
 })();
 </script>
