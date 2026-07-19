@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>قائمة الأسعار</title>
+<script>
+/* ⚙️⚙️⚙️ إعدادات نشاطك — عدّل هذه الأسطر فقط ثم احفظ الملف ⚙️⚙️⚙️ */
+const CONFIG = {
+  name:     "صالون اللمسة الذهبية",  // اسم النشاط
+  emoji:    "✂️",
+  tagline:  "أسعارنا واضحة — بدون مفاجآت",
+  whatsapp: "9665XXXXXXXX",           // رقم واتساب بصيغة دولية بدون +
+  color1:   "#123c63",
+  color2:   "#0a2946",
+  accent:   "#c9a44a",
+  currency: "ريال",
+  // الأقسام والخدمات: لكل قسم عنوان وقائمة [الخدمة، السعر]
+  sections: [
+    { title: "قص وتصفيف", items: [
+      ["قص شعر", "50"], ["قص + استشوار", "80"], ["تصفيف مناسبات", "150"]
+    ]},
+    { title: "عناية", items: [
+      ["حمام مغربي", "120"], ["تنظيف بشرة", "100"], ["ماسك عناية", "60"]
+    ]},
+    { title: "باقات", items: [
+      ["باقة العروس", "450"], ["باقة شهرية (4 زيارات)", "280"]
+    ]}
+  ]
+};
+/* ⚙️⚙️⚙️ نهاية الإعدادات — لا تعدّل شيئًا بعد هذا السطر ⚙️⚙️⚙️ */
+</script>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
+<style>
+  :root { --brand:#123c63; --brand2:#0a2946; --gold:#c9a44a; --bg:#f4f6f9; --ink:#1d2733; --muted:#64748b; --line:#e2e8f0; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Segoe UI",Tahoma,Arial,sans-serif; background:var(--bg); color:var(--ink); line-height:1.8; }
+  header { background:linear-gradient(135deg,var(--brand2),var(--brand)); color:#fff; padding:26px 18px; text-align:center; }
+  header .logo { font-size:1.5rem; font-weight:900; }
+  header .logo span { color:var(--gold); }
+  header p { margin:6px 0 0; opacity:.85; font-size:.9rem; }
+  .wrap { max-width:640px; margin:-18px auto 40px; padding:0 16px; }
+  .sec { background:#fff; border-radius:16px; padding:20px 22px; box-shadow:0 10px 30px rgba(18,60,99,.1); margin-bottom:16px; }
+  .sec h2 { font-size:1.05rem; color:var(--brand); margin:0 0 10px; border-bottom:2px solid var(--gold); display:inline-block; padding-bottom:2px; }
+  .item { display:flex; align-items:baseline; gap:8px; padding:8px 0; }
+  .item + .item { border-top:1px dashed var(--line); }
+  .item .n { flex-shrink:0; }
+  .item .dots { flex:1; border-bottom:2px dotted var(--line); }
+  .item .p { flex-shrink:0; font-weight:900; color:var(--brand2); }
+  .item .p small { font-weight:400; color:var(--muted); }
+  a.wa { display:block; padding:14px; border-radius:12px; background:#1fa855; color:#fff; text-decoration:none; font-weight:800; text-align:center; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo"><span id="cfgEmoji"></span> <span id="cfgName"></span><span style="color:var(--gold)">.</span></div>
+  <p id="cfgTagline"></p>
+</header>
+
+<div class="wrap">
+  <div id="sections"></div>
+  <a class="wa" id="waLink" href="#" target="_blank" rel="noopener">📲 اطلب أو استفسر عبر واتساب</a>
+</div>
+
+<script>
+document.documentElement.style.setProperty('--brand', CONFIG.color1);
+document.documentElement.style.setProperty('--brand2', CONFIG.color2);
+document.documentElement.style.setProperty('--gold', CONFIG.accent);
+document.getElementById('cfgEmoji').textContent = CONFIG.emoji;
+document.getElementById('cfgName').textContent = CONFIG.name;
+document.getElementById('cfgTagline').textContent = CONFIG.tagline;
+document.title = 'قائمة الأسعار — ' + CONFIG.name;
+
+const root = document.getElementById('sections');
+CONFIG.sections.forEach(sec => {
+  const box = document.createElement('div');
+  box.className = 'sec';
+  const h = document.createElement('h2'); h.textContent = sec.title;
+  box.appendChild(h);
+  sec.items.forEach(([label, price]) => {
+    const row = document.createElement('div'); row.className = 'item';
+    const n = document.createElement('span'); n.className = 'n'; n.textContent = label;
+    const dots = document.createElement('span'); dots.className = 'dots';
+    const p = document.createElement('span'); p.className = 'p';
+    p.innerHTML = '<b></b> <small></small>';
+    p.querySelector('b').textContent = price;
+    p.querySelector('small').textContent = CONFIG.currency;
+    row.appendChild(n); row.appendChild(dots); row.appendChild(p);
+    box.appendChild(row);
+  });
+  root.appendChild(box);
+});
+
+document.getElementById('waLink').href = 'https://wa.me/' + CONFIG.whatsapp + '?text=' +
+  encodeURIComponent('مرحبًا ' + CONFIG.name + '، اطلعت على قائمة الأسعار وأرغب بالاستفسار.');
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>قيّم تجربتك</title>
+<script>
+/* ⚙️⚙️⚙️ إعدادات نشاطك — عدّل هذه الأسطر فقط ثم احفظ الملف ⚙️⚙️⚙️ */
+const CONFIG = {
+  name:      "مطعم الذواقة",         // اسم النشاط
+  emoji:     "🍽️",
+  whatsapp:  "9665XXXXXXXX",          // رقم واتساب (تصلك عليه الملاحظات السلبية بشكل خاص)
+  // رابط صفحة تقييمك في خرائط جوجل (ابحث عن نشاطك في الخرائط > مشاركة > انسخ الرابط)
+  googleReview: "https://g.page/r/XXXXXXXX/review",
+  color1:    "#123c63",
+  color2:    "#0a2946",
+  accent:    "#c9a44a",
+  threshold: 4   // التقييم من كم نجمة فأعلى يُوجَّه لخرائط جوجل (الأقل يصلك بشكل خاص)
+};
+/* ⚙️⚙️⚙️ نهاية الإعدادات — لا تعدّل شيئًا بعد هذا السطر ⚙️⚙️⚙️ */
+</script>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>">
+<style>
+  :root { --brand:#123c63; --brand2:#0a2946; --gold:#c9a44a; --bg:#f4f6f9; --ink:#1d2733; --muted:#64748b; --line:#e2e8f0; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Segoe UI",Tahoma,Arial,sans-serif; background:linear-gradient(160deg,var(--brand2),var(--brand)); min-height:100vh; color:var(--ink); line-height:1.8; display:flex; align-items:center; justify-content:center; padding:20px 14px; }
+  .card { width:100%; max-width:440px; background:#fff; border-radius:22px; padding:34px 26px; box-shadow:0 18px 50px rgba(0,0,0,.3); text-align:center; }
+  .logo { font-size:2.4rem; }
+  h1 { margin:6px 0 2px; font-size:1.3rem; color:var(--brand2); }
+  .sub { color:var(--muted); font-size:.92rem; margin-bottom:22px; }
+  .stars { display:flex; justify-content:center; gap:8px; direction:ltr; }
+  .star { font-size:2.6rem; cursor:pointer; filter:grayscale(1); opacity:.45; transition:all .15s; user-select:none; }
+  .star.on { filter:none; opacity:1; transform:scale(1.12); }
+  .step2 { display:none; margin-top:22px; }
+  .step2.show { display:block; }
+  textarea { width:100%; min-height:110px; padding:12px 14px; border:1.5px solid var(--line); border-radius:12px; font-size:1rem; font-family:inherit; background:#fafbfd; resize:vertical; }
+  textarea:focus { outline:none; border-color:var(--brand); }
+  .btn { display:block; width:100%; margin-top:14px; padding:14px; border:0; border-radius:12px; cursor:pointer; font-size:1rem; font-weight:800; font-family:inherit; text-decoration:none; }
+  .g { background:#fff; color:#1d2733; border:1.5px solid var(--line); box-shadow:0 4px 14px rgba(0,0,0,.08); }
+  .wa { background:#1fa855; color:#fff; }
+  .thanks { color:var(--muted); font-size:.85rem; margin-top:14px; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo" id="cfgEmoji"></div>
+  <h1 id="cfgName"></h1>
+  <p class="sub">رأيك يهمنا فعلًا — كيف كانت تجربتك معنا؟</p>
+
+  <div class="stars" id="stars"></div>
+
+  <div class="step2" id="stepGood">
+    <p>يسعدنا تقييمك! 💚 شاركه في خرائط جوجل ليستفيد غيرك:</p>
+    <a class="btn g" id="gLink" href="#" target="_blank" rel="noopener">⭐ أضف تقييمك في خرائط جوجل</a>
+  </div>
+
+  <div class="step2" id="stepBad">
+    <p>نعتذر إن قصّرنا 🙏 أخبرنا بما حدث وسنعالجه فورًا:</p>
+    <textarea id="feedback" placeholder="اكتب ملاحظتك هنا..."></textarea>
+    <button class="btn wa" onclick="sendFeedback()">📲 أرسل ملاحظتك للإدارة مباشرة</button>
+    <p class="thanks">تصل ملاحظتك للإدارة بشكل خاص وتُعالج بأولوية.</p>
+  </div>
+</div>
+
+<script>
+document.documentElement.style.setProperty('--brand', CONFIG.color1);
+document.documentElement.style.setProperty('--brand2', CONFIG.color2);
+document.documentElement.style.setProperty('--gold', CONFIG.accent);
+document.getElementById('cfgEmoji').textContent = CONFIG.emoji;
+document.getElementById('cfgName').textContent = CONFIG.name;
+document.getElementById('gLink').href = CONFIG.googleReview;
+document.title = 'قيّم تجربتك — ' + CONFIG.name;
+
+const starsBox = document.getElementById('stars');
+let rating = 0;
+for (let i = 1; i <= 5; i++) {
+  const s = document.createElement('span');
+  s.className = 'star'; s.textContent = '⭐'; s.dataset.v = i;
+  s.onclick = () => setRating(i);
+  starsBox.appendChild(s);
+}
+function setRating(v) {
+  rating = v;
+  document.querySelectorAll('.star').forEach(s => s.classList.toggle('on', +s.dataset.v <= v));
+  const good = v >= CONFIG.threshold;
+  document.getElementById('stepGood').classList.toggle('show', good);
+  document.getElementById('stepBad').classList.toggle('show', !good);
+}
+function sendFeedback() {
+  const txt = document.getElementById('feedback').value.trim();
+  if (!txt) { alert('اكتب ملاحظتك أولًا'); return; }
+  const msg = encodeURIComponent('ملاحظة عميل (' + rating + '/5 ⭐)\n' + txt);
+  window.open('https://wa.me/' + CONFIG.whatsapp + '?text=' + msg, '_blank');
+}
+</script>
+</body>
+</html>

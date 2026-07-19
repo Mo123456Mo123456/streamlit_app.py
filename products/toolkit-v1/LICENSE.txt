@@ -1,0 +1,27 @@
+حزمة أدوات الأعمال الذكية — رخصة الاستخدام
+Smart Business Tools Pack — License
+
+العربية:
+1. بشرائك هذه الحزمة تحصل على رخصة دائمة غير حصرية لاستخدام الملفات
+   وتخصيصها ونشرها لصالح أنشطتك التجارية الخاصة، بلا حد لعدد الأنشطة
+   التي تملكها أو تديرها.
+2. يجوز تعديل الملفات بحرية كاملة (الأسماء، الألوان، النصوص، الأكواد).
+3. لا يجوز إعادة بيع الملفات أو توزيعها أو نشرها كمنتج أو كجزء من منتج
+   (مجانًا أو بمقابل)، ولا رفعها في مستودعات عامة.
+4. إذا كنت مصمم/مطور وتريد استخدام الحزمة في مشاريع عملائك (رخصة تجارية
+   موسعة)، تواصل مع البائع للحصول عليها.
+5. الملفات تُقدَّم كما هي؛ الحاسبات استرشادية ولا تُعد استشارة مالية
+   أو قانونية.
+
+English:
+1. Purchasing this pack grants you a perpetual, non-exclusive license to
+   use, customize, and publish the files for your own businesses
+   (unlimited businesses you own or operate).
+2. You may modify the files freely (names, colors, texts, code).
+3. You may NOT resell, redistribute, or republish the files as a product
+   or part of a product (free or paid), nor upload them to public
+   repositories.
+4. Designers/developers wishing to use the pack in client projects need
+   an extended commercial license — contact the seller.
+5. Files are provided as-is; calculators are indicative and do not
+   constitute financial or legal advice.

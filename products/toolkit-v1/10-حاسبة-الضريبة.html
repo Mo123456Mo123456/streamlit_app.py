@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>حاسبة ضريبة القيمة المضافة</title>
+<script>
+/* ⚙️⚙️⚙️ إعدادات نشاطك — عدّل هذه الأسطر فقط ثم احفظ الملف ⚙️⚙️⚙️ */
+const CONFIG = {
+  name:     "مكتب الدقة للمحاسبة",   // اسم نشاطك
+  emoji:    "🧾",
+  tagline:  "أداة مجانية لعملائنا — احسب الضريبة بالاتجاهين",
+  whatsapp: "9665XXXXXXXX",           // رقم واتساب بصيغة دولية بدون +
+  color1:   "#123c63",
+  color2:   "#0a2946",
+  accent:   "#c9a44a",
+  vatRate:  15,                       // نسبة الضريبة % (السعودية 15)
+  currency: "ريال"
+};
+/* ⚙️⚙️⚙️ نهاية الإعدادات — لا تعدّل شيئًا بعد هذا السطر ⚙️⚙️⚙️ */
+</script>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧾</text></svg>">
+<style>
+  :root { --brand:#123c63; --brand2:#0a2946; --gold:#c9a44a; --bg:#f4f6f9; --ink:#1d2733; --muted:#64748b; --line:#e2e8f0; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Segoe UI",Tahoma,Arial,sans-serif; background:var(--bg); color:var(--ink); line-height:1.8; }
+  header { background:linear-gradient(135deg,var(--brand2),var(--brand)); color:#fff; padding:26px 18px; text-align:center; }
+  header .logo { font-size:1.5rem; font-weight:900; }
+  header .logo span { color:var(--gold); }
+  header p { margin:6px 0 0; opacity:.85; font-size:.9rem; }
+  .wrap { max-width:640px; margin:-18px auto 40px; padding:0 16px; }
+  .card { background:#fff; border-radius:16px; padding:26px; box-shadow:0 10px 30px rgba(18,60,99,.12); }
+  .tabs { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px; }
+  .tab { padding:11px; text-align:center; border:1.5px solid var(--line); border-radius:10px; cursor:pointer; font-weight:700; font-size:.92rem; background:#fafbfd; user-select:none; }
+  .tab.on { background:var(--brand); color:#fff; border-color:var(--brand); }
+  label { display:block; font-weight:700; font-size:.92rem; margin:14px 0 6px; }
+  input { width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:10px; font-size:1rem; font-family:inherit; background:#fafbfd; }
+  input:focus { outline:none; border-color:var(--brand); }
+  button.calc { width:100%; margin-top:20px; padding:14px; border:0; border-radius:12px; cursor:pointer; background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#fff; font-size:1.05rem; font-weight:800; font-family:inherit; }
+  .result { display:none; margin-top:22px; border-top:2px dashed var(--line); padding-top:18px; }
+  .result.show { display:block; }
+  .line { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px dashed var(--line); }
+  .line b { color:var(--brand2); }
+  .line.total b { color:var(--brand); font-size:1.2rem; }
+  a.wa { display:block; margin-top:18px; padding:13px; border-radius:12px; background:#1fa855; color:#fff; text-decoration:none; font-weight:800; text-align:center; }
+  .note { font-size:.78rem; color:var(--muted); margin-top:14px; text-align:center; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo"><span id="cfgEmoji"></span> <span id="cfgName"></span><span style="color:var(--gold)">.</span></div>
+  <p id="cfgTagline"></p>
+</header>
+
+<div class="wrap">
+  <div class="card">
+    <div class="tabs">
+      <div class="tab on" id="tabAdd" onclick="setMode('add')">➕ أضف الضريبة على السعر</div>
+      <div class="tab" id="tabExtract" onclick="setMode('extract')">➖ استخرجها من مبلغ شامل</div>
+    </div>
+
+    <label id="amountLabel">السعر قبل الضريبة</label>
+    <input type="number" id="amount" inputmode="decimal" placeholder="مثال: 1000">
+
+    <button class="calc" onclick="calc()">احسب</button>
+
+    <div class="result" id="result">
+      <div class="line"><span>المبلغ قبل الضريبة</span><b id="net">—</b></div>
+      <div class="line"><span>الضريبة (<span id="rateShow"></span>%)</span><b id="vat">—</b></div>
+      <div class="line total"><span>الإجمالي شامل الضريبة</span><b id="gross">—</b></div>
+      <a class="wa" id="waLink" href="#" target="_blank" rel="noopener">📲 استشرنا في ضرائبك وفواتيرك</a>
+    </div>
+
+    <p class="note">الاستخراج يتم بالقسمة على 1.15 وليس بخصم 15% — هذه هي الطريقة النظامية الصحيحة.</p>
+  </div>
+</div>
+
+<script>
+document.documentElement.style.setProperty('--brand', CONFIG.color1);
+document.documentElement.style.setProperty('--brand2', CONFIG.color2);
+document.documentElement.style.setProperty('--gold', CONFIG.accent);
+document.getElementById('cfgEmoji').textContent = CONFIG.emoji;
+document.getElementById('cfgName').textContent = CONFIG.name;
+document.getElementById('cfgTagline').textContent = CONFIG.tagline;
+document.getElementById('rateShow').textContent = CONFIG.vatRate;
+document.title = 'حاسبة الضريبة — ' + CONFIG.name;
+document.getElementById('waLink').href = 'https://wa.me/' + CONFIG.whatsapp + '?text=' +
+  encodeURIComponent('مرحبًا ' + CONFIG.name + '، أرغب باستشارة بخصوص الضريبة والفواتير.');
+
+let mode = 'add';
+function setMode(m) {
+  mode = m;
+  document.getElementById('tabAdd').classList.toggle('on', m === 'add');
+  document.getElementById('tabExtract').classList.toggle('on', m === 'extract');
+  document.getElementById('amountLabel').textContent =
+    m === 'add' ? 'السعر قبل الضريبة' : 'المبلغ شامل الضريبة';
+  document.getElementById('result').classList.remove('show');
+}
+
+const fmt = n => n.toLocaleString('ar-SA', { maximumFractionDigits: 2 }) + ' ' + CONFIG.currency;
+
+function calc() {
+  const amount = parseFloat(document.getElementById('amount').value) || 0;
+  if (amount <= 0) return;
+  const r = CONFIG.vatRate / 100;
+  let net, vat, gross;
+  if (mode === 'add') { net = amount; vat = amount * r; gross = amount + vat; }
+  else { gross = amount; net = amount / (1 + r); vat = gross - net; }
+  document.getElementById('net').textContent = fmt(net);
+  document.getElementById('vat').textContent = fmt(vat);
+  document.getElementById('gross').textContent = fmt(gross);
+  document.getElementById('result').classList.add('show');
+}
+</script>
+</body>
+</html>

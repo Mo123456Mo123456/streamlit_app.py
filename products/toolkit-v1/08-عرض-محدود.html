@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>عرض محدود</title>
+<script>
+/* ⚙️⚙️⚙️ إعدادات نشاطك والعرض — عدّل هذه الأسطر فقط ثم احفظ الملف ⚙️⚙️⚙️ */
+const CONFIG = {
+  name:      "متجر لمسة",            // اسم النشاط
+  emoji:     "🛍️",
+  whatsapp:  "9665XXXXXXXX",          // رقم واتساب بصيغة دولية بدون +
+  color1:    "#123c63",
+  color2:    "#0a2946",
+  accent:    "#c9a44a",
+  // تفاصيل العرض:
+  offerTitle: "خصم 30% على كل المنتجات",
+  offerDesc:  "لفترة محدودة — خصم مباشر على كامل تشكيلتنا بدون حد أدنى للطلب.",
+  oldPrice:   "200",                  // اترك "" لإخفاء الأسعار
+  newPrice:   "140",
+  currency:   "ريال",
+  // نهاية العرض: السنة، الشهر، اليوم، الساعة (بتوقيت جهاز الزائر)
+  endYear: 2026, endMonth: 8, endDay: 1, endHour: 23,
+  ctaText:   "🛒 اطلب الآن قبل انتهاء العرض"
+};
+/* ⚙️⚙️⚙️ نهاية الإعدادات — لا تعدّل شيئًا بعد هذا السطر ⚙️⚙️⚙️ */
+</script>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
+<style>
+  :root { --brand:#123c63; --brand2:#0a2946; --gold:#c9a44a; --ink:#1d2733; --muted:#64748b; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Segoe UI",Tahoma,Arial,sans-serif; background:linear-gradient(160deg,var(--brand2),var(--brand)); min-height:100vh; color:#fff; line-height:1.8; display:flex; align-items:center; justify-content:center; padding:24px 14px; text-align:center; }
+  .page { max-width:480px; width:100%; }
+  .biz { font-weight:900; opacity:.9; }
+  .biz span { color:var(--gold); }
+  .flame { font-size:3rem; margin:10px 0 0; }
+  h1 { font-size:1.7rem; margin:6px 0 8px; }
+  .desc { opacity:.85; font-size:.95rem; margin:0 0 20px; }
+  .prices { margin:0 0 20px; }
+  .old { text-decoration:line-through; opacity:.6; font-size:1.1rem; }
+  .new { font-size:2.2rem; font-weight:900; color:var(--gold); margin-inline-start:10px; }
+  .timer { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:0 0 24px; direction:ltr; }
+  .t { background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25); border-radius:14px; padding:12px 4px; }
+  .t b { display:block; font-size:1.7rem; }
+  .t span { font-size:.72rem; opacity:.8; }
+  .ended { display:none; font-size:1.1rem; font-weight:800; background:rgba(0,0,0,.3); border-radius:14px; padding:14px; margin-bottom:24px; }
+  a.cta { display:block; background:#1fa855; color:#fff; text-decoration:none; font-weight:900; font-size:1.1rem; padding:16px; border-radius:14px; box-shadow:0 10px 30px rgba(0,0,0,.3); }
+  .foot { opacity:.6; font-size:.78rem; margin-top:18px; }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="biz"><span id="cfgEmoji"></span> <span id="cfgName"></span><span>.</span></div>
+  <div class="flame">🔥</div>
+  <h1 id="offerTitle"></h1>
+  <p class="desc" id="offerDesc"></p>
+  <div class="prices" id="prices"></div>
+
+  <div class="timer" id="timer">
+    <div class="t"><b id="d">0</b><span>يوم</span></div>
+    <div class="t"><b id="h">0</b><span>ساعة</span></div>
+    <div class="t"><b id="m">0</b><span>دقيقة</span></div>
+    <div class="t"><b id="s">0</b><span>ثانية</span></div>
+  </div>
+  <div class="ended" id="ended">⏰ انتهى العرض — تابعنا ليصلك العرض القادم</div>
+
+  <a class="cta" id="cta" href="#" target="_blank" rel="noopener"></a>
+  <p class="foot" id="cfgFoot"></p>
+</div>
+
+<script>
+document.documentElement.style.setProperty('--brand', CONFIG.color1);
+document.documentElement.style.setProperty('--brand2', CONFIG.color2);
+document.documentElement.style.setProperty('--gold', CONFIG.accent);
+document.getElementById('cfgEmoji').textContent = CONFIG.emoji;
+document.getElementById('cfgName').textContent = CONFIG.name;
+document.getElementById('offerTitle').textContent = CONFIG.offerTitle;
+document.getElementById('offerDesc').textContent = CONFIG.offerDesc;
+document.getElementById('cfgFoot').textContent = '© ' + new Date().getFullYear() + ' ' + CONFIG.name;
+document.title = CONFIG.offerTitle + ' — ' + CONFIG.name;
+
+if (CONFIG.oldPrice) {
+  const p = document.getElementById('prices');
+  p.innerHTML = '<span class="old"></span><span class="new"></span> <small></small>';
+  p.querySelector('.old').textContent = CONFIG.oldPrice + ' ' + CONFIG.currency;
+  p.querySelector('.new').textContent = CONFIG.newPrice;
+  p.querySelector('small').textContent = CONFIG.currency;
+}
+
+const cta = document.getElementById('cta');
+cta.textContent = CONFIG.ctaText;
+cta.href = 'https://wa.me/' + CONFIG.whatsapp + '?text=' +
+  encodeURIComponent('مرحبًا، أرغب بالاستفادة من عرض: ' + CONFIG.offerTitle);
+
+const end = new Date(CONFIG.endYear, CONFIG.endMonth - 1, CONFIG.endDay, CONFIG.endHour, 0, 0);
+function tick() {
+  let diff = Math.floor((end - new Date()) / 1000);
+  if (diff <= 0) {
+    document.getElementById('timer').style.display = 'none';
+    document.getElementById('ended').style.display = 'block';
+    return;
+  }
+  document.getElementById('d').textContent = Math.floor(diff / 86400);
+  document.getElementById('h').textContent = Math.floor(diff % 86400 / 3600);
+  document.getElementById('m').textContent = Math.floor(diff % 3600 / 60);
+  document.getElementById('s').textContent = diff % 60;
+  setTimeout(tick, 1000);
+}
+tick();
+</script>
+</body>
+</html>

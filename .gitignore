@@ -11,7 +11,7 @@ __pycache__/
 build/
 develop-eggs/
 dist/
-downloads/
+# downloads/  # disabled: site/downloads holds product zips
 eggs/
 .eggs/
 lib/
@@ -119,7 +119,7 @@ venv.bak/
 .ropeproject
 
 # mkdocs documentation
-/site
+# /site  (معطّل: مجلد site/ هو موقع حاسبتي وليس مخرجات mkdocs)
 
 # mypy
 .mypy_cache/
@@ -155,3 +155,7 @@ logs/
 # OS
 .DS_Store
 Thumbs.db
+
+# قاعدة بيانات مصنع الدخل المحلية
+data/income_factory.db
+data/app_foundry.db

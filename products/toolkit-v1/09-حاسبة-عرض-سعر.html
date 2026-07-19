@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>احسب تكلفة طلبك</title>
+<script>
+/* ⚙️⚙️⚙️ إعدادات نشاطك — عدّل هذه الأسطر فقط ثم احفظ الملف ⚙️⚙️⚙️ */
+const CONFIG = {
+  name:     "ورشة الإتقان للديكور",  // اسم النشاط
+  emoji:    "🛠️",
+  tagline:  "سعر تقديري فوري لطلبك — قبل أن تتصل",
+  whatsapp: "9665XXXXXXXX",           // رقم واتساب بصيغة دولية بدون +
+  color1:   "#123c63",
+  color2:   "#0a2946",
+  accent:   "#c9a44a",
+  currency: "ريال",
+  unitLabel:"المساحة (متر مربع)",     // اسم وحدة القياس التي يدخلها العميل
+  // الخدمات: [الاسم، سعر الوحدة] — أضف أو احذف أسطرًا
+  services: [
+    ["دهانات داخلية", 18],
+    ["ورق جدران", 45],
+    ["جبس بورد أسقف", 65],
+    ["أرضيات باركيه", 90],
+    ["عزل أسطح", 35]
+  ],
+  // إضافات اختيارية: [الاسم، مبلغ ثابت يُضاف]
+  extras: [
+    ["تنظيف بعد التنفيذ", 300],
+    ["تسليم مستعجل (نصف المدة)", 500]
+  ],
+  note: "السعر تقديري ويشمل المواد والتنفيذ — العرض النهائي بعد المعاينة المجانية."
+};
+/* ⚙️⚙️⚙️ نهاية الإعدادات — لا تعدّل شيئًا بعد هذا السطر ⚙️⚙️⚙️ */
+</script>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+<style>
+  :root { --brand:#123c63; --brand2:#0a2946; --gold:#c9a44a; --bg:#f4f6f9; --ink:#1d2733; --muted:#64748b; --line:#e2e8f0; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Segoe UI",Tahoma,Arial,sans-serif; background:var(--bg); color:var(--ink); line-height:1.8; }
+  header { background:linear-gradient(135deg,var(--brand2),var(--brand)); color:#fff; padding:26px 18px; text-align:center; }
+  header .logo { font-size:1.5rem; font-weight:900; }
+  header .logo span { color:var(--gold); }
+  header p { margin:6px 0 0; opacity:.85; font-size:.9rem; }
+  .wrap { max-width:640px; margin:-18px auto 40px; padding:0 16px; }
+  .card { background:#fff; border-radius:16px; padding:26px; box-shadow:0 10px 30px rgba(18,60,99,.12); }
+  label { display:block; font-weight:700; font-size:.92rem; margin:14px 0 6px; }
+  input, select { width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:10px; font-size:1rem; font-family:inherit; background:#fafbfd; }
+  input:focus, select:focus { outline:none; border-color:var(--brand); }
+  .extra { display:flex; align-items:center; gap:10px; padding:10px 12px; border:1.5px solid var(--line); border-radius:10px; margin-top:8px; cursor:pointer; background:#fafbfd; }
+  .extra input { width:auto; }
+  .extra small { color:var(--muted); margin-inline-start:auto; }
+  button.calc { width:100%; margin-top:20px; padding:14px; border:0; border-radius:12px; cursor:pointer; background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#fff; font-size:1.05rem; font-weight:800; font-family:inherit; }
+  .result { display:none; margin-top:22px; border-top:2px dashed var(--line); padding-top:18px; text-align:center; }
+  .result.show { display:block; }
+  .big { font-size:2.1rem; font-weight:900; color:var(--brand); }
+  a.wa { display:block; margin-top:16px; padding:13px; border-radius:12px; background:#1fa855; color:#fff; text-decoration:none; font-weight:800; text-align:center; }
+  .note { font-size:.78rem; color:var(--muted); margin-top:14px; text-align:center; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo"><span id="cfgEmoji"></span> <span id="cfgName"></span><span style="color:var(--gold)">.</span></div>
+  <p id="cfgTagline"></p>
+</header>
+
+<div class="wrap">
+  <div class="card">
+    <label>الخدمة المطلوبة</label>
+    <select id="service"></select>
+
+    <label id="unitLabel"></label>
+    <input type="number" id="qty" inputmode="decimal" placeholder="مثال: 120">
+
+    <label>إضافات اختيارية</label>
+    <div id="extras"></div>
+
+    <button class="calc" onclick="calc()">💰 احسب السعر التقديري</button>
+
+    <div class="result" id="result">
+      <div class="big" id="total">—</div>
+      <small style="color:var(--muted)">السعر التقديري الإجمالي</small>
+      <a class="wa" id="waLink" href="#" target="_blank" rel="noopener">📲 أرسل الطلب واحجز معاينة مجانية</a>
+    </div>
+
+    <p class="note" id="cfgNote"></p>
+  </div>
+</div>
+
+<script>
+document.documentElement.style.setProperty('--brand', CONFIG.color1);
+document.documentElement.style.setProperty('--brand2', CONFIG.color2);
+document.documentElement.style.setProperty('--gold', CONFIG.accent);
+document.getElementById('cfgEmoji').textContent = CONFIG.emoji;
+document.getElementById('cfgName').textContent = CONFIG.name;
+document.getElementById('cfgTagline').textContent = CONFIG.tagline;
+document.getElementById('unitLabel').textContent = CONFIG.unitLabel;
+document.getElementById('cfgNote').textContent = CONFIG.note;
+document.title = 'احسب تكلفة طلبك — ' + CONFIG.name;
+
+const svcSel = document.getElementById('service');
+CONFIG.services.forEach(([label, price], i) => {
+  const opt = document.createElement('option');
+  opt.value = i;
+  opt.textContent = label + ' — ' + price + ' ' + CONFIG.currency + '/وحدة';
+  svcSel.appendChild(opt);
+});
+const extrasBox = document.getElementById('extras');
+CONFIG.extras.forEach(([label, price], i) => {
+  const l = document.createElement('label');
+  l.className = 'extra';
+  const cb = document.createElement('input');
+  cb.type = 'checkbox'; cb.value = i; cb.className = 'exCb';
+  const t = document.createElement('span'); t.textContent = label;
+  const p = document.createElement('small'); p.textContent = '+' + price + ' ' + CONFIG.currency;
+  l.appendChild(cb); l.appendChild(t); l.appendChild(p);
+  extrasBox.appendChild(l);
+});
+
+const fmt = n => Math.round(n).toLocaleString('ar-SA');
+
+function calc() {
+  const qty = parseFloat(document.getElementById('qty').value) || 0;
+  if (qty <= 0) { alert('أدخل ' + CONFIG.unitLabel); return; }
+  const [svcName, unitPrice] = CONFIG.services[+svcSel.value];
+  let total = qty * unitPrice;
+  const chosen = [];
+  document.querySelectorAll('.exCb:checked').forEach(cb => {
+    const [exName, exPrice] = CONFIG.extras[+cb.value];
+    total += exPrice; chosen.push(exName);
+  });
+  document.getElementById('total').textContent = fmt(total) + ' ' + CONFIG.currency;
+  const msg = encodeURIComponent(
+    'طلب عرض سعر 🛠️\n' +
+    'الخدمة: ' + svcName + '\n' +
+    'الكمية: ' + qty + '\n' +
+    (chosen.length ? 'إضافات: ' + chosen.join('، ') + '\n' : '') +
+    'السعر التقديري: ' + fmt(total) + ' ' + CONFIG.currency + '\n' +
+    'أرغب بحجز معاينة.');
+  document.getElementById('waLink').href = 'https://wa.me/' + CONFIG.whatsapp + '?text=' + msg;
+  document.getElementById('result').classList.add('show');
+}
+</script>
+</body>
+</html>

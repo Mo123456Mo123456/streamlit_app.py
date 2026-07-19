@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>حجز موعد</title>
+<script>
+/* ⚙️⚙️⚙️ إعدادات نشاطك — عدّل هذه الأسطر فقط ثم احفظ الملف ⚙️⚙️⚙️ */
+const CONFIG = {
+  name:     "عيادة الابتسامة",     // اسم نشاطك
+  emoji:    "🦷",                   // رمز/شعار بسيط
+  whatsapp: "9665XXXXXXXX",         // رقم واتساب بصيغة دولية بدون +
+  color1:   "#123c63",
+  color2:   "#0a2946",
+  accent:   "#c9a44a",
+  // الخدمات التي يحجز لها العملاء — أضف أو احذف بين الأقواس
+  services: ["كشف وتشخيص", "تنظيف الأسنان", "تبييض", "حشوات تجميلية", "استشارة عامة"],
+  // أوقات المواعيد المتاحة يوميًا
+  times: ["4:30 م", "5:30 م", "6:30 م", "7:30 م", "8:30 م", "9:30 م"],
+  closedDay: 5   // يوم الإجازة الأسبوعية: 5 = الجمعة، 6 = السبت، 0 = الأحد (اكتب -1 إذا تعمل كل الأيام)
+};
+/* ⚙️⚙️⚙️ نهاية الإعدادات — لا تعدّل شيئًا بعد هذا السطر ⚙️⚙️⚙️ */
+</script>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
+<style>
+  :root { --brand:#123c63; --brand2:#0a2946; --gold:#c9a44a; --bg:#f4f6f9; --ink:#1d2733; --muted:#64748b; --line:#e2e8f0; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Segoe UI",Tahoma,Arial,sans-serif; background:var(--bg); color:var(--ink); line-height:1.8; }
+  header { background:linear-gradient(135deg,var(--brand2),var(--brand)); color:#fff; padding:26px 18px; text-align:center; }
+  header .logo { font-size:1.5rem; font-weight:900; }
+  header .logo span { color:var(--gold); }
+  .wrap { max-width:640px; margin:-18px auto 40px; padding:0 16px; }
+  .card { background:#fff; border-radius:16px; padding:26px; box-shadow:0 10px 30px rgba(18,60,99,.12); }
+  h1 { font-size:1.25rem; color:var(--brand); margin:0 0 4px; }
+  .sub { color:var(--muted); font-size:.9rem; margin:0 0 18px; }
+  label { display:block; font-weight:700; font-size:.92rem; margin:14px 0 6px; }
+  input, select { width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:10px; font-size:1rem; font-family:inherit; background:#fafbfd; }
+  input:focus, select:focus { outline:none; border-color:var(--brand); }
+  .slots { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:6px; }
+  .slot { padding:10px 4px; text-align:center; border:1.5px solid var(--line); border-radius:10px; cursor:pointer; font-size:.9rem; background:#fafbfd; user-select:none; }
+  .slot.sel { background:var(--brand); color:#fff; border-color:var(--brand); font-weight:800; }
+  button.go { width:100%; margin-top:20px; padding:14px; border:0; border-radius:12px; cursor:pointer; background:#1fa855; color:#fff; font-size:1.05rem; font-weight:800; font-family:inherit; }
+  .hint { font-size:.8rem; color:var(--muted); text-align:center; margin-top:12px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo"><span id="cfgEmoji"></span> <span id="cfgName"></span><span style="color:var(--gold)">.</span></div>
+</header>
+
+<div class="wrap">
+  <div class="card">
+    <h1>📅 احجز موعدك</h1>
+    <p class="sub">اختر الخدمة والوقت المناسب — يصلنا حجزك فورًا على واتساب ونؤكده لك.</p>
+
+    <label>الخدمة المطلوبة</label>
+    <select id="service"></select>
+
+    <label>اليوم</label>
+    <select id="day"></select>
+
+    <label>الوقت المناسب</label>
+    <div class="slots" id="slots"></div>
+
+    <label>الاسم الكريم</label>
+    <input type="text" id="name" placeholder="اسمك">
+
+    <label>رقم الجوال</label>
+    <input type="tel" id="phone" inputmode="tel" placeholder="05xxxxxxxx">
+
+    <button class="go" onclick="book()">📲 تأكيد الحجز عبر واتساب</button>
+    <p class="hint">بالضغط يُفتح واتساب برسالة حجز جاهزة — أرسلها وينتهي حجزك.</p>
+  </div>
+</div>
+
+<script>
+document.documentElement.style.setProperty('--brand', CONFIG.color1);
+document.documentElement.style.setProperty('--brand2', CONFIG.color2);
+document.documentElement.style.setProperty('--gold', CONFIG.accent);
+document.getElementById('cfgEmoji').textContent = CONFIG.emoji;
+document.getElementById('cfgName').textContent = CONFIG.name;
+document.title = 'حجز موعد — ' + CONFIG.name;
+
+const svcSel = document.getElementById('service');
+CONFIG.services.forEach(s => {
+  const opt = document.createElement('option');
+  opt.textContent = s;
+  svcSel.appendChild(opt);
+});
+
+const daySel = document.getElementById('day');
+const dfmt = new Intl.DateTimeFormat('ar', { weekday:'long', day:'numeric', month:'long' });
+for (let i = 1; i <= 8; i++) {
+  const d = new Date(); d.setDate(d.getDate() + i);
+  if (d.getDay() === CONFIG.closedDay) continue;
+  const opt = document.createElement('option');
+  opt.textContent = dfmt.format(d);
+  daySel.appendChild(opt);
+}
+
+const slotsBox = document.getElementById('slots');
+let selectedTime = null;
+CONFIG.times.forEach(t => {
+  const el = document.createElement('div');
+  el.className = 'slot'; el.textContent = t;
+  el.onclick = () => {
+    document.querySelectorAll('.slot').forEach(s => s.classList.remove('sel'));
+    el.classList.add('sel'); selectedTime = t;
+  };
+  slotsBox.appendChild(el);
+});
+
+function book() {
+  const name = document.getElementById('name').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  if (!name || !phone) { alert('فضلًا أدخل اسمك ورقم جوالك'); return; }
+  if (!selectedTime) { alert('اختر الوقت المناسب'); return; }
+  const msg = encodeURIComponent(
+    'طلب حجز موعد 📅\n' +
+    'الخدمة: ' + svcSel.value + '\n' +
+    'اليوم: ' + daySel.value + '\n' +
+    'الوقت: ' + selectedTime + '\n' +
+    'الاسم: ' + name + '\n' +
+    'الجوال: ' + phone);
+  window.open('https://wa.me/' + CONFIG.whatsapp + '?text=' + msg, '_blank');
+}
+</script>
+</body>
+</html>

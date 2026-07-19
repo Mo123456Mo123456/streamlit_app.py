@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>حاسبة زكاة المال — احسب زكاتك بدقة مع النصاب بسعر الذهب اليوم</title>
+<meta name="description" content="حاسبة زكاة المال: احسب زكاة النقد والذهب والأسهم والاستثمارات بعد خصم الديون الحالّة، مع تحديد النصاب تلقائيًا من سعر جرام الذهب. نسبة الزكاة 2.5%.">
+<link rel="canonical" href="https://mo123456mo123456.github.io/streamlit_app.py/tools/zakat.html">
+<meta property="og:title" content="حاسبة زكاة المال — دقيقة ومجانية">
+<meta property="og:description" content="زكاة النقد والذهب والاستثمارات مع تحديد النصاب بسعر الذهب الحالي.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕌</text></svg>">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "ما هو نصاب زكاة المال؟", "acceptedAnswer": {"@type": "Answer", "text": "النصاب هو ما يعادل قيمة 85 جرامًا من الذهب الخالص. إذا بلغ مجموع أموالك الزكوية هذا الحد وحال عليها الحول وجبت الزكاة بنسبة 2.5%."}},
+    {"@type": "Question", "name": "هل تُخصم الديون من وعاء الزكاة؟", "acceptedAnswer": {"@type": "Answer", "text": "الديون الحالّة المطلوبة منك خلال العام تُخصم من الوعاء عند جمهور المعاصرين، أما أقساط الديون طويلة الأجل فيُخصم قسط العام الحالي فقط في قول كثير من أهل العلم."}},
+    {"@type": "Question", "name": "كيف تُزكى الأسهم والاستثمارات؟", "acceptedAnswer": {"@type": "Answer", "text": "أسهم المتاجرة تُزكى بقيمتها السوقية كاملة 2.5%. أما أسهم الاستثمار طويل الأجل ففيها تفصيل، والأحوط تزكية قيمتها السوقية."}},
+    {"@type": "Question", "name": "متى تجب الزكاة؟", "acceptedAnswer": {"@type": "Answer", "text": "إذا بلغ المال النصاب وحال عليه حول هجري كامل (354 يومًا) وهو في ملكك."}}
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site">
+  <div class="container">
+    <a class="logo" href="../index.html">🧮 حاسبتي<span>.</span></a>
+    <nav class="main"><a href="../index.html#tools">الأدوات</a><a href="../about.html">عن الموقع</a></nav>
+  </div>
+</header>
+
+<main class="container tool-wrap">
+  <div class="tool-head">
+    <h1>🕌 حاسبة زكاة المال</h1>
+    <p class="lead">اجمع أموالك الزكوية، اخصم ديونك الحالّة، وتحقق من بلوغ النصاب — كل ذلك في خطوة واحدة.</p>
+  </div>
+
+  <div class="calc">
+    <div class="row2">
+      <div class="field">
+        <label for="cash">النقد (حسابات بنكية + كاش)</label>
+        <input type="number" id="cash" inputmode="decimal" placeholder="0" min="0" value="">
+      </div>
+      <div class="field">
+        <label for="gold">قيمة الذهب والفضة المملوكة</label>
+        <input type="number" id="gold" inputmode="decimal" placeholder="0" min="0" value="">
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label for="invest">الأسهم والاستثمارات (القيمة السوقية)</label>
+        <input type="number" id="invest" inputmode="decimal" placeholder="0" min="0" value="">
+      </div>
+      <div class="field">
+        <label for="owed">ديون لك يُرجى سدادها</label>
+        <input type="number" id="owed" inputmode="decimal" placeholder="0" min="0" value="">
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label for="debts">ديون عليك حالّة هذا العام (تُخصم)</label>
+        <input type="number" id="debts" inputmode="decimal" placeholder="0" min="0" value="">
+      </div>
+      <div class="field">
+        <label for="goldprice">سعر جرام الذهب (عيار 24) بعملتك</label>
+        <input type="number" id="goldprice" inputmode="decimal" placeholder="مثال: 400" min="0">
+      </div>
+    </div>
+    <button class="go" onclick="calc()">احسب الزكاة</button>
+
+    <div class="result" id="result">
+      <p class="big-number" id="zakat">—</p>
+      <p class="big-label" id="zlabel">مقدار الزكاة الواجبة (2.5%)</p>
+      <div class="mini-grid">
+        <div class="mini"><b id="pool">—</b><span>وعاء الزكاة بعد الخصوم</span></div>
+        <div class="mini"><b id="nisab">—</b><span>النصاب (قيمة 85 جم ذهب)</span></div>
+        <div class="mini"><b id="status">—</b><span>الحكم</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">⚠️ الحاسبة وسيلة مساعدة على التقدير، والمسائل الخلافية (كزكاة أسهم الاستثمار وخصم الديون) يُرجع فيها لأهل العلم أو الجهات الإفتائية في بلدك.</div>
+
+  <article class="explain">
+    <h2>كيف تعمل حاسبة الزكاة؟</h2>
+    <p>تجمع الحاسبة أموالك الزكوية: <strong>النقد</strong> بجميع صوره، و<strong>الذهب والفضة</strong>، و<strong>عروض التجارة والاستثمارات</strong>، و<strong>الديون المرجوّة</strong> التي لك عند الناس، ثم تخصم منها <strong>الديون الحالّة</strong> التي عليك، وتقارن الناتج بالنصاب.</p>
+    <p><strong>النصاب</strong> = قيمة 85 جرامًا من الذهب الخالص بسعر اليوم. إن بلغ الوعاء النصاب فالزكاة <strong>ربع العشر (2.5%)</strong> بعد حولان الحول الهجري.</p>
+    <h3>مثال</h3>
+    <p>شخص لديه 50,000 في البنك و20,000 أسهمًا وعليه قسط حالّ 10,000: الوعاء = 60,000. إذا كان سعر الجرام 400 فالنصاب = 34,000. الوعاء أكبر من النصاب، فالزكاة = 60,000 × 2.5% = <strong>1,500</strong>.</p>
+
+    <h2>أسئلة شائعة</h2>
+    <details class="faq"><summary>هل على الراتب زكاة؟</summary><p>الراتب نفسه ليس عليه زكاة عند قبضه، وإنما يُضم ما يتبقى منه إلى مالك، فإذا حال الحول على مالك البالغ للنصاب زكّيت الجميع. وطريقة أهل التيسير: اجعل لك يومًا واحدًا في السنة تزكي فيه كل ما تملك.</p></details>
+    <details class="faq"><summary>هل يُزكى ذهب المرأة المُعد للاستعمال؟</summary><p>مسألة خلافية مشهورة: جمهور الفقهاء لا يوجبون الزكاة في الحلي المعد للاستعمال، ومذهب الحنفية وجوبها، وهو الأحوط. أدخل قيمته في الحاسبة إن أخذت بالأحوط.</p></details>
+    <details class="faq"><summary>حال الحول وأنا لا أذكر متى بلغ مالي النصاب؟</summary><p>اجتهد في تحديد تاريخ تقريبي وثبّت عليه يومًا هجريًا سنويًا للزكاة، فالمقصود ألا تفوت الزكاة، والتحري الصادق يكفي.</p></details>
+    <details class="faq"><summary>أين أجد سعر جرام الذهب؟</summary><p>ابحث في جوجل عن "سعر جرام الذهب عيار 24 اليوم" مع اسم بلدك، وأدخل الرقم في الحاسبة — يتغير السعر يوميًا.</p></details>
+  </article>
+
+  <p>🧮 جرّب أيضًا: <a href="savings.html">حاسبة الادخار</a> • <a href="end-of-service.html">حاسبة نهاية الخدمة</a> • <a href="loan.html">حاسبة الأقساط</a></p>
+</main>
+
+<footer class="site">
+  <div class="container">
+    <div>© <span id="y"></span> حاسبتي</div>
+    <div><a href="../about.html">عن الموقع</a><a href="../privacy.html">سياسة الخصوصية</a></div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('y').textContent = new Date().getFullYear();
+const fmt = n => n.toLocaleString('ar-SA', {maximumFractionDigits: 2});
+const val = id => parseFloat(document.getElementById(id).value) || 0;
+
+function calc() {
+  const pool = val('cash') + val('gold') + val('invest') + val('owed') - val('debts');
+  const nisab = 85 * val('goldprice');
+  const due = pool >= nisab && nisab > 0;
+  const zakat = due ? pool * 0.025 : 0;
+
+  document.getElementById('pool').textContent = fmt(Math.max(pool, 0));
+  document.getElementById('nisab').textContent = nisab > 0 ? fmt(nisab) : 'أدخل سعر الذهب';
+  document.getElementById('status').textContent = nisab <= 0 ? '—' : (due ? 'بلغ النصاب ✅' : 'لم يبلغ النصاب');
+  document.getElementById('zakat').textContent = due ? fmt(zakat) : '0';
+  document.getElementById('zlabel').textContent = due ?
+    'مقدار الزكاة الواجبة (2.5%) بعد حولان الحول' :
+    (nisab > 0 ? 'لا زكاة عليك — المال لم يبلغ النصاب' : 'أدخل سعر جرام الذهب لتحديد النصاب');
+  document.getElementById('result').classList.add('show');
+}
+</script>
+</body>
+</html>

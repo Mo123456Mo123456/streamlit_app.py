@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>حاسبة التمويل والأقساط — القسط الشهري وإجمالي التكلفة قبل التوقيع</title>
+<meta name="description" content="حاسبة تمويل شخصي وعقاري: احسب القسط الشهري وإجمالي المبلغ المدفوع وكلفة التمويل من مبلغ التمويل ومعدل النسبة السنوي والمدة. اعرف التكلفة الحقيقية قبل أن توقّع.">
+<link rel="canonical" href="https://mo123456mo123456.github.io/streamlit_app.py/tools/loan.html">
+<meta property="og:title" content="حاسبة التمويل والأقساط الشهرية">
+<meta property="og:description" content="القسط الشهري وإجمالي التكلفة وكلفة التمويل — بأرقام واضحة قبل التوقيع.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏦</text></svg>">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "كيف يُحسب القسط الشهري للتمويل؟", "acceptedAnswer": {"@type": "Answer", "text": "بمعادلة الأقساط المتساوية: القسط = المبلغ × المعدل الشهري × (1+المعدل)^عدد الأشهر ÷ ((1+المعدل)^عدد الأشهر − 1)، حيث المعدل الشهري هو المعدل السنوي مقسومًا على 12."}},
+    {"@type": "Question", "name": "ما الفرق بين معدل النسبة السنوي APR والمعدل الثابت؟", "acceptedAnswer": {"@type": "Answer", "text": "المعدل الثابت يُحسب على أصل المبلغ كاملًا طوال المدة فيبدو أقل، بينما APR يعكس الكلفة الحقيقية على الرصيد المتناقص شاملًا الرسوم، لذلك APR هو الرقم الصحيح للمقارنة بين العروض."}},
+    {"@type": "Question", "name": "هل السداد المبكر يوفر عليّ؟", "acceptedAnswer": {"@type": "Answer", "text": "غالبًا نعم، إذ تسقط كلفة الأجل عن المدة المتبقية وفق الضوابط، وقد تُطبق رسوم — راجع عقدك وتعليمات البنك المركزي في بلدك."}},
+    {"@type": "Question", "name": "كم يجب ألا يتجاوز القسط من الراتب؟", "acceptedAnswer": {"@type": "Answer", "text": "قاعدة شائعة ألا تتجاوز التزاماتك الشهرية 33% من دخلك، وتضع بعض الجهات التنظيمية حدودًا أعلى وفق نوع التمويل — وكلما قلّت النسبة كان وضعك المالي أكثر أمانًا."}}
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site">
+  <div class="container">
+    <a class="logo" href="../index.html">🧮 حاسبتي<span>.</span></a>
+    <nav class="main"><a href="../index.html#tools">الأدوات</a><a href="../about.html">عن الموقع</a></nav>
+  </div>
+</header>
+
+<main class="container tool-wrap">
+  <div class="tool-head">
+    <h1>🏦 حاسبة التمويل والأقساط</h1>
+    <p class="lead">أدخل مبلغ التمويل والمعدل والمدة — واعرف قسطك الشهري والتكلفة الكاملة قبل أن تلتزم.</p>
+  </div>
+
+  <div class="calc">
+    <div class="field">
+      <label for="amount">مبلغ التمويل</label>
+      <input type="number" id="amount" inputmode="decimal" placeholder="مثال: 100000" min="0">
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label for="rate">معدل النسبة السنوي % (APR)</label>
+        <input type="number" id="rate" inputmode="decimal" placeholder="مثال: 6.5" min="0" step="0.01">
+      </div>
+      <div class="field">
+        <label for="years">مدة التمويل (سنوات)</label>
+        <input type="number" id="years" inputmode="decimal" placeholder="مثال: 5" min="0" step="0.5">
+      </div>
+    </div>
+    <button class="go" onclick="calc()">احسب القسط</button>
+
+    <div class="result" id="result">
+      <p class="big-number" id="payment">—</p>
+      <p class="big-label">القسط الشهري</p>
+      <div class="mini-grid">
+        <div class="mini"><b id="total">—</b><span>إجمالي ما ستدفعه</span></div>
+        <div class="mini"><b id="cost">—</b><span>كلفة التمويل (فوق الأصل)</span></div>
+        <div class="mini"><b id="months">—</b><span>عدد الأقساط</span></div>
+        <div class="mini"><b id="ratio">—</b><span>الكلفة كنسبة من الأصل</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">⚠️ الأرقام استرشادية بمعادلة الأقساط المتساوية القياسية، وقد تختلف العروض الفعلية برسوم إدارية وتأمين وطريقة احتساب مختلفة — قارن دائمًا بعرض السعر الرسمي.</div>
+
+  <article class="explain">
+    <h2>افهم الرقم قبل التوقيع</h2>
+    <p>أخطر خطأ شائع هو النظر إلى القسط الشهري وحده. القسط "المريح" على مدة طويلة قد يعني أنك تدفع كلفة تمويل ضخمة. هذه الحاسبة تعرض لك <strong>إجمالي ما ستدفعه فعليًا</strong> و<strong>كلفة التمويل</strong> — وهذان الرقمان هما أساس أي قرار سليم.</p>
+    <h3>المعادلة المستخدمة</h3>
+    <p>القسط الشهري = م × ر × (1+ر)^ن ÷ ((1+ر)^ن − 1)، حيث م = المبلغ، ر = المعدل الشهري (السنوي ÷ 12)، ن = عدد الأشهر. وهي معادلة الأقساط المتساوية على الرصيد المتناقص المعتمدة لدى البنوك.</p>
+    <h3>نصيحتان تختصران آلاف الريالات</h3>
+    <ul>
+      <li><strong>قصّر المدة ما استطعت:</strong> تمويل 100,000 بمعدل 6% لعشر سنوات كلفته ~33,000، ولخمس سنوات ~16,000 فقط — نصف الكلفة تقريبًا.</li>
+      <li><strong>قارن بـ APR لا بالمعدل الثابت:</strong> معدل ثابت 3% قد يعادل APR يقارب 6% — لا تقارن عرضين إلا بنفس المقياس.</li>
+    </ul>
+
+    <h2>أسئلة شائعة</h2>
+    <details class="faq"><summary>ما الفرق بين المعدل الثابت وAPR؟</summary><p>الثابت يُحسب على أصل المبلغ كاملًا كل المدة فيبدو رقمه صغيرًا، بينما APR يعكس الكلفة على الرصيد المتناقص شاملًا الرسوم الإلزامية، وهو المقياس الصحيح للمقارنة.</p></details>
+    <details class="faq"><summary>هل يشمل الحساب الرسوم الإدارية والتأمين؟</summary><p>لا — أدخلها ضمن المعدل إن كانت معلنة ضمن APR، أو أضفها ذهنيًا للإجمالي. العروض الرسمية ملزمة بإظهار APR شاملًا الرسوم في معظم دول الخليج.</p></details>
+    <details class="faq"><summary>كيف أقلل القسط دون زيادة الكلفة كثيرًا؟</summary><p>بزيادة الدفعة الأولى أو تقليل المبلغ الممول، فتقصير المدة يرفع القسط لكنه يخفض الكلفة، والعكس صحيح — وازن بينهما حسب دخلك.</p></details>
+    <details class="faq"><summary>القسط المناسب كم يكون من راتبي؟</summary><p>القاعدة الذهبية ألا تتجاوز كل التزاماتك 33% من دخلك الشهري، وكلما نزلت عنها كنت أكثر أمانًا أمام الطوارئ.</p></details>
+  </article>
+
+  <p>🧮 جرّب أيضًا: <a href="savings.html">حاسبة الادخار والنمو</a> • <a href="end-of-service.html">حاسبة نهاية الخدمة</a></p>
+</main>
+
+<footer class="site">
+  <div class="container">
+    <div>© <span id="y"></span> حاسبتي</div>
+    <div><a href="../about.html">عن الموقع</a><a href="../privacy.html">سياسة الخصوصية</a></div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('y').textContent = new Date().getFullYear();
+const fmt = n => n.toLocaleString('ar-SA', {maximumFractionDigits: 2});
+
+function calc() {
+  const P = parseFloat(document.getElementById('amount').value) || 0;
+  const annual = parseFloat(document.getElementById('rate').value) || 0;
+  const years = parseFloat(document.getElementById('years').value) || 0;
+  const n = Math.round(years * 12);
+  if (P <= 0 || n <= 0) return;
+
+  const r = annual / 100 / 12;
+  const payment = r === 0 ? P / n : P * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+  const total = payment * n;
+  const cost = total - P;
+
+  document.getElementById('payment').textContent = fmt(payment);
+  document.getElementById('total').textContent = fmt(total);
+  document.getElementById('cost').textContent = fmt(cost);
+  document.getElementById('months').textContent = n.toLocaleString('ar-SA') + ' قسطًا';
+  document.getElementById('ratio').textContent = fmt(cost / P * 100) + '%';
+  document.getElementById('result').classList.add('show');
+}
+</script>
+</body>
+</html>
