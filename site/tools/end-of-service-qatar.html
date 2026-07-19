@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>حاسبة مكافأة نهاية الخدمة في قطر — قانون العمل رقم 14 لسنة 2004 (محدثة)</title>
+<meta name="description" content="احسب مكافأة نهاية الخدمة في قطر وفق قانون العمل رقم 14 لسنة 2004: أجر 3 أسابيع (21 يومًا) من الراتب الأساسي عن كل سنة خدمة بعد إتمام سنة، بلا سقف أعلى، والمكافأة لا تنقص بالاستقالة. حاسبة دقيقة ومجانية.">
+<link rel="canonical" href="https://mo123456mo123456.github.io/streamlit_app.py/tools/end-of-service-qatar.html">
+<meta property="og:title" content="حاسبة مكافأة نهاية الخدمة في قطر">
+<meta property="og:description" content="اعرف مستحقاتك وفق قانون العمل القطري خلال ثوانٍ.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇶🇦</text></svg>">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "كيف تُحسب مكافأة نهاية الخدمة في قطر؟", "acceptedAnswer": {"@type": "Answer", "text": "وفق المادة 54 من قانون العمل القطري رقم 14 لسنة 2004: يستحق العامل الذي أتم سنة خدمة متصلة فأكثر مكافأة لا تقل عن أجر 3 أسابيع (21 يومًا) من الراتب الأساسي الأخير عن كل سنة خدمة، وتُحسب أجزاء السنة بنسبتها، بلا حد أقصى."}},
+    {"@type": "Question", "name": "هل تنقص مكافأة نهاية الخدمة إذا استقلت في قطر؟", "acceptedAnswer": {"@type": "Answer", "text": "لا — على خلاف السعودية والكويت، لا يفرّق القانون القطري بين الاستقالة والإنهاء: متى أتممت سنة خدمة استحققت المكافأة كاملة، ولا تسقط إلا في حالات الفصل التأديبي المحددة في المادة 61."}},
+    {"@type": "Question", "name": "هل تُحسب المكافأة على الراتب الأساسي أم الإجمالي في قطر؟", "acceptedAnswer": {"@type": "Answer", "text": "على الراتب الأساسي الأخير فقط دون بدلات السكن والمواصلات وغيرها — لذا تأكد من قيمة أساسيّك في عقدك لأنه وعاء الحساب."}},
+    {"@type": "Question", "name": "هل 21 يومًا هي الحد الأقصى للمكافأة في قطر؟", "acceptedAnswer": {"@type": "Answer", "text": "لا، هي الحد الأدنى القانوني. يجوز أن ينص عقد العمل أو لائحة المنشأة على مكافأة أعلى (شهر عن كل سنة مثلًا) وعندها يُطبق الأفضل للعامل."}}
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site">
+  <div class="container">
+    <a class="logo" href="../index.html">🧮 حاسبتي<span>.</span></a>
+    <nav class="main"><a href="../index.html#tools">الأدوات</a><a href="../about.html">عن الموقع</a></nav>
+  </div>
+</header>
+
+<main class="container tool-wrap">
+  <div class="tool-head">
+    <h1>🇶🇦 حاسبة مكافأة نهاية الخدمة — قطر</h1>
+    <p class="lead">وفق المادة 54 من قانون العمل رقم 14 لسنة 2004 — أدخل بياناتك واعرف مستحقاتك.</p>
+  </div>
+
+  <div class="calc">
+    <div class="field">
+      <label for="salary">الراتب الأساسي الشهري الأخير (ريال قطري) — بدون البدلات</label>
+      <input type="number" id="salary" inputmode="decimal" placeholder="مثال: 8000" min="0">
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label for="years">سنوات الخدمة</label>
+        <input type="number" id="years" inputmode="numeric" placeholder="مثال: 6" min="0">
+      </div>
+      <div class="field">
+        <label for="months">الأشهر الإضافية</label>
+        <input type="number" id="months" inputmode="numeric" placeholder="مثال: 8" min="0" max="11" value="0">
+      </div>
+    </div>
+    <div class="field">
+      <label for="weeks">عدد أسابيع المكافأة عن كل سنة (الحد الأدنى القانوني 3 — ارفعه إن كان عقدك أفضل)</label>
+      <select id="weeks">
+        <option value="3" selected>3 أسابيع/سنة (الحد الأدنى القانوني)</option>
+        <option value="4">4 أسابيع/سنة (شهر — إن نص عقدك)</option>
+      </select>
+    </div>
+    <button class="go" onclick="calc()">احسب المكافأة</button>
+
+    <div class="result" id="result">
+      <p class="big-number" id="total">—</p>
+      <p class="big-label">إجمالي مكافأة نهاية الخدمة المستحقة (ريال قطري)</p>
+      <div class="mini-grid">
+        <div class="mini"><b id="daily">—</b><span>الأجر اليومي (الأساسي ÷ 30)</span></div>
+        <div class="mini"><b id="peryear">—</b><span>المكافأة عن كل سنة خدمة</span></div>
+        <div class="mini"><b id="service">—</b><span>مدة الخدمة المحسوبة</span></div>
+        <div class="mini"><b id="note">—</b><span>ملاحظة</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">⚠️ الحاسبة استرشادية للعاملين الخاضعين لقانون العمل القطري. القطريون المشمولون بقانون التقاعد والمعاشات لهم نظام مختلف، وقد تكون لبعض الجهات (قطاع الطاقة، المناطق الحرة) لوائح خاصة — راجع وزارة العمل للحالات الخاصة.</div>
+
+  <article class="explain">
+    <h2>كيف تُحسب المكافأة في قطر؟</h2>
+    <p>نصت <strong>المادة 54 من قانون العمل رقم 14 لسنة 2004</strong> على أن العامل الذي أتم <strong>سنة خدمة متصلة</strong> فأكثر يستحق عند انتهاء عمله مكافأة لا تقل عن أجر <strong>3 أسابيع (21 يومًا) من الراتب الأساسي الأخير عن كل سنة خدمة</strong>، وتُحسب أجزاء السنة بنسبتها. الأجر اليومي = الأساسي ÷ 30، ومكافأة السنة الواحدة = الأجر اليومي × 21.</p>
+    <h3>أهم ثلاثة فروق عن جاراتها</h3>
+    <ul>
+      <li><strong>لا سقف:</strong> بخلاف الإمارات (سنتان) والكويت (18 شهرًا)، لا حد أقصى للمكافأة في قطر مهما طالت الخدمة.</li>
+      <li><strong>لا خصم للاستقالة:</strong> النسبة واحدة استقلت أم أُنهي عقدك — بخلاف نسب المادة 85 السعودية والمادة 52 الكويتية.</li>
+      <li><strong>الوعاء:</strong> الراتب الأساسي فقط كالإمارات وقطر — بينما تعتمد السعودية والكويت الأجر الشامل للعناصر الثابتة.</li>
+    </ul>
+    <h3>مثال عملي</h3>
+    <p>موظف أساسيّه 8,000 ريال قطري خدم 6 سنوات و8 أشهر: الأجر اليومي = 8,000 ÷ 30 = 266.67 ريالًا. مكافأة السنة = 21 × 266.67 = 5,600 ريال. مدة الخدمة = 6.667 سنة. الإجمالي = 6.667 × 5,600 = <strong>37,333 ريالًا قطريًا</strong>.</p>
+
+    <h2>أسئلة شائعة</h2>
+    <details class="faq"><summary>خدمت 10 أشهر فقط — هل أستحق شيئًا؟</summary><p>لا، تشترط المادة 54 إتمام سنة خدمة متصلة واحدة على الأقل. بعد إتمامها تُحسب كل المدة بما فيها كسور السنوات التالية.</p></details>
+    <details class="faq"><summary>متى أفقد المكافأة كليًا؟</summary><p>فقط في حالات الفصل التأديبي المنصوصة في المادة 61 (كالاعتداء أو الإضرار الجسيم المتعمد أو انتحال الشخصية). خارج هذه الحالات مكافأتك محفوظة كاملة.</p></details>
+    <details class="faq"><summary>متى يجب أن تُصرف مستحقاتي؟</summary><p>ألزم القانون صاحب العمل بأداء أجور ومستحقات العامل قبل انتهاء يوم العمل التالي لانتهاء العقد، وتُدفع عبر نظام حماية الأجور.</p></details>
+    <details class="faq"><summary>عقدي ينص على شهر عن كل سنة — أيهما يُطبق؟</summary><p>الأفضل لك. الـ21 يومًا حد أدنى قانوني، وأي اتفاق أعلى في العقد أو لائحة المنشأة ملزم لصاحب العمل — اختر «4 أسابيع» في الحاسبة لتقريب الناتج.</p></details>
+  </article>
+
+  <p>🧮 جرّب أيضًا: <a href="end-of-service.html">نهاية الخدمة — السعودية</a> • <a href="end-of-service-uae.html">نهاية الخدمة — الإمارات</a> • <a href="end-of-service-kuwait.html">نهاية الخدمة — الكويت</a></p>
+</main>
+
+<footer class="site">
+  <div class="container">
+    <div>© <span id="y"></span> حاسبتي</div>
+    <div><a href="../about.html">عن الموقع</a><a href="../privacy.html">سياسة الخصوصية</a></div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('y').textContent = new Date().getFullYear();
+const fmt = n => n.toLocaleString('ar-QA', {maximumFractionDigits: 0});
+
+function calc() {
+  const salary = parseFloat(document.getElementById('salary').value) || 0;
+  const years = parseInt(document.getElementById('years').value) || 0;
+  const months = parseInt(document.getElementById('months').value) || 0;
+  const weeks = parseInt(document.getElementById('weeks').value) || 3;
+  if (salary <= 0) return;
+
+  const service = years + months / 12;
+  const daily = salary / 30;
+  const perYear = daily * weeks * 7;
+
+  let total, note;
+  if (service < 1) {
+    total = 0;
+    note = 'لا استحقاق قبل إتمام سنة خدمة';
+  } else {
+    total = service * perYear;
+    note = 'لا سقف أعلى في قطر';
+  }
+
+  document.getElementById('total').textContent = fmt(total);
+  document.getElementById('daily').textContent = fmt(daily);
+  document.getElementById('peryear').textContent = fmt(perYear);
+  document.getElementById('service').textContent = service.toLocaleString('ar-QA', {maximumFractionDigits: 2}) + ' سنة';
+  document.getElementById('note').textContent = note;
+  document.getElementById('result').classList.add('show');
+}
+</script>
+</body>
+</html>
