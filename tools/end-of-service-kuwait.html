@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>حاسبة مكافأة نهاية الخدمة في الكويت — قانون العمل الأهلي (محدثة)</title>
+<meta name="description" content="احسب مكافأة نهاية الخدمة في الكويت وفق قانون العمل في القطاع الأهلي رقم 6 لسنة 2010: 15 يومًا عن كل سنة من أول 5 سنوات وشهر عن كل سنة بعدها، بحد أقصى أجر سنة ونصف، مع نسب الاستقالة (50% و75%). حاسبة دقيقة ومجانية.">
+<link rel="canonical" href="https://mo123456mo123456.github.io/streamlit_app.py/tools/end-of-service-kuwait.html">
+<meta property="og:title" content="حاسبة مكافأة نهاية الخدمة في الكويت">
+<meta property="og:description" content="اعرف مستحقاتك وفق قانون العمل الكويتي خلال ثوانٍ — مع نسب الاستقالة.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇰🇼</text></svg>">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "كيف تُحسب مكافأة نهاية الخدمة في الكويت؟", "acceptedAnswer": {"@type": "Answer", "text": "وفق قانون العمل في القطاع الأهلي رقم 6 لسنة 2010: أجر 15 يومًا عن كل سنة من السنوات الخمس الأولى، وأجر شهر كامل عن كل سنة تالية، على ألا يتجاوز المجموع أجر سنة ونصف (18 شهرًا). ولمن يتقاضى أجره شهريًا يُحسب الأجر اليومي بقسمة الراتب الشهري على 26 يوم عمل."}},
+    {"@type": "Question", "name": "كم أستحق من المكافأة إذا استقلت في الكويت؟", "acceptedAnswer": {"@type": "Answer", "text": "عند الاستقالة في عقد غير محدد المدة: لا استحقاق إن قلت الخدمة عن 3 سنوات، ونصف المكافأة من 3 إلى أقل من 5 سنوات، وثلاثة أرباعها من 5 إلى أقل من 10 سنوات، والمكافأة كاملة عند بلوغ 10 سنوات فأكثر."}},
+    {"@type": "Question", "name": "متى تُصرف المكافأة كاملة أيًا كانت مدة الخدمة؟", "acceptedAnswer": {"@type": "Answer", "text": "إذا أنهى صاحب العمل العقد، أو انتهى العقد محدد المدة بانقضاء مدته، أو انتهت الخدمة بالوفاة أو العجز، أو أنهت العاملة عقدها بسبب الزواج خلال سنة منه — ففي هذه الحالات تُصرف المكافأة كاملة دون تخفيض."}},
+    {"@type": "Question", "name": "هل تُحسب المكافأة على الراتب الأساسي أم الإجمالي في الكويت؟", "acceptedAnswer": {"@type": "Answer", "text": "تُحسب على الأجر الأخير الشامل الذي يتقاضاه العامل بما يدخل فيه من عناصر ثابتة، ولمن يتقاضى أجره شهريًا يعتمد آخر راتب شهري ويُقسم على 26 لاستخراج الأجر اليومي."}}
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site">
+  <div class="container">
+    <a class="logo" href="../index.html">🧮 حاسبتي<span>.</span></a>
+    <nav class="main"><a href="../index.html#tools">الأدوات</a><a href="../about.html">عن الموقع</a></nav>
+  </div>
+</header>
+
+<main class="container tool-wrap">
+  <div class="tool-head">
+    <h1>🇰🇼 حاسبة مكافأة نهاية الخدمة — الكويت</h1>
+    <p class="lead">وفق قانون العمل في القطاع الأهلي رقم 6 لسنة 2010 — أدخل بياناتك واعرف مستحقاتك مع نسب الاستقالة.</p>
+  </div>
+
+  <div class="calc">
+    <div class="field">
+      <label for="salary">الراتب الشهري الأخير (دينار كويتي)</label>
+      <input type="number" id="salary" inputmode="decimal" placeholder="مثال: 600" min="0">
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label for="years">سنوات الخدمة</label>
+        <input type="number" id="years" inputmode="numeric" placeholder="مثال: 7" min="0">
+      </div>
+      <div class="field">
+        <label for="months">الأشهر الإضافية</label>
+        <input type="number" id="months" inputmode="numeric" placeholder="مثال: 4" min="0" max="11" value="0">
+      </div>
+    </div>
+    <div class="field">
+      <label for="reason">سبب انتهاء الخدمة</label>
+      <select id="reason">
+        <option value="employer">إنهاء من صاحب العمل / انتهاء العقد المحدد / وفاة أو عجز</option>
+        <option value="resign">استقالة (عقد غير محدد المدة)</option>
+      </select>
+    </div>
+    <button class="go" onclick="calc()">احسب المكافأة</button>
+
+    <div class="result" id="result">
+      <p class="big-number" id="total">—</p>
+      <p class="big-label">صافي مكافأة نهاية الخدمة المستحقة (دينار)</p>
+      <div class="mini-grid">
+        <div class="mini"><b id="first5">—</b><span>عن السنوات الخمس الأولى (15 يومًا/سنة)</span></div>
+        <div class="mini"><b id="after5">—</b><span>عن السنوات التالية (شهر/سنة)</span></div>
+        <div class="mini"><b id="pct">—</b><span>نسبة الاستحقاق المطبقة</span></div>
+        <div class="mini"><b id="capnote">—</b><span>سقف أجر 18 شهرًا</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">⚠️ الحاسبة استرشادية للعاملين في القطاع الأهلي وفق الأحكام العامة. للمشمولين بالتأمينات الاجتماعية (الكويتيون) تُطبق تسويات خاصة بين المكافأة واشتراكات المؤسسة العامة للتأمينات — راجع الجهات المختصة للحالات الخاصة.</div>
+
+  <article class="explain">
+    <h2>كيف تُحسب المكافأة في الكويت؟</h2>
+    <p>حدد <strong>قانون العمل في القطاع الأهلي رقم 6 لسنة 2010</strong> (المادتان 51 و52) المكافأة كما يلي: أجر <strong>15 يومًا عن كل سنة</strong> من السنوات الخمس الأولى، وأجر <strong>شهر كامل عن كل سنة</strong> تزيد على ذلك، بحد أقصى إجمالي <strong>أجر سنة ونصف</strong> (18 شهرًا). ولمن يتقاضى أجره شهريًا يُستخرج الأجر اليومي بقسمة الراتب على <strong>26 يوم عمل</strong> — وهذه نقطة تميّز الكويت عن جاراتها التي تقسم على 30.</p>
+    <h3>نسب الاستحقاق عند الاستقالة (عقد غير محدد المدة)</h3>
+    <ul>
+      <li>أقل من 3 سنوات خدمة: <strong>لا استحقاق</strong></li>
+      <li>من 3 إلى أقل من 5 سنوات: <strong>نصف المكافأة (50%)</strong></li>
+      <li>من 5 إلى أقل من 10 سنوات: <strong>ثلاثة أرباع المكافأة (75%)</strong></li>
+      <li>10 سنوات فأكثر: <strong>المكافأة كاملة (100%)</strong></li>
+    </ul>
+    <h3>مثال عملي</h3>
+    <p>موظف راتبه 600 دينار خدم 7 سنوات وأنهى صاحبُ العمل عقده: الأجر اليومي = 600 ÷ 26 = 23.08 دينارًا. أول 5 سنوات = 5 × 15 × 23.08 = 1,730.8 دينارًا. السنتان التاليتان = 2 × 600 = 1,200 دينار. الإجمالي = <strong>2,930.8 دينارًا</strong>. ولو كان تركُ العمل استقالةً بعد 7 سنوات لاستحق 75% منها أي 2,198.1 دينارًا.</p>
+
+    <h2>أسئلة شائعة</h2>
+    <details class="faq"><summary>لماذا يُقسم الراتب على 26 وليس 30؟</summary><p>لأن القانون الكويتي يحسب الأجر اليومي لمن يتقاضى راتبًا شهريًا على أساس أيام العمل الفعلية في الشهر (26 يومًا بعد استبعاد الجمع) — وهذا يرفع قيمة اليوم الواحد مقارنة بالقسمة على 30.</p></details>
+    <details class="faq"><summary>استقلت وخدمتي 4 سنوات — كم آخذ؟</summary><p>تستحق نصف المكافأة المحسوبة: 4 سنوات × 15 يومًا × أجرك اليومي × 50%.</p></details>
+    <details class="faq"><summary>هل ينطبق الحساب على العقود محددة المدة؟</summary><p>إذا انتهى العقد المحدد بانقضاء مدته تُصرف المكافأة كاملة. أما إنهاء العامل للعقد المحدد قبل أوانه دون مسوّغ فقد يفقده المكافأة كليًا أو جزئيًا ويعرضه للتعويض — راجع نص عقدك.</p></details>
+    <details class="faq"><summary>هل البدلات تدخل في الحساب؟</summary><p>يُعتمد الأجر الأخير بعناصره الثابتة المنتظمة. البدلات غير الثابتة والمكافآت التقديرية لا تدخل عادة — وعند الخلاف تفصل وزارة الشؤون أو القضاء العمالي.</p></details>
+  </article>
+
+  <p>🧮 جرّب أيضًا: <a href="end-of-service.html">نهاية الخدمة — السعودية</a> • <a href="end-of-service-uae.html">نهاية الخدمة — الإمارات</a> • <a href="end-of-service-qatar.html">نهاية الخدمة — قطر</a></p>
+</main>
+
+<footer class="site">
+  <div class="container">
+    <div>© <span id="y"></span> حاسبتي</div>
+    <div><a href="../about.html">عن الموقع</a><a href="../privacy.html">سياسة الخصوصية</a></div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('y').textContent = new Date().getFullYear();
+const fmt = n => n.toLocaleString('ar-KW', {maximumFractionDigits: 2});
+
+function calc() {
+  const salary = parseFloat(document.getElementById('salary').value) || 0;
+  const years = parseInt(document.getElementById('years').value) || 0;
+  const months = parseInt(document.getElementById('months').value) || 0;
+  const reason = document.getElementById('reason').value;
+  if (salary <= 0) return;
+
+  const service = years + months / 12;
+  const daily = salary / 26;
+
+  // 15 يومًا/سنة لأول 5 سنوات، شهر كامل/سنة بعدها (الكسور بنسبتها)
+  const first5Years = Math.min(service, 5);
+  const after5Years = Math.max(service - 5, 0);
+  let first5 = first5Years * 15 * daily;
+  let after5 = after5Years * salary;
+  let gross = first5 + after5;
+
+  // السقف: أجر 18 شهرًا
+  const cap = salary * 18;
+  let note = 'لم يُبلغ السقف';
+  if (gross > cap) { gross = cap; note = 'طُبق السقف (18 شهرًا)'; }
+
+  // نسب الاستقالة (المادة 52)
+  let pct = 1, pctLabel = '100% (كاملة)';
+  if (reason === 'resign') {
+    if (service < 3)       { pct = 0;    pctLabel = '0% (أقل من 3 سنوات)'; }
+    else if (service < 5)  { pct = 0.5;  pctLabel = '50% (من 3 إلى 5 سنوات)'; }
+    else if (service < 10) { pct = 0.75; pctLabel = '75% (من 5 إلى 10 سنوات)'; }
+  }
+  const total = gross * pct;
+
+  document.getElementById('total').textContent = fmt(total);
+  document.getElementById('first5').textContent = fmt(first5);
+  document.getElementById('after5').textContent = fmt(after5);
+  document.getElementById('pct').textContent = pctLabel;
+  document.getElementById('capnote').textContent = note;
+  document.getElementById('result').classList.add('show');
+}
+</script>
+</body>
+</html>

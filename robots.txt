@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /demos/
+Disallow: /downloads/
+Disallow: /guides/
+
+Sitemap: https://mo123456mo123456.github.io/streamlit_app.py/sitemap.xml

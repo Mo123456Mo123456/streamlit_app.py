@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>حاسبة العمر بالهجري والميلادي — كم عمرك بالسنوات والأشهر والأيام؟</title>
+<meta name="description" content="احسب عمرك بدقة بالسنوات والأشهر والأيام، واعرف تاريخ ميلادك بالتقويم الهجري (أم القرى)، وعدد الأيام المتبقية على عيد ميلادك القادم — مجانًا وبدون تسجيل.">
+<link rel="canonical" href="https://mo123456mo123456.github.io/streamlit_app.py/tools/age.html">
+<meta property="og:title" content="حاسبة العمر بالهجري والميلادي">
+<meta property="og:description" content="عمرك بالتفصيل + تاريخك الهجري + العد التنازلي لعيد ميلادك.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎂</text></svg>">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "كيف أحسب عمري بالهجري؟", "acceptedAnswer": {"@type": "Answer", "text": "السنة الهجرية أقصر من الميلادية بنحو 11 يومًا، لذا يكون عمرك بالهجري أكبر رقميًا. الحاسبة تعرض تاريخ ميلادك بتقويم أم القرى وتحسب العمر الميلادي بدقة الأيام."}},
+    {"@type": "Question", "name": "لماذا يختلف عمري الهجري عن الميلادي؟", "acceptedAnswer": {"@type": "Answer", "text": "لأن السنة الهجرية 354 يومًا تقريبًا والميلادية 365 يومًا، فكل 33 سنة ميلادية تعادل نحو 34 سنة هجرية."}},
+    {"@type": "Question", "name": "هل تحفظ الحاسبة تاريخ ميلادي؟", "acceptedAnswer": {"@type": "Answer", "text": "لا، جميع الحسابات تتم داخل متصفحك ولا يُرسل أي تاريخ أو بيان إلى أي خادم."}}
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site">
+  <div class="container">
+    <a class="logo" href="../index.html">🧮 حاسبتي<span>.</span></a>
+    <nav class="main"><a href="../index.html#tools">الأدوات</a><a href="../about.html">عن الموقع</a></nav>
+  </div>
+</header>
+
+<main class="container tool-wrap">
+  <div class="tool-head">
+    <h1>🎂 حاسبة العمر بالهجري والميلادي</h1>
+    <p class="lead">أدخل تاريخ ميلادك الميلادي — واعرف عمرك بالتفصيل وتاريخك الهجري فورًا.</p>
+  </div>
+
+  <div class="calc">
+    <div class="field">
+      <label for="dob">تاريخ الميلاد (ميلادي)</label>
+      <input type="date" id="dob">
+    </div>
+    <button class="go" onclick="calc()">احسب عمري</button>
+
+    <div class="result" id="result">
+      <p class="big-number" id="age">—</p>
+      <p class="big-label">عمرك الآن</p>
+      <div class="mini-grid">
+        <div class="mini"><b id="hijri">—</b><span>تاريخ ميلادك بالهجري (أم القرى)</span></div>
+        <div class="mini"><b id="days">—</b><span>إجمالي أيام حياتك</span></div>
+        <div class="mini"><b id="next">—</b><span>المتبقي لعيد ميلادك القادم</span></div>
+        <div class="mini"><b id="weekday">—</b><span>وُلدت يوم</span></div>
+      </div>
+    </div>
+  </div>
+
+  <article class="explain">
+    <h2>لماذا يختلف العمر الهجري عن الميلادي؟</h2>
+    <p>السنة الهجرية قمرية طولها نحو <strong>354 يومًا</strong>، بينما الميلادية شمسية طولها <strong>365 يومًا</strong>. الفارق نحو 11 يومًا سنويًا يجعل عمرك بالهجري أكبر رقميًا — فمن عمره 33 سنة ميلادية يكون قد أتم نحو 34 سنة هجرية. تعتمد هذه الحاسبة تقويم <strong>أم القرى</strong> المعمول به رسميًا في السعودية لعرض تاريخ الميلاد الهجري.</p>
+    <h3>أين يُطلب العمر الهجري؟</h3>
+    <p>كثير من المعاملات الرسمية في السعودية تعتمد التاريخ الهجري: مواعيد التقاعد، شروط بعض الوظائف والقبول الجامعي، والوثائق الرسمية — لذلك معرفة تاريخك بالتقويمين تجنبك أخطاء في المعاملات.</p>
+
+    <h2>أسئلة شائعة</h2>
+    <details class="faq"><summary>هل تدعم الحاسبة التحويل من هجري إلى ميلادي؟</summary><p>حاليًا تعرض تاريخك الهجري من الميلادي بدقة تقويم أم القرى. أداة تحويل كاملة بالاتجاهين ستُضاف للموقع قريبًا.</p></details>
+    <details class="faq"><summary>ما مدى دقة التاريخ الهجري المعروض؟</summary><p>يُحسب بتقويم أم القرى الحسابي المدمج في المتصفحات الحديثة، وقد يختلف يومًا واحدًا عن الرؤية الشرعية لبعض الأشهر — وهو الفارق المعتاد بين الحساب والرؤية.</p></details>
+    <details class="faq"><summary>هل بياناتي آمنة؟</summary><p>نعم، الحساب يتم بالكامل داخل متصفحك، ولا يُرسل تاريخ ميلادك إلى أي جهة.</p></details>
+  </article>
+
+  <p>🧮 جرّب أيضًا: <a href="savings.html">حاسبة الادخار</a> • <a href="zakat.html">حاسبة الزكاة</a></p>
+</main>
+
+<footer class="site">
+  <div class="container">
+    <div>© <span id="y"></span> حاسبتي</div>
+    <div><a href="../about.html">عن الموقع</a><a href="../privacy.html">سياسة الخصوصية</a></div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('y').textContent = new Date().getFullYear();
+
+function calc() {
+  const v = document.getElementById('dob').value;
+  if (!v) return;
+  const dob = new Date(v + 'T00:00:00');
+  const now = new Date();
+  if (dob > now) { alert('تاريخ الميلاد في المستقبل!'); return; }
+
+  // العمر: سنوات/أشهر/أيام
+  let y = now.getFullYear() - dob.getFullYear();
+  let m = now.getMonth() - dob.getMonth();
+  let d = now.getDate() - dob.getDate();
+  if (d < 0) { m--; d += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
+  if (m < 0) { y--; m += 12; }
+
+  const totalDays = Math.floor((now - dob) / 86400000);
+
+  // عيد الميلاد القادم
+  let next = new Date(now.getFullYear(), dob.getMonth(), dob.getDate());
+  if (next <= now) next = new Date(now.getFullYear() + 1, dob.getMonth(), dob.getDate());
+  const toNext = Math.ceil((next - now) / 86400000);
+
+  // التاريخ الهجري بتقويم أم القرى
+  let hijri = '—';
+  try {
+    hijri = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', {
+      year: 'numeric', month: 'long', day: 'numeric'
+    }).format(dob);
+  } catch (e) {}
+
+  const weekday = new Intl.DateTimeFormat('ar', { weekday: 'long' }).format(dob);
+
+  document.getElementById('age').textContent =
+    y + ' سنة و' + m + ' شهرًا و' + d + ' يومًا';
+  document.getElementById('hijri').textContent = hijri;
+  document.getElementById('days').textContent = totalDays.toLocaleString('ar-SA') + ' يوم';
+  document.getElementById('next').textContent = toNext.toLocaleString('ar-SA') + ' يومًا';
+  document.getElementById('weekday').textContent = weekday;
+  document.getElementById('result').classList.add('show');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>حاسبة مكافأة نهاية الخدمة — نظام العمل السعودي (محدثة)</title>
+<meta name="description" content="احسب مكافأة نهاية الخدمة حسب نظام العمل السعودي: نصف راتب عن كل سنة من السنوات الخمس الأولى وراتب كامل عما بعدها، مع أحكام الاستقالة. حاسبة دقيقة ومجانية.">
+<link rel="canonical" href="https://mo123456mo123456.github.io/streamlit_app.py/tools/end-of-service.html">
+<meta property="og:title" content="حاسبة مكافأة نهاية الخدمة — نظام العمل السعودي">
+<meta property="og:description" content="اعرف مستحقاتك النظامية بدقة خلال ثوانٍ — لانتهاء العقد أو الاستقالة.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💼</text></svg>">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "كيف تُحسب مكافأة نهاية الخدمة في السعودية؟", "acceptedAnswer": {"@type": "Answer", "text": "وفق المادة 84 من نظام العمل: نصف أجر شهر عن كل سنة من السنوات الخمس الأولى، وأجر شهر كامل عن كل سنة من السنوات التالية، وتُحسب أجزاء السنة بنسبتها."}},
+    {"@type": "Question", "name": "هل أستحق المكافأة كاملة إذا استقلت؟", "acceptedAnswer": {"@type": "Answer", "text": "حسب المادة 85: أقل من سنتين لا شيء، من سنتين إلى خمس ثلث المكافأة، من خمس إلى عشر ثلثاها، وعشر سنوات فأكثر تستحقها كاملة."}},
+    {"@type": "Question", "name": "على أي راتب تُحسب المكافأة؟", "acceptedAnswer": {"@type": "Answer", "text": "على الأجر الأخير، ويشمل الأجر الأساسي وجميع البدلات الثابتة المنتظمة كبدل السكن والمواصلات إذا كانت جزءًا من الأجر."}},
+    {"@type": "Question", "name": "هل تشمل الحاسبة العمالة المنزلية أو العقود البحرية؟", "acceptedAnswer": {"@type": "Answer", "text": "الحاسبة مبنية على الأحكام العامة لنظام العمل السعودي، وبعض الفئات لها أنظمة خاصة، فيُرجع لها عند الحاجة."}}
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site">
+  <div class="container">
+    <a class="logo" href="../index.html">🧮 حاسبتي<span>.</span></a>
+    <nav class="main"><a href="../index.html#tools">الأدوات</a><a href="../about.html">عن الموقع</a></nav>
+  </div>
+</header>
+
+<main class="container tool-wrap">
+  <div class="tool-head">
+    <h1>💼 حاسبة مكافأة نهاية الخدمة</h1>
+    <p class="lead">وفق نظام العمل السعودي (المادتان 84 و85) — أدخل بياناتك واعرف مستحقاتك فورًا.</p>
+  </div>
+
+  <div class="calc">
+    <div class="field">
+      <label for="salary">الأجر الشهري الأخير (شامل البدلات الثابتة) — ريال</label>
+      <input type="number" id="salary" inputmode="decimal" placeholder="مثال: 8000" min="0">
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label for="years">سنوات الخدمة</label>
+        <input type="number" id="years" inputmode="numeric" placeholder="مثال: 7" min="0">
+      </div>
+      <div class="field">
+        <label for="months">الأشهر الإضافية</label>
+        <input type="number" id="months" inputmode="numeric" placeholder="مثال: 4" min="0" max="11" value="0">
+      </div>
+    </div>
+    <div class="field">
+      <label for="reason">سبب انتهاء العلاقة العمالية</label>
+      <select id="reason">
+        <option value="end">انتهاء العقد / إنهاء من صاحب العمل / تقاعد</option>
+        <option value="resign">استقالة</option>
+        <option value="art87">استقالة لظرف من ظروف المادة 87 (زواج/إنجاب/قوة قاهرة)</option>
+      </select>
+    </div>
+    <button class="go" onclick="calc()">احسب المكافأة</button>
+
+    <div class="result" id="result">
+      <p class="big-number" id="total">—</p>
+      <p class="big-label">إجمالي مكافأة نهاية الخدمة المستحقة (ريال)</p>
+      <div class="mini-grid">
+        <div class="mini"><b id="base">—</b><span>المكافأة قبل تطبيق نسبة الاستقالة</span></div>
+        <div class="mini"><b id="first5">—</b><span>عن السنوات الخمس الأولى</span></div>
+        <div class="mini"><b id="after5">—</b><span>عن السنوات التالية</span></div>
+        <div class="mini"><b id="pct">—</b><span>النسبة المستحقة</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">⚠️ هذه الحاسبة استرشادية مبنية على الأحكام العامة لنظام العمل السعودي، ولا تغني عن الرجوع للجهات الرسمية أو مستشار قانوني في الحالات الخاصة.</div>
+
+  <article class="explain">
+    <h2>كيف تُحسب مكافأة نهاية الخدمة؟</h2>
+    <p>حددت <strong>المادة 84</strong> من نظام العمل السعودي المكافأة كالتالي: <strong>أجر نصف شهر</strong> عن كل سنة من السنوات الخمس الأولى، و<strong>أجر شهر كامل</strong> عن كل سنة من السنوات التالية، وتُحسب كسور السنة بنسبتها (فسبعة أشهر مثلًا = 7/12 من استحقاق السنة).</p>
+    <h3>ماذا لو استقلت؟</h3>
+    <p>تنص <strong>المادة 85</strong> على أن المستقيل يستحق جزءًا من المكافأة حسب مدة خدمته:</p>
+    <ul>
+      <li>أقل من سنتين: لا يستحق مكافأة.</li>
+      <li>سنتان إلى أقل من خمس سنوات: <strong>ثلث</strong> المكافأة.</li>
+      <li>خمس إلى أقل من عشر سنوات: <strong>ثلثا</strong> المكافأة.</li>
+      <li>عشر سنوات فأكثر: المكافأة <strong>كاملة</strong>.</li>
+    </ul>
+    <p>أما <strong>المادة 87</strong> فتمنح المكافأة كاملة في حالات خاصة مثل ترك العاملة العمل خلال ستة أشهر من الزواج أو ثلاثة أشهر من الوضع، أو ترك العمل لقوة قاهرة.</p>
+    <h3>مثال عملي</h3>
+    <p>موظف راتبه 10,000 ريال وخدم 8 سنوات وانتهى عقده: السنوات الخمس الأولى = 5 × 5,000 = 25,000 ريال، والسنوات الثلاث التالية = 3 × 10,000 = 30,000 ريال. الإجمالي = <strong>55,000 ريال</strong>.</p>
+
+    <h2>أسئلة شائعة</h2>
+    <details class="faq"><summary>هل تدخل البدلات في حساب المكافأة؟</summary><p>تُحسب المكافأة على الأجر الأخير، ويدخل فيه الأجر الأساسي والبدلات الثابتة المنتظمة (كالسكن والمواصلات) وفق ما استقر عليه التطبيق، بخلاف المزايا غير المنتظمة.</p></details>
+    <details class="faq"><summary>متى يجب على صاحب العمل صرف المستحقات؟</summary><p>عند انتهاء العلاقة العمالية يجب سداد أجر العامل وتصفية حقوقه خلال أسبوع من تاريخ انتهاء العلاقة، وإن كان العامل هو من أنهى العقد فخلال أسبوعين.</p></details>
+    <details class="faq"><summary>هل تُحسب أيام الإجازات غير المستخدمة؟</summary><p>نعم، رصيد الإجازات السنوية غير المستخدمة يُصرف بدلًا نقديًا عند انتهاء الخدمة، وهو مستحق منفصل يُضاف إلى مكافأة نهاية الخدمة.</p></details>
+    <details class="faq"><summary>هل هذه الحاسبة مناسبة لدول الخليج الأخرى؟</summary><p>هذه النسخة مبنية على النظام السعودي. أنظمة الإمارات والكويت وقطر تختلف في التفاصيل — وستُضاف نسخ خاصة بها إلى الموقع تباعًا.</p></details>
+  </article>
+
+  <p>🧮 جرّب أيضًا: <a href="loan.html">حاسبة التمويل والأقساط</a> • <a href="savings.html">حاسبة الادخار</a> • <a href="zakat.html">حاسبة الزكاة</a></p>
+</main>
+
+<footer class="site">
+  <div class="container">
+    <div>© <span id="y"></span> حاسبتي</div>
+    <div><a href="../about.html">عن الموقع</a><a href="../privacy.html">سياسة الخصوصية</a></div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('y').textContent = new Date().getFullYear();
+const fmt = n => n.toLocaleString('ar-SA', {maximumFractionDigits: 2});
+
+function calc() {
+  const salary = parseFloat(document.getElementById('salary').value) || 0;
+  const years = parseInt(document.getElementById('years').value) || 0;
+  const months = parseInt(document.getElementById('months').value) || 0;
+  const reason = document.getElementById('reason').value;
+  const service = years + months / 12;
+
+  // المادة 84: نصف شهر لأول 5 سنوات، شهر كامل لما بعدها (الكسور بنسبتها)
+  const first5Years = Math.min(service, 5);
+  const after5Years = Math.max(service - 5, 0);
+  const first5 = first5Years * 0.5 * salary;
+  const after5 = after5Years * 1.0 * salary;
+  const base = first5 + after5;
+
+  // المادة 85: نسب الاستقالة — المادة 87: كاملة
+  let pct = 1;
+  if (reason === 'resign') {
+    if (service < 2) pct = 0;
+    else if (service < 5) pct = 1 / 3;
+    else if (service < 10) pct = 2 / 3;
+    else pct = 1;
+  }
+  const total = base * pct;
+
+  document.getElementById('total').textContent = fmt(total);
+  document.getElementById('base').textContent = fmt(base);
+  document.getElementById('first5').textContent = fmt(first5);
+  document.getElementById('after5').textContent = fmt(after5);
+  document.getElementById('pct').textContent = pct === 0 ? 'لا استحقاق' :
+    pct === 1 ? '100%' : (pct === 1/3 ? 'الثلث (33.3%)' : 'الثلثان (66.7%)');
+  document.getElementById('result').classList.add('show');
+}
+</script>
+</body>
+</html>
