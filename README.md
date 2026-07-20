@@ -19,11 +19,17 @@
 
 ## 🚀 التشغيل | Quick start
 
+المشروع يتكون من ثلاث مكونات تشترك في نفس قاعدة البيانات ومنطق الأعمال (`silver/`):
+
+| المكوّن | المسار | التشغيل |
+|---|---|---|
+| 🌐 نسخة الويب (Streamlit) | `streamlit_app.py` | `streamlit run streamlit_app.py` |
+| ⚙️ خادم REST API للجوال | `backend/` | `uvicorn backend.main:app --host 0.0.0.0 --port 8000` |
+| 📱 تطبيق iOS/Android (Expo) | `mobile/` | `cd mobile && npm install && npx expo start` — انظر `mobile/README.md` |
+
 ```bash
-pip install -r requirements.txt
-streamlit run streamlit_app.py
-# أو
-./start.sh   # يثبت المتطلبات ويشغل الاختبارات ثم التطبيق
+pip install -r requirements.txt -r backend/requirements.txt
+./start.sh   # يثبت المتطلبات ويشغل الاختبارات ثم نسخة الويب
 ```
 
 حساب المدير يُنشأ تلقائيًا عند أول تشغيل من متغيرات البيئة:

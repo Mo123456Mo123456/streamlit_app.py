@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "Silver | سيلفر",
+    "slug": "silver",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#0ABAB5"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "app.silver.social"
+    },
+    "android": {
+      "package": "app.silver.social",
+      "adaptiveIcon": {
+        "backgroundColor": "#0ABAB5"
+      }
+    },
+    "extra": {
+      "apiUrl": "http://10.0.2.2:8000"
+    }
+  }
+}
