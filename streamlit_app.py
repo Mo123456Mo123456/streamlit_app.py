@@ -1,151 +1,137 @@
+"""Silver / سيلفر — social platform MVP.
+
+Entry point: authentication, routing and the main navigation shell.
+Run with:  streamlit run streamlit_app.py
+"""
 import streamlit as st
-import pandas as pd
-import math
-from pathlib import Path
 
-# Set the title and favicon that appear in the Browser's tab bar.
+from silver import auth, db, services, theme
+from silver.i18n import t
+from silver import (
+    views_auth, views_feed, views_social, views_discover, views_admin,
+)
+
 st.set_page_config(
-    page_title='GDP dashboard',
-    page_icon=':earth_americas:', # This is an emoji shortcode. Could be a URL too.
+    page_title="Silver | سيلفر",
+    page_icon="💠",
+    layout="centered",
+    initial_sidebar_state="expanded",
 )
 
-# -----------------------------------------------------------------------------
-# Declare some useful functions.
 
-@st.cache_data
-def get_gdp_data():
-    """Grab GDP data from a CSV file.
-
-    This uses caching to avoid having to read the file every time. If we were
-    reading from an HTTP endpoint instead of a file, it's a good idea to set
-    a maximum age to the cache with the TTL argument: @st.cache_data(ttl='1d')
-    """
-
-    # Instead of a CSV on disk, you could read from an HTTP endpoint here too.
-    DATA_FILENAME = Path(__file__).parent/'data/gdp_data.csv'
-    raw_gdp_df = pd.read_csv(DATA_FILENAME)
-
-    MIN_YEAR = 1960
-    MAX_YEAR = 2022
-
-    # The data above has columns like:
-    # - Country Name
-    # - Country Code
-    # - [Stuff I don't care about]
-    # - GDP for 1960
-    # - GDP for 1961
-    # - GDP for 1962
-    # - ...
-    # - GDP for 2022
-    #
-    # ...but I want this instead:
-    # - Country Name
-    # - Country Code
-    # - Year
-    # - GDP
-    #
-    # So let's pivot all those year-columns into two: Year and GDP
-    gdp_df = raw_gdp_df.melt(
-        ['Country Code'],
-        [str(x) for x in range(MIN_YEAR, MAX_YEAR + 1)],
-        'Year',
-        'GDP',
-    )
-
-    # Convert years from string to integers
-    gdp_df['Year'] = pd.to_numeric(gdp_df['Year'])
-
-    return gdp_df
-
-gdp_df = get_gdp_data()
-
-# -----------------------------------------------------------------------------
-# Draw the actual page
-
-# Set the title that appears at the top of the page.
-'''
-# :earth_americas: GDP dashboard
-
-Browse GDP data from the [World Bank Open Data](https://data.worldbank.org/) website. As you'll
-notice, the data only goes to 2022 right now, and datapoints for certain years are often missing.
-But it's otherwise a great (and did I mention _free_?) source of data.
-'''
-
-# Add some spacing
-''
-''
-
-min_value = gdp_df['Year'].min()
-max_value = gdp_df['Year'].max()
-
-from_year, to_year = st.slider(
-    'Which years are you interested in?',
-    min_value=min_value,
-    max_value=max_value,
-    value=[min_value, max_value])
-
-countries = gdp_df['Country Code'].unique()
-
-if not len(countries):
-    st.warning("Select at least one country")
-
-selected_countries = st.multiselect(
-    'Which countries would you like to view?',
-    countries,
-    ['DEU', 'FRA', 'GBR', 'BRA', 'MEX', 'JPN'])
-
-''
-''
-''
-
-# Filter the data
-filtered_gdp_df = gdp_df[
-    (gdp_df['Country Code'].isin(selected_countries))
-    & (gdp_df['Year'] <= to_year)
-    & (from_year <= gdp_df['Year'])
-]
-
-st.header('GDP over time', divider='gray')
-
-''
-
-st.line_chart(
-    filtered_gdp_df,
-    x='Year',
-    y='GDP',
-    color='Country Code',
-)
-
-''
-''
+@st.cache_resource
+def get_connection():
+    conn = db.get_conn()
+    db.init_db(conn)
+    auth.ensure_admin(conn)
+    return conn
 
 
-first_year = gdp_df[gdp_df['Year'] == from_year]
-last_year = gdp_df[gdp_df['Year'] == to_year]
+conn = get_connection()
 
-st.header(f'GDP in {to_year}', divider='gray')
+# ---------------------------------------------------------------- session
+st.session_state.setdefault("lang", "ar")
+st.session_state.setdefault("view", "home")
+st.session_state.setdefault("view_params", {})
+lang = st.session_state["lang"]
+theme.apply(lang)
 
-''
+user_id = st.session_state.get("user_id")
+user = auth.get_user(conn, user_id) if user_id else None
+if user is not None and user["status"] != "active":
+    st.session_state.pop("user_id", None)
+    user = None
 
-cols = st.columns(4)
+# ---------------------------------------------------------------- anonymous
+if user is None:
+    col1, col2 = st.columns([5, 1])
+    with col2:
+        if st.button("🌐 " + ("EN" if lang == "ar" else "ع")):
+            st.session_state["lang"] = "en" if lang == "ar" else "ar"
+            st.rerun()
+    views_auth.auth_view(conn, lang)
+    st.stop()
 
-for i, country in enumerate(selected_countries):
-    col = cols[i % len(cols)]
+# ---------------------------------------------------------------- onboarding
+has_interests = conn.execute(
+    "SELECT 1 FROM user_interests WHERE user_id=? LIMIT 1", (user["id"],)
+).fetchone()
+if st.session_state["view"] == "onboarding" or not has_interests:
+    views_auth.onboarding_view(conn, user["id"], lang)
+    st.stop()
 
-    with col:
-        first_gdp = first_year[first_year['Country Code'] == country]['GDP'].iat[0] / 1000000000
-        last_gdp = last_year[last_year['Country Code'] == country]['GDP'].iat[0] / 1000000000
+# ---------------------------------------------------------------- navigation
+unread_n = services.unread_count(conn, user["id"])
+unread_dm = sum(c["unread"] for c in services.user_conversations(conn, user["id"]))
 
-        if math.isnan(first_gdp):
-            growth = 'n/a'
-            delta_color = 'off'
-        else:
-            growth = f'{last_gdp / first_gdp:,.2f}x'
-            delta_color = 'normal'
+with st.sidebar:
+    theme.header()
+    st.caption(t("tagline", lang))
+    st.markdown(f"**{user['display_name']}** · @{user['username']}")
+    st.divider()
 
-        st.metric(
-            label=f'{country} GDP',
-            value=f'{last_gdp:,.0f}B',
-            delta=growth,
-            delta_color=delta_color
-        )
+    NAV = [
+        ("home", "🏠", t("home", lang), ""),
+        ("discover", "🔍", t("discover", lang), ""),
+        ("compose", "➕", t("create", lang), ""),
+        ("messages", "✉️", t("messages", lang), f" ({unread_dm})" if unread_dm else ""),
+        ("notifications", "🔔", t("notifications", lang), f" ({unread_n})" if unread_n else ""),
+        ("communities", "👥", t("communities", lang), ""),
+        ("profile", "👤", t("profile", lang), ""),
+        ("settings", "⚙️", t("settings", lang), ""),
+    ]
+    if user["role"] in views_admin.ADMIN_ROLES:
+        NAV.append(("admin", "🛡", t("admin", lang), ""))
+
+    for view_name, icon, label, badge in NAV:
+        current = st.session_state["view"] == view_name
+        if st.button(f"{icon} {label}{badge}", key=f"nav_{view_name}",
+                     type="primary" if current else "secondary",
+                     use_container_width=True):
+            st.session_state["view"] = view_name
+            st.session_state["view_params"] = {}
+            st.rerun()
+
+    st.divider()
+    if st.button("🌐 " + ("English" if lang == "ar" else "العربية"), use_container_width=True):
+        new_lang = "en" if lang == "ar" else "ar"
+        conn.execute("UPDATE user_settings SET language=? WHERE user_id=?", (new_lang, user["id"]))
+        conn.commit()
+        st.session_state["lang"] = new_lang
+        st.rerun()
+    if st.button("🚪 " + t("logout", lang), use_container_width=True):
+        st.session_state.clear()
+        st.rerun()
+
+# ---------------------------------------------------------------- routing
+view = st.session_state["view"]
+params = st.session_state.get("view_params", {})
+
+if view == "home":
+    views_feed.home_view(conn, user["id"], lang)
+elif view == "compose":
+    views_feed.compose_view(conn, user["id"], lang, tab=params.get("tab", "post"))
+elif view == "story_view":
+    views_feed.story_view(conn, user["id"], lang, params.get("author_id", user["id"]))
+elif view == "discover":
+    views_discover.discover_view(conn, user["id"], lang)
+elif view == "communities":
+    views_discover.communities_view(conn, user["id"], lang)
+elif view == "community":
+    views_discover.community_view(conn, user["id"], lang, params.get("community_id"))
+elif view == "live_room":
+    views_discover.live_room_view(conn, user["id"], lang, params.get("stream_id"))
+elif view == "messages":
+    views_social.messages_view(conn, user["id"], lang)
+elif view == "chat":
+    views_social.chat_view(conn, user["id"], lang, params.get("conversation_id"))
+elif view == "notifications":
+    views_social.notifications_view(conn, user["id"], lang)
+elif view == "profile":
+    views_social.profile_view(conn, user["id"], lang, params.get("user_id"))
+elif view == "settings":
+    views_social.settings_view(conn, user["id"], lang)
+elif view == "admin":
+    views_admin.admin_view(conn, user, lang)
+else:
+    views_feed.home_view(conn, user["id"], lang)

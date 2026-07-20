@@ -155,3 +155,7 @@ logs/
 # OS
 .DS_Store
 Thumbs.db
+
+# Silver runtime data
+data/silver.db*
+data/media/
