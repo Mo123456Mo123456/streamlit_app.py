@@ -51,6 +51,46 @@ export function mediaUrl(rel: string | null | undefined): string | undefined {
   return rel.startsWith('http') ? rel : `${API_URL}${rel}`;
 }
 
+// ---- realtime (WebSocket) ----
+function wsBase(): string {
+  return API_URL.replace(/^http/, 'ws');
+}
+
+/** Per-user channel: message/notification events. Returns the socket (caller closes). */
+export function openUserSocket(onEvent: (e: any) => void): WebSocket | null {
+  if (!token) return null;
+  try {
+    const ws = new WebSocket(`${wsBase()}/ws?token=${token}`);
+    ws.onmessage = (m) => {
+      try { onEvent(JSON.parse(m.data as string)); } catch { /* ignore */ }
+    };
+    return ws;
+  } catch {
+    return null;
+  }
+}
+
+/** Per-stream channel: live chat events. */
+export function openLiveSocket(streamId: number, onEvent: (e: any) => void): WebSocket | null {
+  if (!token) return null;
+  try {
+    const ws = new WebSocket(`${wsBase()}/ws/live/${streamId}?token=${token}`);
+    ws.onmessage = (m) => {
+      try { onEvent(JSON.parse(m.data as string)); } catch { /* ignore */ }
+    };
+    return ws;
+  } catch {
+    return null;
+  }
+}
+
+/** Register this device's Expo push token with the backend (best-effort). */
+export async function registerDevice(pushToken: string, platform: string): Promise<void> {
+  try {
+    await api.post('/devices', { push_token: pushToken, platform });
+  } catch { /* best-effort */ }
+}
+
 export async function uploadFile(uri: string, name: string, type: string): Promise<{ path: string; url: string }> {
   const form = new FormData();
   // React Native FormData file object.

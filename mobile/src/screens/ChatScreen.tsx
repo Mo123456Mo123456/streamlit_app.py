@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   FlatList, KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableOpacity, View,
 } from 'react-native';
-import { api, Message } from '../api';
+import { api, Message, openUserSocket } from '../api';
 import { t } from '../i18n';
 import { useApp } from '../state';
 import { colors } from '../theme';
@@ -25,9 +25,17 @@ export default function ChatScreen({ route }: { route: any }) {
 
   useEffect(() => {
     load();
-    const timer = setInterval(load, 4000);
-    return () => clearInterval(timer);
-  }, [load]);
+    // Realtime: reload instantly when a message event for this thread arrives.
+    const ws = openUserSocket((e) => {
+      if (e.type === 'message' && e.conversation_id === conversationId) load();
+    });
+    // Slow polling as a fallback when the socket is unavailable.
+    const timer = setInterval(load, 15000);
+    return () => {
+      clearInterval(timer);
+      ws?.close();
+    };
+  }, [load, conversationId]);
 
   const send = async () => {
     if (!text.trim()) return;

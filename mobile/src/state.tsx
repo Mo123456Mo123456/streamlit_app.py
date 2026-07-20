@@ -4,6 +4,7 @@ import { I18nManager } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api, loadToken, setToken, User } from './api';
 import { Lang } from './i18n';
+import { registerForPush } from './push';
 
 interface AppState {
   user: User | null;
@@ -36,6 +37,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           const me = await api.get<{ user: User; interests: number[] }>('/me');
           setUser(me.user);
           setNeedsOnboarding(me.interests.length === 0);
+          registerForPush();
         } catch {
           await setToken(null);
         }
@@ -53,6 +55,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     } catch {
       setNeedsOnboarding(false);
     }
+    registerForPush();
   };
 
   const signOut = async () => {

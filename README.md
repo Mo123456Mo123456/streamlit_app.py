@@ -32,6 +32,17 @@ pip install -r requirements.txt -r backend/requirements.txt
 ./start.sh   # يثبت المتطلبات ويشغل الاختبارات ثم نسخة الويب
 ```
 
+أو بالنشر الكامل عبر Docker (خادم API + ويب بأمر واحد):
+
+```bash
+cp .env.example .env   # عدّل كلمة مرور المدير وسر التوقيع
+docker compose up -d --build
+```
+
+دليل النشر الكامل حتى متاجر التطبيقات: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md)
+
+**اللحظية والدفع:** الرسائل وتعليقات البث تصل فورًا عبر WebSocket، وإشعارات الدفع للجوال تعمل عبر Expo، وتوكنات بث الفيديو الحقيقي تصدر تلقائيًا عند ضبط LiveKit في `.env`.
+
 حساب المدير يُنشأ تلقائيًا عند أول تشغيل من متغيرات البيئة:
 
 ```bash

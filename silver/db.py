@@ -297,6 +297,15 @@ CREATE TABLE IF NOT EXISTS user_settings (
     notif_live INTEGER NOT NULL DEFAULT 1
 );
 
+CREATE TABLE IF NOT EXISTS devices (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    push_token TEXT NOT NULL,
+    platform TEXT NOT NULL DEFAULT 'unknown', -- ios | android
+    created_at REAL NOT NULL,
+    UNIQUE (user_id, push_token)
+);
+
 CREATE TABLE IF NOT EXISTS audit_logs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     actor_id INTEGER REFERENCES users(id),

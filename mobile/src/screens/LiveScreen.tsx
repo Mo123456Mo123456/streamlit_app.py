@@ -1,7 +1,7 @@
 // Live room: chat, guest requests, host controls (polling refresh).
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { api, Stream } from '../api';
+import { api, openLiveSocket, Stream } from '../api';
 import { t } from '../i18n';
 import { useApp } from '../state';
 import { colors } from '../theme';
@@ -21,9 +21,16 @@ export default function LiveScreen({ route, navigation }: { route: any; navigati
 
   useEffect(() => {
     load();
-    const timer = setInterval(load, 4000);
-    return () => clearInterval(timer);
-  }, [load]);
+    // Realtime chat via the stream's WebSocket room; polling as fallback.
+    const ws = openLiveSocket(streamId, (e) => {
+      if (e.type === 'live_comment') load();
+    });
+    const timer = setInterval(load, 12000);
+    return () => {
+      clearInterval(timer);
+      ws?.close();
+    };
+  }, [load, streamId]);
 
   if (!stream) return <View style={styles.wrap} />;
   const isHost = stream.host_id === user?.id;

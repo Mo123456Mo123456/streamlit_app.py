@@ -16,7 +16,10 @@ import hashlib
 import hmac
 import json
 
-from fastapi import Depends, FastAPI, File, Header, HTTPException, UploadFile
+from fastapi import (
+    Depends, FastAPI, File, Header, HTTPException, UploadFile, WebSocket,
+    WebSocketDisconnect,
+)
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -24,6 +27,9 @@ from pydantic import BaseModel
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from silver import ai, auth as auth_mod, db, services  # noqa: E402
+from backend import streaming  # noqa: E402
+from backend.push import push_to_user  # noqa: E402
+from backend.realtime import manager  # noqa: E402
 
 JWT_SECRET = os.environ.get("SILVER_JWT_SECRET", "dev-secret-change-me")
 JWT_TTL = 30 * 24 * 3600
@@ -389,6 +395,7 @@ def follow(user_id: int, user=Depends(current_user), conn=Depends(get_db)):
         services.unfollow(conn, user["id"], user_id)
         return {"following": False}
     services.follow(conn, user["id"], user_id)
+    push_to_user(conn, user_id, "Silver", f"👤 {user['display_name']}")
     return {"following": True}
 
 
@@ -446,7 +453,7 @@ def get_messages(cid: int, user=Depends(current_user), conn=Depends(get_db)):
 
 
 @app.post("/conversations/{cid}/messages")
-def post_message(cid: int, body: MessageIn, user=Depends(current_user), conn=Depends(get_db)):
+async def post_message(cid: int, body: MessageIn, user=Depends(current_user), conn=Depends(get_db)):
     peer = services.conversation_peer(conn, cid, user["id"])
     if peer is None:
         raise HTTPException(403, "not a member")
@@ -455,6 +462,12 @@ def post_message(cid: int, body: MessageIn, user=Depends(current_user), conn=Dep
     mid = services.send_message(conn, cid, user["id"], body.body,
                                 media_path=body.media_path,
                                 story_id=body.story_id, post_id=body.post_id)
+    # Realtime + push delivery to the recipient.
+    await manager.send_to_user(peer["id"], {
+        "type": "message", "conversation_id": cid, "message_id": mid,
+        "from": user["display_name"],
+    })
+    push_to_user(conn, peer["id"], user["display_name"], body.body[:120] or "📎")
     return {"id": mid}
 
 
@@ -548,6 +561,10 @@ def start_live(body: StreamIn, user=Depends(current_user), conn=Depends(get_db))
     sid = services.start_stream(conn, user["id"], body.title, body.description,
                                 body.category_id, body.comments_enabled,
                                 body.guests_enabled, body.save_recording)
+    for f in conn.execute("SELECT follower_id FROM follows WHERE followee_id=?",
+                          (user["id"],)).fetchall():
+        push_to_user(conn, f["follower_id"], "📡 Silver",
+                     f"{user['display_name']}: {body.title[:80]}")
     return {"id": sid}
 
 
@@ -566,12 +583,33 @@ def stream_detail(sid: int, user=Depends(current_user), conn=Depends(get_db)):
 
 
 @app.post("/live/{sid}/comments")
-def live_comment(sid: int, body: LiveCommentIn, user=Depends(current_user), conn=Depends(get_db)):
+async def live_comment(sid: int, body: LiveCommentIn, user=Depends(current_user), conn=Depends(get_db)):
     s = services.get_stream(conn, sid)
     if s is None or s["status"] != "live" or not s["comments_enabled"]:
         raise HTTPException(403, "comments unavailable")
     services.live_comment(conn, sid, user["id"], body.body)
+    await manager.broadcast_stream(sid, {
+        "type": "live_comment", "stream_id": sid,
+        "display_name": user["display_name"], "body": body.body,
+    })
     return {"ok": True}
+
+
+@app.get("/live/{sid}/rtc-token")
+def live_rtc_token(sid: int, user=Depends(current_user), conn=Depends(get_db)):
+    """LiveKit join token for real A/V — host and approved guests can publish."""
+    s = services.get_stream(conn, sid)
+    if s is None:
+        raise HTTPException(404, "stream not found")
+    is_host = s["host_id"] == user["id"]
+    approved = any(
+        g["user_id"] == user["id"] and g["status"] == "approved"
+        for g in services.stream_guests(conn, sid)
+    )
+    return streaming.rtc_token(
+        sid, identity=f"user-{user['id']}", name=user["display_name"],
+        is_host=is_host, can_publish=is_host or approved,
+    )
 
 
 @app.post("/live/{sid}/guest-request")
@@ -663,6 +701,67 @@ def admin_resolve(rid: int, body: ResolveIn, user=Depends(admin_user), conn=Depe
     return {"ok": True}
 
 
+# ---------------------------------------------------------------- devices (push)
+class DeviceIn(BaseModel):
+    push_token: str
+    platform: str = "unknown"
+
+
+@app.post("/devices")
+def register_device(body: DeviceIn, user=Depends(current_user), conn=Depends(get_db)):
+    conn.execute(
+        "INSERT OR IGNORE INTO devices (user_id, push_token, platform, created_at) VALUES (?,?,?,?)",
+        (user["id"], body.push_token, body.platform, time.time()),
+    )
+    conn.commit()
+    return {"ok": True}
+
+
+# ---------------------------------------------------------------- websockets
+def _ws_user(token: str):
+    """Authenticate a websocket by token query param; returns user id or None."""
+    try:
+        payload = decode_token(token)
+        return int(payload["sub"])
+    except HTTPException:
+        return None
+
+
+@app.websocket("/ws")
+async def ws_user(ws: WebSocket, token: str = ""):
+    """Per-user channel: message/notification events are pushed here."""
+    uid = _ws_user(token)
+    if uid is None:
+        await ws.close(code=4401)
+        return
+    await manager.connect_user(uid, ws)
+    try:
+        while True:
+            await ws.receive_text()  # pings / keepalive from the client
+    except WebSocketDisconnect:
+        pass
+    finally:
+        manager.disconnect_user(uid, ws)
+
+
+@app.websocket("/ws/live/{stream_id}")
+async def ws_live(ws: WebSocket, stream_id: int, token: str = ""):
+    """Per-stream channel: live chat events are broadcast here."""
+    uid = _ws_user(token)
+    if uid is None:
+        await ws.close(code=4401)
+        return
+    await manager.connect_stream(stream_id, ws)
+    try:
+        while True:
+            await ws.receive_text()
+    except WebSocketDisconnect:
+        pass
+    finally:
+        manager.disconnect_stream(stream_id, ws)
+
+
 @app.get("/health")
 def health():
-    return {"status": "ok", "app": "silver-api"}
+    return {"status": "ok", "app": "silver-api",
+            "livekit_configured": streaming.is_configured()}
